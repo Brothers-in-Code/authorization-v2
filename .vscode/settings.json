@@ -1,0 +1,22 @@
+{
+  "cSpell.words": [
+    "Лингво",
+    "callout",
+    "FEEDBACKMESSAGE",
+    "linebreak",
+    "lingvo",
+    "lingvocards",
+    "swiper",
+    "testid",
+    "TTFB",
+    "עברית"
+  ],
+  "todo-tree.tree.showBadges": true,
+  "editor.codeActionsOnSave": {},
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
+}
