@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
+import { getVerifier, getAppState } from 'src/utils/verifiers';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -9,21 +11,24 @@ export class AuthService {
     private httpService: HttpService,
   ) {}
 
-  async signIn(code) {
-    const appSettings = this.configService.get('app');
+  sendVerificationState() {
     const vk = this.configService.get('vk');
+    const app = this.configService.get('app');
+
+    const { codeVerifier, codeChallenge } = getVerifier();
+    const state = getAppState();
 
     const params = {
-      code,
-      client_id: vk.appId,
-      client_secret: vk.serviceKey,
-      redirect_uri: `${appSettings.protocol}://${appSettings.host}/auth/login/vk`,
+      app: vk.appId,
+      redirectUrl: app.frontend,
+      scope: 'email',
+      response_type: 'code',
+      codeVerifier,
+      codeChallenge,
+      code_challenge_method: 's256',
+      state,
     };
 
-    const userData = await this.httpService
-      .get('https://oauth.vk.com/access_token', { params })
-      .toPromise();
-
-    return userData.data;
+    return params;
   }
 }

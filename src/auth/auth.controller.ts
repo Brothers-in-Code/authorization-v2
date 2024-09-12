@@ -1,4 +1,4 @@
-import { Controller, Get, Response } from '@nestjs/common';
+import { Controller, Get, Query, Response } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { ConfigService } from '@nestjs/config';
 
@@ -8,8 +8,18 @@ export class AuthController {
     private configService: ConfigService,
     private authService: AuthService,
   ) {}
+
   @Get('verification')
   verification() {
-    return res.redirect(this.configService.get('app.frontend'));
+    return this.authService.sendVerificationState();
+  }
+
+  @Get('vk')
+  vk(
+    @Query('code') code: string,
+    @Query('state') state: string,
+    @Query('device_id') device_id: string,
+  ) {
+    return { code, state, device_id };
   }
 }
