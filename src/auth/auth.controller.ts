@@ -1,25 +1,39 @@
-import { Controller, Get, Query, Response } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private configService: ConfigService,
-    private authService: AuthService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Get('verification')
   verification() {
-    return this.authService.sendVerificationState();
+    return this.authService.createVerificationState();
   }
 
-  @Get('vk')
-  vk(
-    @Query('code') code: string,
-    @Query('state') state: string,
-    @Query('device_id') device_id: string,
+  @Post('access')
+  handlePostAccess(
+    @Body()
+    {
+      code,
+      state,
+      device_id,
+    }: {
+      code: string;
+      state: string;
+      device_id: string;
+    },
   ) {
-    return { code, state, device_id };
+    const isStateVerified = this.authService.verifyState(state);
+
+    if (isStateVerified) {
+      try {
+        const data = this.authService.getAccessToken(code, device_id);
+        return data;
+      } catch (e) {
+        return { error: e };
+      }
+    }
+
+    return { error: 'State verification failed' };
   }
 }
