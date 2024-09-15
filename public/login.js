@@ -2,6 +2,7 @@
   const VERIFICATION_URL = 'https://stay-in-touch.ru/auth/verification';
   const VK_URL = ' https://id.vk.com/authorize';
   const loginButton = document.getElementById('login');
+
   loginButton.addEventListener('click', login);
 
   async function login() {
