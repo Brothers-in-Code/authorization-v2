@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
-import { getVerifier, getAppState, getHash } from 'src/utils/verifiers';
+import { getVerifier, getAppState } from 'src/utils/verifiers';
 
 @Injectable()
 export class AuthService {
@@ -63,13 +63,12 @@ export class AuthService {
       code_challenge,
     };
 
-    const data = await this.httpService
-      .post(url, qs.stringify(authorization_params), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-      .toPromise();
+    const data = await this.httpService.axiosRef.post(
+      url,
+      qs.stringify(authorization_params),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
     const { access_token } = data.data;
 
     Logger.log(data.data);
