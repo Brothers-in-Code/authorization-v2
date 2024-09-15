@@ -52,7 +52,7 @@ export class AuthService {
     const code_challenge = this.states.get('code_challenge');
 
     const url = 'https://id.vk.com/oauth2/auth';
-    const params = {
+    const authorization_params = {
       grant_type: 'authorization_code',
       code,
       device_id,
@@ -64,13 +64,14 @@ export class AuthService {
     };
 
     const data = await this.httpService
-      .post(url, qs.stringify(params), {
+      .post(url, qs.stringify(authorization_params), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       })
       .toPromise();
     const { access_token } = data.data;
+
     Logger.log(data.data);
     return { message: data.data, access_token };
   }
