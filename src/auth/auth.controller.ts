@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import {
+  UnauthorizedException,
+  InternalServerErrorException,
+  Body,
+  Controller,
+  Get,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 
 @Controller('auth')
@@ -6,8 +13,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('verification')
+  // TODO add output types
   verification() {
-    return this.authService.createVerificationState();
+    const state = this.authService.createVerificationState();
+
+    // TODO save code_verifier to cookies
+
+    return state;
   }
 
   @Post('access')
@@ -23,17 +35,19 @@ export class AuthController {
       device_id: string;
     },
   ) {
+    // TODO get code_verifier to cookies
     const isStateVerified = this.authService.verifyState(state);
 
     if (isStateVerified) {
       try {
-        const data = this.authService.getAccessToken(code, device_id);
-        return data;
+        // pass the code_verifier to the method
+        return this.authService.getAccessToken(code, device_id);
       } catch (e) {
-        return { error: e };
+        // TODO log the error
+        throw new InternalServerErrorException(e.message);
       }
     }
 
-    return { error: 'State verification failed' };
+    throw new UnauthorizedException('State verification failed');
   }
 }
