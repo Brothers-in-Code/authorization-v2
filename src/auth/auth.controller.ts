@@ -8,13 +8,24 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 
+type VerificationOutputType = {
+  client_id: number;
+  redirect_uri: string;
+  response_type: string;
+  code_verifier: string;
+  code_challenge: string;
+  code_challenge_method: string;
+  state: string;
+  scope: string;
+  display: string;
+};
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('verification')
-  // TODO add output types
-  verification() {
+  verification(): VerificationOutputType {
     const state = this.authService.createVerificationState();
 
     // TODO save code_verifier to cookies
@@ -35,7 +46,7 @@ export class AuthController {
       device_id: string;
     },
   ) {
-    // TODO get code_verifier to cookies
+    // TODO get code_verifier from cookies
     const isStateVerified = this.authService.verifyState(state);
 
     if (isStateVerified) {
