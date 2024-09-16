@@ -23,6 +23,12 @@ type VerificationOutputType = {
   display: string;
 };
 
+const cookieOptions = {
+  httpOnly: false,
+  secure: true,
+  samesite: 'strict',
+};
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -32,12 +38,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): VerificationOutputType {
     const verificationState = this.authService.createVerificationState();
-
-    // TODO save code_verifier to cookies
-
-    res.cookie('state', verificationState, {
-      httpOnly: false,
-    });
+    res.cookie('state', verificationState.state, cookieOptions);
+    res.cookie('code_verifier', verificationState.code_verifier, cookieOptions);
 
     return verificationState;
   }
