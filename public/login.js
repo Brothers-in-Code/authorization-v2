@@ -8,9 +8,7 @@
   async function login() {
     const verificationParams = await fetchVerificationParams();
     const url = createRequestURL(verificationParams);
-    // window.location.href = url;
-    console.log(verificationParams);
-    console.log('cookie', document.cookie);
+    window.location.href = url;
   }
 
   function fetchVerificationParams() {
@@ -26,16 +24,21 @@
   //   NOTE для тестирования отправки cookies
   const btnAccess = document.getElementById('access');
   btnAccess.addEventListener('click', () => {
-    fetch('https://stay-in-touch.ru/auth/access', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        code: 'code',
-        state: 'state',
-        device_id: 'device_id',
-      }),
-    });
+    return (
+      fetch('https://stay-in-touch.ru/auth/access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: 'code',
+          state: 'state',
+          device_id: 'device_id',
+        }),
+      })
+        // NOTE не ловит ошибку, показывает then
+        .then((res) => console.log(res))
+        .catch((e) => console.log('test'))
+    );
   });
 })();

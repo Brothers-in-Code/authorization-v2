@@ -6,8 +6,6 @@ import { getVerifier, getAppState } from 'src/utils/verifiers';
 
 @Injectable()
 export class AuthService {
-  private states: Map<string, string> = new Map();
-
   constructor(
     private configService: ConfigService,
     private httpService: HttpService,
@@ -19,9 +17,6 @@ export class AuthService {
 
     const { code_verifier, code_challenge } = getVerifier();
     const state = getAppState();
-
-    this.states.set('state', state);
-    this.states.set('code_verifier', code_verifier);
 
     const frontend_params = {
       client_id: vk.appId,
@@ -38,16 +33,13 @@ export class AuthService {
     return frontend_params;
   }
 
-  verifyState(state) {
-    return this.states.get('state') === state;
+  verifyState(state: string, cookieState: string) {
+    return cookieState === state;
   }
 
-  //   NOTE code_challenge не нужен, но на всякий случай оставил
-  async getAccessToken(code: string, device_id: string) {
+  async getAccessToken(code: string, device_id: string, code_verifier: string) {
     const vk = this.configService.get('vk');
     const app = this.configService.get('app');
-
-    const code_verifier = this.states.get('code_verifier');
 
     const authorization_params = {
       grant_type: 'authorization_code',
