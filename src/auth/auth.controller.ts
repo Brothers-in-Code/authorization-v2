@@ -28,11 +28,18 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('verification')
-  verification(): VerificationOutputType {
-    const state = this.authService.createVerificationState();
+  verification(
+    @Res({ passthrough: true }) res: Response,
+  ): VerificationOutputType {
+    const verificationState = this.authService.createVerificationState();
+
     // TODO save code_verifier to cookies
 
-    return state;
+    res.cookie('state', verificationState, {
+      httpOnly: false,
+    });
+
+    return verificationState;
   }
 
   @Post('access')
