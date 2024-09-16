@@ -8,7 +8,9 @@
   async function login() {
     const verificationParams = await fetchVerificationParams();
     const url = createRequestURL(verificationParams);
-    window.location.href = url;
+    // window.location.href = url;
+    console.log(verificationParams);
+    console.log('cookie', document.cookie);
   }
 
   function fetchVerificationParams() {

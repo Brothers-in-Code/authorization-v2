@@ -5,8 +5,11 @@ import {
   Controller,
   Get,
   Post,
+  Res,
+  Logger,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
+import { Response } from 'express';
 
 type VerificationOutputType = {
   client_id: number;
@@ -27,7 +30,6 @@ export class AuthController {
   @Get('verification')
   verification(): VerificationOutputType {
     const state = this.authService.createVerificationState();
-
     // TODO save code_verifier to cookies
 
     return state;
