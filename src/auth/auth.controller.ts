@@ -59,7 +59,7 @@ export class AuthController {
   ) {
     // TODO get code_verifier from cookies
     const isStateVerified = this.authService.verifyState(state);
-
+    Logger.debug('isStateVerified', isStateVerified);
     if (isStateVerified) {
       try {
         // pass the code_verifier to the method

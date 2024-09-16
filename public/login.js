@@ -22,4 +22,20 @@
   function createRequestURL(params) {
     return `${VK_URL}?${new URLSearchParams(params)}`;
   }
+
+  //   NOTE для тестирования отправки cookies
+  const btnAccess = document.getElementById('access');
+  btnAccess.addEventListener('click', () => {
+    fetch('https://stay-in-touch.ru/auth/access', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: 'code',
+        state: 'state',
+        device_id: 'device_id',
+      }),
+    });
+  });
 })();
