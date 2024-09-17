@@ -47,15 +47,13 @@ export class AuthController {
   ): VerificationOutputType {
     const encryptKey = this.configService.get('app.encryptKey');
     const verificationState = this.authService.createVerificationState();
-    // TODO зашифровать code_verifier
+    const hashCodeVerifier = encrypt(
+      verificationState.code_verifier,
+      encryptKey,
+    );
 
-    const enTest = encrypt('test', encryptKey);
-
-    Logger.log('enTest', enTest);
-
-    res.cookie('test', enTest);
     res.cookie('state', verificationState.state, cookieOptions);
-    res.cookie('code_verifier', verificationState.code_verifier, cookieOptions);
+    res.cookie('code_verifier', hashCodeVerifier, cookieOptions);
 
     return verificationState;
   }
@@ -76,21 +74,14 @@ export class AuthController {
   ) {
     const encryptKey = this.configService.get('app.encryptKey');
     const cookieState = req.cookies?.state || null;
-    const cookieCodeVerifier = req.cookies?.code_verifier || null;
-    const cookieTest = req.cookies?.test || null;
-    const deTest = decrypt(cookieTest, encryptKey);
-    Logger.log('deTest', deTest);
+    const hashCodeVerifier = req.cookies?.code_verifier || null;
+    const codeVerifier = decrypt(hashCodeVerifier, encryptKey);
 
-    // TODO расшифровать code_verifier
     const isStateVerified = this.authService.verifyState(state, cookieState);
 
-    if (isStateVerified && cookieCodeVerifier) {
+    if (isStateVerified && codeVerifier) {
       try {
-        return this.authService.getAccessToken(
-          code,
-          device_id,
-          cookieCodeVerifier,
-        );
+        return this.authService.getAccessToken(code, device_id, codeVerifier);
       } catch (e) {
         // TODO log the error
         throw new InternalServerErrorException(e.message);

@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import { Logger } from '@nestjs/common';
+
 const algorithm = 'aes-256-ctr';
 
 type EncryptedHashType = {
