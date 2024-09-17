@@ -1,10 +1,12 @@
 export function configuration() {
   return {
     app: {
+      frontend: process.env.FRONT_REDIRECT_PATH,
+      encryptKey: process.env.APP_ENCRYPT_KEY,
+
       host: process.env.APP_HOST,
       protocol: process.env.APP_PROTOCOL,
       port: parseInt(process.env.PORT, 10) || 3000,
-      frontend: process.env.FRONT_REDIRECT_PATH,
       front: process.env.APP_REDIRECT_PATH,
     },
     vk: {

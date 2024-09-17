@@ -12,6 +12,9 @@ import {
 import { AuthService } from './services/auth.service';
 import { Response } from 'express';
 
+import { encrypt, decrypt } from 'src/utils/crypting';
+import { ConfigService } from '@nestjs/config';
+
 type VerificationOutputType = {
   client_id: number;
   redirect_uri: string;
@@ -33,16 +36,24 @@ const cookieOptions = {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private configService: ConfigService,
+    private authService: AuthService,
+  ) {}
 
   @Get('verification')
   verification(
     @Res({ passthrough: true }) res: Response,
   ): VerificationOutputType {
+    const encryptKey = this.configService.get('app.encryptKey');
     const verificationState = this.authService.createVerificationState();
-    // TODO зашифровать code_verifier
+    const hashCodeVerifier = encrypt(
+      verificationState.code_verifier,
+      encryptKey,
+    );
+
     res.cookie('state', verificationState.state, cookieOptions);
-    res.cookie('code_verifier', verificationState.code_verifier, cookieOptions);
+    res.cookie('code_verifier', hashCodeVerifier, cookieOptions);
 
     return verificationState;
   }
@@ -61,18 +72,16 @@ export class AuthController {
       device_id: string;
     },
   ) {
+    const encryptKey = this.configService.get('app.encryptKey');
     const cookieState = req.cookies?.state || null;
-    const cookieCodeVerifier = req.cookies?.code_verifier || null;
-    // TODO расшифровать code_verifier
+    const hashCodeVerifier = req.cookies?.code_verifier || null;
+    const codeVerifier = decrypt(hashCodeVerifier, encryptKey);
+
     const isStateVerified = this.authService.verifyState(state, cookieState);
 
-    if (isStateVerified && cookieCodeVerifier) {
+    if (isStateVerified && codeVerifier) {
       try {
-        return this.authService.getAccessToken(
-          code,
-          device_id,
-          cookieCodeVerifier,
-        );
+        return this.authService.getAccessToken(code, device_id, codeVerifier);
       } catch (e) {
         // TODO log the error
         throw new InternalServerErrorException(e.message);
