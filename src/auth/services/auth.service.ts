@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
@@ -10,6 +10,8 @@ export class AuthService {
     private configService: ConfigService,
     private httpService: HttpService,
   ) {}
+
+  private readonly logger = new Logger(AuthService.name);
 
   createVerificationState() {
     const vk = this.configService.get('vk');
@@ -51,15 +53,18 @@ export class AuthService {
       code_verifier,
     };
 
-    const data = await this.httpService.axiosRef.post(
+    const response = await this.httpService.axiosRef.post(
       'https://id.vk.com/oauth2/auth',
       qs.stringify(authorization_params),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
 
-    const { access_token } = data.data;
-
-    Logger.log(data.data);
-    return { message: data.data, access_token };
+    if (!response.data.hasOwnProperty('access_token')) {
+      this.logger.log(`access_token не получен. ${response.data}`);
+      throw new UnauthorizedException(
+        `access_token не получен. ${response.data}`,
+      );
+    }
+    return { message: response.data };
   }
 }
