@@ -28,8 +28,7 @@ type VerificationOutputType = {
 };
 
 const cookieOptions = {
-  // TODO поставить httpOnly: true
-  httpOnly: false,
+  httpOnly: true,
   secure: true,
   samesite: 'strict',
 };
@@ -40,6 +39,8 @@ export class AuthController {
     private configService: ConfigService,
     private authService: AuthService,
   ) {}
+
+  private readonly logger = new Logger(AuthController.name);
 
   @Get('verification')
   verification(
@@ -83,7 +84,7 @@ export class AuthController {
       try {
         return this.authService.getAccessToken(code, device_id, codeVerifier);
       } catch (e) {
-        // TODO log the error
+        this.logger.error(`Failed to get access token. ${e}`);
         throw new InternalServerErrorException(e.message);
       }
     }
