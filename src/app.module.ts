@@ -5,7 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './configuration';
-import { UserModule } from './user/user.module';
+import { UserModule } from './db/user/user.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -24,6 +25,12 @@ import { UserModule } from './user/user.module';
           username: configService.get('db.username'),
           password: configService.get('db.password'),
           database: configService.get('db.database'),
+          namingStrategy: new SnakeNamingStrategy(),
+          migrations: ['./dist/migrations/*.js'],
+          migrationsTableName: 'typeorm_migrations',
+          synchronize: false,
+          migrationsRun: true,
+          autoLoadEntities: true,
         };
       },
     }),

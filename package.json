@@ -18,9 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeORM": "ts-node ./node_modules/TypeORM/cli.js",
-    "migration:up": "npm run build && npm run typeORM migration:run -- -d src/data-source.ts",
-    "migration:down": "npm run build && npm run typeORM migration:revert -- -d src/data-source.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "migration:up": "npm run build && npm run typeorm migration:run -- -d src/data-source.ts",
+    "migration:down": "npm run build && npm run typeorm migration:revert -- -d src/data-source.ts",
     "docker:build": "npm run build && docker build -t lingvo-api .",
     "pm2:prod": "pm2 startOrRestart ecosystem.config.js --env prod"
   },
