@@ -17,3 +17,5 @@ export class User {
   @Column()
   expires_date: Date;
 }
+
+// npm run typeorm migration:generate -- ./dist/migrations/init.js  -d src/data-source.ts?
