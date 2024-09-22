@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../db/entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -33,14 +33,16 @@ export class UserService {
     access_token: string,
     refresh_token: string,
     expires_date: Date,
-  ): Promise<string> {
+  ): Promise<{ message: string }> {
     return this.userRepository
       .update(user_id, {
         access_token,
         refresh_token,
         expires_date,
       })
-      .then(() => 'Token updated successfully')
-      .catch((error) => `Failed to update token. ${error}`);
+      .then(() => ({
+        message: 'Token updated successfully',
+      }))
+      .catch((error) => ({ message: `Failed to update token. ${error}` }));
   }
 }

@@ -7,8 +7,8 @@ import {
   Body,
   NotFoundException,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { User } from '../db/entities/user.entity';
+import { UserService } from '../services/user.service';
+import { User } from 'src/db/entities/user.entity';
 
 @Controller('user')
 export class UserController {

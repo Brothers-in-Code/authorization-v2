@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { getVerifier, getAppState } from 'src/utils/verifiers';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/db/services/user.service';
 
 type getAccessTokenOutputType = {
   access_token: string;
