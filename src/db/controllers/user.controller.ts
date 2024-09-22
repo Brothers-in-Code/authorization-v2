@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { User } from 'src/db/entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Controller('user')
 export class UserController {
