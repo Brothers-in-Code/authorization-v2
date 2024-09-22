@@ -14,7 +14,6 @@ import { Response } from 'express';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from 'src/db/services/user.service';
 
 type VerificationOutputType = {
   client_id: number;
