@@ -2,8 +2,8 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
-import { getVerifier, getAppState } from 'src/utils/verifiers';
-import { UserService } from 'src/db/services/user.service';
+import { getVerifier, getAppState } from '../../utils/verifiers';
+import { UserService } from '../../db/services/user.service';
 
 type getAccessTokenOutputType = {
   access_token: string;

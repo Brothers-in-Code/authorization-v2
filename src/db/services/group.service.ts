@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Group } from 'src/db/entities/group.entity';
+import { Group } from '../entities/group.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
