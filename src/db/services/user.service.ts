@@ -3,6 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 
+type UpdateTokenParamsType = {
+  user_vkid: number;
+  access_token: string;
+  refresh_token: string;
+  expires_date: Date;
+};
+
 @Injectable()
 export class UserService {
   constructor(
@@ -14,8 +21,8 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findOne(user_id: number): Promise<User> {
-    return this.userRepository.findOneBy({ user_id });
+  findOne(user_vkid: number): Promise<User> {
+    return this.userRepository.findOneBy({ user_vkid });
   }
 
   async deleteUser(user: User) {
@@ -28,14 +35,14 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  updateToken(
-    user_id: number,
-    access_token: string,
-    refresh_token: string,
-    expires_date: Date,
-  ): Promise<{ message: string }> {
+  updateToken({
+    user_vkid,
+    access_token,
+    refresh_token,
+    expires_date,
+  }: UpdateTokenParamsType): Promise<{ message: string }> {
     return this.userRepository
-      .update(user_id, {
+      .update(user_vkid, {
         access_token,
         refresh_token,
         expires_date,

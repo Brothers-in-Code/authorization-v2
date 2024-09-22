@@ -98,26 +98,22 @@ export class AuthService {
   }
 
   async saveUser(
-    user_id: number,
+    user_vkid: number,
     access_token: string,
     refresh_token: string,
     expires_date: Date,
   ) {
-    const user = await this.userService.findOne(user_id);
+    const user = await this.userService.findOne(user_vkid);
+    const params = {
+      user_vkid,
+      access_token,
+      refresh_token,
+      expires_date,
+    };
     if (user) {
-      return this.userService.updateToken(
-        user_id,
-        access_token,
-        refresh_token,
-        expires_date,
-      );
+      return this.userService.updateToken(params);
     } else {
-      return this.userService.createUser({
-        user_id,
-        access_token,
-        refresh_token,
-        expires_date,
-      });
+      return this.userService.createUser(params);
     }
   }
 
