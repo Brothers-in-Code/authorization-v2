@@ -5,13 +5,13 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './configuration';
-import { UserModule } from './user/user.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { PostModule } from './post/post.module';
+import { DBModule } from 'src/db/db.module';
 
 @Module({
   imports: [
     AuthModule,
+    DBModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -35,8 +35,6 @@ import { PostModule } from './post/post.module';
         };
       },
     }),
-    UserModule,
-    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -14,6 +14,7 @@ import { Response } from 'express';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
 import { ConfigService } from '@nestjs/config';
+import { UserService } from 'src/db/services/user.service';
 
 type VerificationOutputType = {
   client_id: number;
@@ -60,7 +61,7 @@ export class AuthController {
   }
 
   @Post('access')
-  handlePostAccess(
+  async handlePostAccess(
     @Req() req: any,
     @Body()
     {
@@ -82,7 +83,20 @@ export class AuthController {
 
     if (isStateVerified && codeVerifier) {
       try {
-        return this.authService.getAccessToken(code, device_id, codeVerifier);
+        const data = await this.authService.getAccessToken(
+          code,
+          device_id,
+          codeVerifier,
+        );
+
+        const expires_date = this.authService.calcExpiresDate(data.expires_in);
+
+        return this.authService.saveUser(
+          data.user_id,
+          data.access_token,
+          data.refresh_token,
+          expires_date,
+        );
       } catch (e) {
         this.logger.error(`Failed to get access token. ${e}`);
         throw new InternalServerErrorException(e.message);
