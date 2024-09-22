@@ -10,7 +10,7 @@ export default new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: ['src/db/**/*.entity{.ts,.js}'],
+  entities: ['src/db/entities/*.entity{.ts,.js}'],
   migrations: ['src/db/migrations/*.js'],
   migrationsTableName: 'typeorm_migrations',
 });

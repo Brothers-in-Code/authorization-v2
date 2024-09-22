@@ -3,12 +3,22 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { getVerifier, getAppState } from 'src/utils/verifiers';
+import { UserService } from 'src/user/user.service';
+
+type getAccessTokenOutputType = {
+  access_token: string;
+  expires_in: number;
+  id_token: string;
+  refresh_token: string;
+  user_id: number;
+};
 
 @Injectable()
 export class AuthService {
   constructor(
     private configService: ConfigService,
     private httpService: HttpService,
+    private userService: UserService,
   ) {}
 
   private readonly logger = new Logger(AuthService.name);
@@ -39,7 +49,19 @@ export class AuthService {
     return cookieState === state;
   }
 
-  async getAccessToken(code: string, device_id: string, code_verifier: string) {
+  /**
+   * getAccessToken
+   * @param code
+   * @param device_id
+   * @param code_verifier
+   * @returns {Promise<getAccessTokenOutputType>}
+   */
+
+  async getAccessToken(
+    code: string,
+    device_id: string,
+    code_verifier: string,
+  ): Promise<getAccessTokenOutputType> {
     const vk = this.configService.get('vk');
     const app = this.configService.get('app');
 
@@ -65,6 +87,46 @@ export class AuthService {
         `access_token не получен. ${response.data}`,
       );
     }
-    return { message: response.data };
+
+    return {
+      access_token: response.data.access_token,
+      expires_in: response.data.expires_in,
+      id_token: response.data.id_token,
+      refresh_token: response.data.refresh_token,
+      user_id: response.data.user_id,
+    };
+  }
+
+  async saveUser(
+    user_id: number,
+    access_token: string,
+    refresh_token: string,
+    expires_date: Date,
+  ) {
+    const user = await this.userService.findOne(user_id);
+    if (user) {
+      return this.userService.updateToken(
+        user_id,
+        access_token,
+        refresh_token,
+        expires_date,
+      );
+    } else {
+      return this.userService.createUser({
+        user_id,
+        access_token,
+        refresh_token,
+        expires_date,
+      });
+    }
+  }
+
+  calcExpiresDate(expires_in: number) {
+    const RESPONSE_DELAY = 200;
+    const expires_date = new Date();
+    expires_date.setSeconds(
+      expires_date.getSeconds() + expires_in - RESPONSE_DELAY,
+    );
+    return expires_date;
   }
 }
