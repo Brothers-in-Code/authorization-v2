@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './configuration';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
+import { VkDataModule } from './vk-data/vk-data.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { DBModule } from 'src/db/db.module';
         };
       },
     }),
+    VkDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],
