@@ -1,3 +1,4 @@
+// Получение кода
 (async () => {
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -25,4 +26,16 @@
       body,
     }).then((res) => res.json());
   }
+})();
+
+// Получение групп
+(async () => {
+  const btnGetGroups = document.getElementById('get-groups');
+  btnGetGroups.addEventListener('click', () => {
+    return fetch('https://stay-in-touch.ru/api/v1/groups', {
+      method: 'GET',
+    })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  });
 })();

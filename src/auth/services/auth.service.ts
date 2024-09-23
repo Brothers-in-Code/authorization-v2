@@ -38,7 +38,7 @@ export class AuthService {
       code_challenge,
       code_challenge_method: 's256',
       state,
-      scope: 'email',
+      scope: 'email groups',
       display: 'page',
     };
 
