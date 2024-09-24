@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { VkDataService } from './vk-data.service';
+import { VkDataService } from './vkdata.service';
 
 describe('VkDataService', () => {
   let service: VkDataService;

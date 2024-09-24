@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { VkDataController } from './vk-data.controller';
+import { VkDataController } from './vkdata.controller';
 
 describe('VkDataController', () => {
   let controller: VkDataController;

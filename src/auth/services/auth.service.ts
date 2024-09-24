@@ -81,12 +81,13 @@ export class AuthService {
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
 
-    if (!response.data.hasOwnProperty('access_token')) {
-      this.logger.log(`access_token не получен. ${response.data}`);
-      throw new UnauthorizedException(
-        `access_token не получен. ${response.data}`,
-      );
-    }
+    // TODO вернуть после настройки vk-data
+    // if (!response.data.hasOwnProperty('access_token')) {
+    //   this.logger.log(`access_token не получен. ${response.data}`);
+    //   throw new UnauthorizedException(
+    //     `access_token не получен. ${response.data}`,
+    //   );
+    // }
 
     return {
       access_token: response.data.access_token,

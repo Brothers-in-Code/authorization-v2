@@ -18,7 +18,7 @@
   }
 
   function sendCode(body) {
-    return fetch('https://stay-in-touch.ru/auth/access', {
+    return fetch('https://stay-in-touch.ru/api/auth/access', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,8 +32,14 @@
 (async () => {
   const btnGetGroups = document.getElementById('get-groups');
   btnGetGroups.addEventListener('click', () => {
-    return fetch('https://stay-in-touch.ru/api/v1/groups', {
-      method: 'GET',
+    return fetch('https://stay-in-touch.ru/api/vkdata/groups', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_vkid: 1267318,
+      }),
     })
       .then((res) => console.log(res))
       .catch((e) => console.log(e));
