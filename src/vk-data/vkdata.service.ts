@@ -14,7 +14,7 @@ export class VkDataService {
     private userService: UserService,
   ) {}
 
-  async getUserGroupListFromVK(user_vkid: number, extended = 1) {
+  async getUserGroupListFromVK(user_vkid: number, extended: number) {
     const user = await this.userService.findOne(user_vkid);
     if (!user) {
       throw new Error(`User with id = ${user_vkid} not found`);
