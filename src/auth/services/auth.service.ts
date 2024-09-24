@@ -38,7 +38,7 @@ export class AuthService {
       code_challenge,
       code_challenge_method: 's256',
       state,
-      scope: 'email',
+      scopes: 'groups email',
       display: 'page',
     };
 
@@ -81,12 +81,13 @@ export class AuthService {
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
 
-    if (!response.data.hasOwnProperty('access_token')) {
-      this.logger.log(`access_token не получен. ${response.data}`);
-      throw new UnauthorizedException(
-        `access_token не получен. ${response.data}`,
-      );
-    }
+    // TODO вернуть после настройки vk-data
+    // if (!response.data.hasOwnProperty('access_token')) {
+    //   this.logger.log(`access_token не получен. ${response.data}`);
+    //   throw new UnauthorizedException(
+    //     `access_token не получен. ${response.data}`,
+    //   );
+    // }
 
     return {
       access_token: response.data.access_token,
@@ -117,6 +118,7 @@ export class AuthService {
     }
   }
 
+  //   FIX не правильно вычисляет expires_date - на часах 21.15 а он отдает 19:09
   calcExpiresDate(expires_in: number) {
     const RESPONSE_DELAY = 200;
     const expires_date = new Date();

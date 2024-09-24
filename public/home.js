@@ -1,3 +1,4 @@
+// Получение кода
 (async () => {
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -17,7 +18,7 @@
   }
 
   function sendCode(body) {
-    return fetch('https://stay-in-touch.ru/auth/access', {
+    return fetch('https://stay-in-touch.ru/api/auth/access', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,4 +26,23 @@
       body,
     }).then((res) => res.json());
   }
+})();
+
+// Получение групп
+(async () => {
+  const btnGetGroups = document.getElementById('get-groups');
+  btnGetGroups.addEventListener('click', () => {
+    return fetch('https://stay-in-touch.ru/api/vkdata/groups', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_vkid: 1267318,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((e) => console.log(e));
+  });
 })();

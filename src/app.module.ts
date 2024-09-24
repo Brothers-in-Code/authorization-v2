@@ -7,11 +7,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './configuration';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
+import { VkDataModule } from './vk-data/vkdata.module';
 
 @Module({
   imports: [
     AuthModule,
     DBModule,
+    VkDataModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],

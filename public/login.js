@@ -1,5 +1,5 @@
 (() => {
-  const VERIFICATION_URL = 'https://stay-in-touch.ru/auth/verification';
+  const STAY_API_URL = 'https://stay-in-touch.ru/api';
   const VK_URL = ' https://id.vk.com/authorize';
   const loginButton = document.getElementById('login');
 
@@ -12,7 +12,7 @@
   }
 
   function fetchVerificationParams() {
-    return fetch(VERIFICATION_URL, {
+    return fetch(`${STAY_API_URL}/auth/verification`, {
       method: 'GET',
     }).then((res) => res.json());
   }
@@ -25,7 +25,7 @@
   const btnAccess = document.getElementById('access');
   btnAccess.addEventListener('click', () => {
     return (
-      fetch('https://stay-in-touch.ru/auth/access', {
+      fetch(`${STAY_API_URL}/auth/access`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +38,7 @@
       })
         // NOTE не ловит ошибку, показывает then
         .then((res) => console.log(res))
-        .catch((e) => console.log('test'))
+        .catch((e) => console.log(e))
     );
   });
 })();

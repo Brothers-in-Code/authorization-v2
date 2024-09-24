@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { AuthService } from './auth.service';
-import { UserService } from '../../db/services/user.service';
+import { AuthService } from 'src/auth/services/auth.service';
+import { UserService } from 'src/db/services/user.service';
 
 describe('AuthService', () => {
   let service: AuthService;
