@@ -23,10 +23,9 @@ export class VkDataService {
     const access_token =
       'vk2.a.LVui3YEALZzKwvaljaQRbQ7ANKjP7HGYpPmtv4hdIyHC8TB4nzJpPtE_pH1nkKEte57zgGEQYlS6dWsajOUDNf6aw74QvWJTnwcesCzGRe6X76aLFmAV8056zQmJ93WpJEchA3URO0dJnUTcNpeZ0CmIbE5K3UiFH9_qtphczgMsAR2_WaJuAbS5_snWXJE7JmzQZZIgIV0rLBxGHc74t9Gx88v4GXAhLdDPMHyLSvbPMsycq3x2BGhjYwhmNutz';
 
-    const vk = this.configService.get('vk');
     const params = {
-      client_id: vk.appId,
       user_id: user_vkid,
+      client_id: this.configService.get('vk.appId'),
       v: 5.199,
       extended: extended,
       //   access_token: user.access_token,
@@ -36,6 +35,26 @@ export class VkDataService {
       `${VK_API}/groups.get`,
       qs.stringify(params),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+    return response.data;
+  }
+
+  async getWallPublicGroup(owner_id: number, extended: number) {
+    const params = {
+      owner_id: -owner_id,
+      client_id: this.configService.get('vk.appId'),
+      v: 5.199,
+      extended: extended,
+    };
+    const response = await this.httpService.axiosRef.post(
+      `${VK_API}/wall.get`,
+      qs.stringify(params),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${this.configService.get('vk.serviceKey')}`,
+        },
+      },
     );
     return response.data;
   }
