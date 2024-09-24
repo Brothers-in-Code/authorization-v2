@@ -38,7 +38,7 @@ export class AuthService {
       code_challenge,
       code_challenge_method: 's256',
       state,
-      scope: 'email groups',
+      scopes: 'groups email',
       display: 'page',
     };
 
@@ -118,6 +118,7 @@ export class AuthService {
     }
   }
 
+  //   FIX не правильно вычисляет expires_date - на часах 21.15 а он отдает 19:09
   calcExpiresDate(expires_in: number) {
     const RESPONSE_DELAY = 200;
     const expires_date = new Date();

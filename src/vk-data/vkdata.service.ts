@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
+
+const VK_API = 'https://api.vk.com/method';
 
 @Injectable()
 export class VkDataService {
@@ -12,33 +14,36 @@ export class VkDataService {
     private userService: UserService,
   ) {}
 
-  async getUserGroupListFromVK(user_vkid: number) {
+  async getUserGroupListFromVK(user_vkid: number, extended = 1) {
     const user = await this.userService.findOne(user_vkid);
     if (!user) {
       throw new Error(`User with id = ${user_vkid} not found`);
     }
     // TODO добавить проверку date_expires
     const access_token =
-      'vk2.a.DIwa6Yql2YX8Rt-uAW4kURei9UcXx-9viNWIVnJBtu8ljHxaqttD94EkY3qjOVeCXxXh2tNoiqF12YRL0IaSe6kNQGxtIZ-Yw7lqWpKe__rAXmK3o6hROXQ0zFLq_FpbwGXvNEE2pKN6JGFDHjaNTwFiVFlCD1lO1ps6xmf6OspE1naPZikXr6lXbuAThONC1roDHxSAnuDY18y0WRztqdW3XiB4RgTC1jYxwBew3xUTMLSevrHh8-U9dIcDCWZR';
+      'vk2.a.LVui3YEALZzKwvaljaQRbQ7ANKjP7HGYpPmtv4hdIyHC8TB4nzJpPtE_pH1nkKEte57zgGEQYlS6dWsajOUDNf6aw74QvWJTnwcesCzGRe6X76aLFmAV8056zQmJ93WpJEchA3URO0dJnUTcNpeZ0CmIbE5K3UiFH9_qtphczgMsAR2_WaJuAbS5_snWXJE7JmzQZZIgIV0rLBxGHc74t9Gx88v4GXAhLdDPMHyLSvbPMsycq3x2BGhjYwhmNutz';
 
     const vk = this.configService.get('vk');
     const params = {
       client_id: vk.appId,
+      user_id: user_vkid,
+      v: 5.199,
+      extended: extended,
       //   access_token: user.access_token,
       access_token,
     };
     const response = await this.httpService.axiosRef.post(
-      'https://id.vk.com/oauth2/groups',
+      `${VK_API}/groups.get`,
       qs.stringify(params),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
-    return response;
+    return response.data;
   }
 }
 
 // {
 //     "user_vkid": 1267318,
-//     "access_token": "vk2.a.DIwa6Yql2YX8Rt-uAW4kURei9UcXx-9viNWIVnJBtu8ljHxaqttD94EkY3qjOVeCXxXh2tNoiqF12YRL0IaSe6kNQGxtIZ-Yw7lqWpKe__rAXmK3o6hROXQ0zFLq_FpbwGXvNEE2pKN6JGFDHjaNTwFiVFlCD1lO1ps6xmf6OspE1naPZikXr6lXbuAThONC1roDHxSAnuDY18y0WRztqdW3XiB4RgTC1jYxwBew3xUTMLSevrHh8-U9dIcDCWZR",
-//     "refresh_token": "vk2.a.ka-hGYzOsKKdqx_5Dt3P_-Y4bQ3mXcJgAyvYlNcJu0BtPJM7v2u64CLC1QrQfrRSTLoiGlz71WLpCkPQYecNqklSiY9IjjZgXQEN1QwORttMiauGWMFf9lOQaiOAbIFX4wgCJj6COlvUcFOnSjxwyzfVAxDjjzkmLPBkei2Z9Krl7lQ-9v9DKWJFD5IpzY9LVmLJeAt4DwuUMlmsK3o2aeMGHLFHbHcIHNnywylB6TN1qpZrh21sz3hKmv-MlhT5",
-//     "expires_date": "2024-09-24T18:45:55.843Z"
+//     "access_token": "vk2.a.LVui3YEALZzKwvaljaQRbQ7ANKjP7HGYpPmtv4hdIyHC8TB4nzJpPtE_pH1nkKEte57zgGEQYlS6dWsajOUDNf6aw74QvWJTnwcesCzGRe6X76aLFmAV8056zQmJ93WpJEchA3URO0dJnUTcNpeZ0CmIbE5K3UiFH9_qtphczgMsAR2_WaJuAbS5_snWXJE7JmzQZZIgIV0rLBxGHc74t9Gx88v4GXAhLdDPMHyLSvbPMsycq3x2BGhjYwhmNutz",
+//     "refresh_token": "vk2.a.1bTdHzvwDBptIINQ-SYk3QaQ6V1N_73C399BzxUYOyR3zH5T63i0Vx1840uwAR1I-gzBa6Xz6bCIyd4kGjCiuLqAeY7X--t8EMt4I39E4-DzogvQTgde1m9uphEvLgX2xEflrgJuCmnI7kKIGJWMM0kyqwF0G9dKEYDkYr_qnu5u7WjSjVlNMT15nk8z_9UEN8Wz6Uq8o37OS9iG44r3W8RMWCkKSWHC37bkepqbpe8",
+//     "expires_date": "2024-09-24T20:19:51.438Z"
 //   }

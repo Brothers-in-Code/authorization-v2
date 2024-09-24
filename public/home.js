@@ -41,7 +41,8 @@
         user_vkid: 1267318,
       }),
     })
-      .then((res) => console.log(res))
+      .then((res) => res.json())
+      .then((data) => console.log(data))
       .catch((e) => console.log(e));
   });
 })();

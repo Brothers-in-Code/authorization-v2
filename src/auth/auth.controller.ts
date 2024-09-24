@@ -23,7 +23,7 @@ type VerificationOutputType = {
   code_challenge: string;
   code_challenge_method: string;
   state: string;
-  scope: string;
+  scopes: string;
   display: string;
 };
 
