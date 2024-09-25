@@ -35,22 +35,21 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
-  updateToken({
+  async updateToken({
     user_vkid,
     access_token,
     refresh_token,
     expires_date,
-  }: UpdateTokenParamsType): Promise<{ message: string }> {
-    Logger.log({ user_vkid, access_token, refresh_token, expires_date });
-    return this.userRepository
-      .update(user_vkid, {
-        access_token,
-        refresh_token,
-        expires_date,
-      })
-      .then(() => ({
-        message: 'Token updated successfully',
-      }))
-      .catch((error) => ({ message: `Failed to update token. ${error}` }));
+  }: UpdateTokenParamsType): Promise<User> {
+    const user = await this.userRepository.findOneBy({ user_vkid });
+
+    if (!user) {
+      throw new Error(`User with id = ${user_vkid} not found`);
+    }
+    user.access_token = access_token;
+    user.refresh_token = refresh_token;
+    user.expires_date = expires_date;
+
+    return this.userRepository.save(user);
   }
 }
