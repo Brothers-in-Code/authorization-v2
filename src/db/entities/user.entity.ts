@@ -13,6 +13,6 @@ export class User extends AbstractEntity {
   @Column({ type: 'varchar', length: 1000 })
   refresh_token: string;
 
-  @Column()
+  @Column({ default: null })
   expires_date: Date;
 }
