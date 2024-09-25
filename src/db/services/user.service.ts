@@ -54,8 +54,3 @@ export class UserService {
       .catch((error) => ({ message: `Failed to update token. ${error}` }));
   }
 }
-
-// user_vkid": 1267318,
-//   "access_token": "vk2.a.3pdcYTenpw2s9_KlFEiwvIjdcZSMcTTIxMBASa-s2poWy7sFbuD-oorqapIwRt_vBzz869OHDW4mRVkgM3hCRZ7id6vswKSawEKAqqzNB-16HGxWLiB_64lPG73vqBQiArJWIBu8EbmzvmCwtFBM0uzMG5FRhYYS5gZbnCmK-AT2ZEjkrfPCllooyqej36k7BCr0R9X9rn9Lag16tPrpD89N67uDxDMDQCiXyAxRrAPtK_bAHnBnJqXlJ8OxCSM5",
-//   "refresh_token": "vk2.a.GPjkRAtjxU_QLNAzlIXr3DqUmn7MLsvIyy8bIfGD9BPDIQuhSzkZxz7QBH16GtQUvo6JkNcEcTBqu2xUtMhvUEh1eGlHZfZ2jO2DOvByz_sETd2Ef7EhaFTGbbbY54agHV4LWxGjJYJmd-f9GzSVE_Onha5pFSwejwUgitcQdvjVuIIdIkVKXdZtVt0b5N6E_PpoW2rWusH2qqXc825wh0X7VMszUh566lsKh5Xwm5w6XjBU8Lz8iD0pgO61W4zS",
-//   "expires_date": "2024-09-23T22:51:41.911Z"
