@@ -7,7 +7,7 @@ type UpdateTokenParamsType = {
   user_vkid: number;
   access_token: string;
   refresh_token: string;
-  expires_date: Date;
+  expires_timestamp: number;
 };
 
 @Injectable()
@@ -39,7 +39,7 @@ export class UserService {
     user_vkid,
     access_token,
     refresh_token,
-    expires_date,
+    expires_timestamp,
   }: UpdateTokenParamsType): Promise<User> {
     const user = await this.userRepository.findOneBy({ user_vkid });
 
@@ -48,7 +48,7 @@ export class UserService {
     }
     user.access_token = access_token;
     user.refresh_token = refresh_token;
-    user.expires_date = expires_date;
+    user.expires_timestamp = expires_timestamp;
 
     return this.userRepository.save(user);
   }

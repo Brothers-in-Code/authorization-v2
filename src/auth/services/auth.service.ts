@@ -100,14 +100,14 @@ export class AuthService {
     user_vkid: number,
     access_token: string,
     refresh_token: string,
-    expires_date: Date,
+    expires_timestamp: number,
   ) {
     const user = await this.userService.findOne(user_vkid);
     const params = {
       user_vkid,
       access_token,
       refresh_token,
-      expires_date,
+      expires_timestamp,
     };
     if (user) {
       return this.userService.updateToken(params);
@@ -116,13 +116,11 @@ export class AuthService {
     }
   }
 
-  //   FIX не правильно вычисляет expires_date - на часах 21.15 а он отдает 19:09
-  calcExpiresDate(expires_in: number) {
-    const RESPONSE_DELAY = 200;
-    const expires_date = new Date();
-    expires_date.setSeconds(
-      expires_date.getSeconds() + expires_in - RESPONSE_DELAY,
-    );
+  calcExpiresTimestamp(expires_in: number) {
+    const RESPONSE_DELAY = 300_000;
+    const MILLISECONDS_IN_SECOND = 1000;
+    const expires_date =
+      Date.now() + expires_in * MILLISECONDS_IN_SECOND - RESPONSE_DELAY;
     return expires_date;
   }
 }

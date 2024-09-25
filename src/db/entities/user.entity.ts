@@ -14,5 +14,5 @@ export class User extends AbstractEntity {
   refresh_token: string;
 
   @Column()
-  expires_date: Date;
+  expires_timestamp: number;
 }

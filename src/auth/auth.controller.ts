@@ -88,13 +88,15 @@ export class AuthController {
           codeVerifier,
         );
 
-        const expires_date = this.authService.calcExpiresDate(data.expires_in);
+        const expires_timestamp = this.authService.calcExpiresTimestamp(
+          data.expires_in,
+        );
 
         return this.authService.saveUser(
           data.user_id,
           data.access_token,
           data.refresh_token,
-          expires_date,
+          expires_timestamp,
         );
       } catch (e) {
         this.logger.error(`Failed to get access token. ${e}`);
