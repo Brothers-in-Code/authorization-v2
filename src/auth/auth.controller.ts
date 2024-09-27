@@ -28,6 +28,12 @@ type VerificationOutputType = {
   display: string;
 };
 
+type AuthBaseOutputType = {
+  message: string;
+  status: string;
+  error?: any;
+};
+
 const cookieOptions = {
   httpOnly: true,
   secure: true,
@@ -74,7 +80,7 @@ export class AuthController {
       state: string;
       device_id: string;
     },
-  ) {
+  ): Promise<AuthBaseOutputType> {
     const encryptKey = this.configService.get('app.encryptKey');
     const cookieState = req.cookies?.state || null;
     const hashCodeVerifier = req.cookies?.code_verifier || null;
@@ -123,7 +129,9 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  async handleRefreshToken(@Body() { user_vkid }: { user_vkid: number }) {
+  async handleRefreshToken(
+    @Body() { user_vkid }: { user_vkid: number },
+  ): Promise<AuthBaseOutputType> {
     const user = await this.userService.findOne(user_vkid);
     if (!user) {
       this.logger.error(`User with id = ${user_vkid} not found`);
