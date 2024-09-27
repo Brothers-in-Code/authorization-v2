@@ -18,7 +18,7 @@
   }
 
   function sendCode(body) {
-    return fetch('https://stay-in-touch.ru/api/auth/access', {
+    return fetch('https://stay-in-touch.ru/api/auth/get-token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

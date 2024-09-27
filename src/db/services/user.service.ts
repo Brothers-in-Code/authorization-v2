@@ -7,6 +7,7 @@ type UpdateTokenParamsType = {
   user_vkid: number;
   access_token: string;
   refresh_token: string;
+  device_id: string;
   expires_date: Date;
 };
 
@@ -39,6 +40,7 @@ export class UserService {
     user_vkid,
     access_token,
     refresh_token,
+    device_id,
     expires_date,
   }: UpdateTokenParamsType): Promise<User> {
     const user = await this.userRepository.findOneBy({ user_vkid });
@@ -46,8 +48,10 @@ export class UserService {
     if (!user) {
       throw new Error(`User with id = ${user_vkid} not found`);
     }
+
     user.access_token = access_token;
     user.refresh_token = refresh_token;
+    user.device_id = device_id;
     user.expires_date = expires_date;
 
     return this.userRepository.save(user);

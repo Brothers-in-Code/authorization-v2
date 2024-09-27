@@ -13,6 +13,9 @@ export class User extends AbstractEntity {
   @Column({ type: 'varchar', length: 1000 })
   refresh_token: string;
 
+  @Column({ type: 'varchar', length: 1000 })
+  device_id: string;
+
   @Column({ default: null })
   expires_date: Date;
 }
