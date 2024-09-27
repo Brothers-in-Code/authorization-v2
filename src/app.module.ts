@@ -15,6 +15,7 @@ import { VkDataModule } from './vk-data/vkdata.module';
     DBModule,
     VkDataModule,
     ConfigModule.forRoot({
+      envFilePath: '.env',
       isGlobal: true,
       load: [configuration],
     }),
