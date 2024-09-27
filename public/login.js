@@ -25,7 +25,7 @@
   const btnAccess = document.getElementById('access');
   btnAccess.addEventListener('click', () => {
     return (
-      fetch(`${STAY_API_URL}/auth/access`, {
+      fetch(`${STAY_API_URL}/auth/get-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

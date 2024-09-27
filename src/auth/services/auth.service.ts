@@ -7,10 +7,17 @@ import { UserService } from '../../db/services/user.service';
 
 type getAccessTokenOutputType = {
   access_token: string;
-  expires_in: number;
-  id_token: string;
   refresh_token: string;
+  expires_in: number;
   user_id: number;
+  id_token: string;
+  device_id: string;
+};
+
+type refreshTokenOutputType = {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
 };
 
 @Injectable()
@@ -89,10 +96,52 @@ export class AuthService {
 
     return {
       access_token: response.data.access_token,
+      refresh_token: response.data.refresh_token,
       expires_in: response.data.expires_in,
       id_token: response.data.id_token,
-      refresh_token: response.data.refresh_token,
       user_id: response.data.user_id,
+      device_id,
+    };
+  }
+
+  async refreshAccessToken(
+    refresh_token: string,
+    device_id: string,
+  ): Promise<refreshTokenOutputType> {
+    const state = getAppState();
+
+    const refresh_params = {
+      grant_type: 'refresh_token',
+      refresh_token,
+      client_id: this.configService.get('vk.appId'),
+      state,
+      scope: ['groups'],
+      device_id,
+    };
+
+    this.logger.log(refresh_params);
+
+    const response = await this.httpService.axiosRef.post(
+      'https://id.vk.com/oauth2/auth',
+      qs.stringify(refresh_params),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
+    if (!response.data.hasOwnProperty('access_token')) {
+      this.logger.error(response.data);
+      throw new UnauthorizedException(`access_token не получен.`);
+    }
+
+    if (state !== response.data.state) {
+      this.logger.error(`test`);
+      this.logger.error(`access_token не получен. ${response.data}`);
+      throw new UnauthorizedException(`state не совпадает. ${response.data}`);
+    }
+
+    return {
+      access_token: response.data.access_token,
+      refresh_token: response.data.refresh_token,
+      expires_in: response.data.expires_in,
     };
   }
 
@@ -100,6 +149,7 @@ export class AuthService {
     user_vkid: number,
     access_token: string,
     refresh_token: string,
+    device_id: string,
     expires_date: Date,
   ) {
     const user = await this.userService.findOne(user_vkid);
@@ -107,6 +157,7 @@ export class AuthService {
       user_vkid,
       access_token,
       refresh_token,
+      device_id,
       expires_date,
     };
     if (user) {
@@ -116,7 +167,6 @@ export class AuthService {
     }
   }
 
-  //   FIX не правильно вычисляет expires_date - на часах 21.15 а он отдает 19:09
   calcExpiresDate(expires_in: number) {
     const RESPONSE_DELAY = 200;
     const expires_date = new Date();

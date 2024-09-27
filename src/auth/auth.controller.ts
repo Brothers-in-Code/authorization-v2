@@ -14,6 +14,7 @@ import { Response } from 'express';
 
 import { encrypt, decrypt } from '../utils/crypting';
 import { ConfigService } from '@nestjs/config';
+import { UserService } from 'src/db/services/user.service';
 
 type VerificationOutputType = {
   client_id: number;
@@ -38,6 +39,7 @@ export class AuthController {
   constructor(
     private configService: ConfigService,
     private authService: AuthService,
+    private userService: UserService,
   ) {}
 
   private readonly logger = new Logger(AuthController.name);
@@ -59,8 +61,8 @@ export class AuthController {
     return verificationState;
   }
 
-  @Post('access')
-  async handlePostAccess(
+  @Post('get-token')
+  async handleGetToken(
     @Req() req: any,
     @Body()
     {
@@ -82,20 +84,33 @@ export class AuthController {
 
     if (isStateVerified && codeVerifier) {
       try {
-        const data = await this.authService.getAccessToken(
+        const response = await this.authService.getAccessToken(
           code,
           device_id,
           codeVerifier,
         );
 
-        const expires_date = this.authService.calcExpiresDate(data.expires_in);
+        if (!response.hasOwnProperty('access_token')) {
+          return {
+            message: 'Token not received',
+            status: 'error',
+            error: response,
+          };
+        }
 
-        return this.authService.saveUser(
-          data.user_id,
-          data.access_token,
-          data.refresh_token,
+        const expires_date = this.authService.calcExpiresDate(
+          response.expires_in,
+        );
+
+        await this.authService.saveUser(
+          response.user_id,
+          response.access_token,
+          response.refresh_token,
+          response.device_id,
           expires_date,
         );
+
+        return { message: 'Token successfully received', status: 'ok' };
       } catch (e) {
         this.logger.error(`Failed to get access token. ${e}`);
         throw new InternalServerErrorException(e.message);
@@ -105,5 +120,47 @@ export class AuthController {
     throw new UnauthorizedException(
       'State verification failed or missing code_verifier',
     );
+  }
+
+  @Post('refresh-token')
+  async handleRefreshToken(@Body() { user_vkid }: { user_vkid: number }) {
+    const user = await this.userService.findOne(user_vkid);
+    if (!user) {
+      this.logger.error(`User with id = ${user_vkid} not found`);
+      return {
+        message: `User with id = ${user_vkid} not found`,
+        status: 'error',
+      };
+    }
+    try {
+      const response = await this.authService.refreshAccessToken(
+        user.refresh_token,
+        user.device_id,
+      );
+
+      if (!response.hasOwnProperty('access_token')) {
+        return {
+          message: 'Token not received',
+          status: 'error',
+          error: response,
+        };
+      }
+      const expires_date = this.authService.calcExpiresDate(
+        response.expires_in,
+      );
+
+      await this.authService.saveUser(
+        user_vkid,
+        response.access_token,
+        response.refresh_token,
+        user.device_id,
+        expires_date,
+      );
+
+      return { message: 'Token successfully received', status: 'ok' };
+    } catch (e) {
+      this.logger.error(`Failed to get access token. ${e.message}`);
+      throw new InternalServerErrorException(e.message);
+    }
   }
 }
