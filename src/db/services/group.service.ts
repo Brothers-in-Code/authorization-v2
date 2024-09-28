@@ -38,16 +38,19 @@ export class GroupService {
       throw new NotFoundException(`Group id: ${group_vkid} not found`);
     }
 
-    return this.groupRepository
-      .update(group_id.id, {
-        last_group_scan_date,
-      })
-      .then(() => ({
-        result: last_group_scan_date,
-        message: 'Group scan date updated successfully',
-      }))
-      .catch((error) => {
-        throw new InternalServerErrorException(error);
-      });
+    return (
+      this.groupRepository
+        .update(group_id.id, {
+          last_group_scan_date,
+        })
+        //    TODO сделать проверку на affectedRows
+        .then(() => ({
+          result: last_group_scan_date,
+          message: 'Group scan date updated successfully',
+        }))
+        .catch((error) => {
+          throw new InternalServerErrorException(error);
+        })
+    );
   }
 }

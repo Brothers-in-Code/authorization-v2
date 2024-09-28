@@ -12,6 +12,9 @@ export class Group extends AbstractEntity {
   @Column()
   is_private: boolean;
 
+  @Column({ default: null, type: 'varchar', length: 1000 })
+  photo: string;
+
   @Column()
   last_group_scan_date: Date;
 }

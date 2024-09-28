@@ -39,9 +39,14 @@ export class VkDataController {
     { owner_id, extended = 1 }: { owner_id: number; extended?: number },
   ) {
     try {
-      const data = await this.vkDataService.getWallPublicGroup(
+      //   const data = await this.vkDataService.getWallPublicGroup(
+      //     owner_id,
+      //     extended,
+      //   );
+      const data = await this.vkDataService.getWallPrivetGroup(
         owner_id,
         extended,
+        1267318,
       );
       return data;
     } catch (error) {

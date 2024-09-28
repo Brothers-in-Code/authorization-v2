@@ -30,9 +30,30 @@
 
 // Получение групп
 (async () => {
+  const VK_DATA_URL = 'https://stay-in-touch.ru/api/vkdata';
+
   const btnGetGroups = document.getElementById('get-groups');
+  const btnGetPrivetGroupWall = document.getElementById(
+    'get-wall-private-group',
+  );
+
   btnGetGroups.addEventListener('click', () => {
-    return fetch('https://stay-in-touch.ru/api/vkdata/groups', {
+    return fetch(`${VK_DATA_URL}/groups`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_vkid: 1267318,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((e) => console.log(e));
+  });
+
+  btnGetPrivetGroupWall.addEventListener('click', () => {
+    return fetch(`${VK_DATA_URL}/wall`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

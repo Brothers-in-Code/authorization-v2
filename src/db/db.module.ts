@@ -9,11 +9,13 @@ import { UserService } from 'src/db/services/user.service';
 import { GroupController } from './controllers/group.controller';
 import { GroupService } from './services/group.service';
 import { Group } from './entities/group.entity';
+import { UserGroupService } from './services/user-group.service';
+import { UserGroup } from './entities/user_group.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Group])],
+  imports: [TypeOrmModule.forFeature([Post, User, Group, UserGroup])],
   controllers: [PostController, UserController, GroupController],
-  providers: [PostService, UserService, GroupService],
+  providers: [PostService, UserService, GroupService, UserGroupService],
   exports: [PostService, UserService, GroupService],
 })
 export class DBModule {}
