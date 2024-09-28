@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserGroup } from '../entities/user_group.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -27,6 +27,7 @@ export class UserGroupService {
 
   async findUsersGroupList(user_vkid: number): Promise<any> {
     const user = await this.userRepository.findOneBy({ user_vkid });
+    Logger.log(user);
     if (!user) {
       throw new NotFoundException(`User with id = ${user_vkid} not found`);
     }
