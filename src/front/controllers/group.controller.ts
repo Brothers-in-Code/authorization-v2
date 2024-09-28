@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Logger, Param } from '@nestjs/common';
 import { GroupService } from 'src/db/services/group.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 
