@@ -7,6 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from '../entities/group.entity';
 import { Repository } from 'typeorm';
 
+type CreateGroupParamsType = {
+  vkid: number;
+  name: string;
+  is_private: boolean;
+  photo?: string;
+};
+
 @Injectable()
 export class GroupService {
   constructor(
@@ -18,24 +25,26 @@ export class GroupService {
     return this.groupRepository.find();
   }
 
-  findOne(group_vkid: number): Promise<Group> {
-    return this.groupRepository.findOneBy({ group_vkid });
+  findOne(vkid: number): Promise<Group> {
+    return this.groupRepository.findOneBy({ vkid });
   }
 
-  createGroup(groupParams: Partial<Group>): Promise<Group> {
-    return this.groupRepository.save(groupParams);
+  create(groupParams: CreateGroupParamsType): Promise<Group> {
+    const newGroup = new Group();
+    Object.assign(newGroup, groupParams);
+    return this.groupRepository.save(newGroup);
   }
 
   async updateGroupScanDate(
-    group_vkid: number,
+    vkid: number,
     last_group_scan_date: Date,
   ): Promise<{ result: Date; message: string }> {
     const group_id = await this.groupRepository.findOneBy({
-      group_vkid,
+      vkid,
     });
 
     if (!group_id) {
-      throw new NotFoundException(`Group id: ${group_vkid} not found`);
+      throw new NotFoundException(`Group id: ${vkid} not found`);
     }
 
     return (

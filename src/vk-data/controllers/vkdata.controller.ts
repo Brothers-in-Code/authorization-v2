@@ -2,9 +2,13 @@ import {
   Body,
   Controller,
   InternalServerErrorException,
+  Logger,
   Post,
 } from '@nestjs/common';
-import { VkDataService } from './vkdata.service';
+import { VkDataService } from '../services/vkdata.service';
+import { GroupService } from 'src/db/services/group.service';
+import { UserGroupService } from 'src/db/services/user-group.service';
+import { UserService } from 'src/db/services/user.service';
 
 /*
 TODO сделать обработчик ошибок
@@ -15,7 +19,12 @@ TODO сделать обработчик ошибок
 
 @Controller('vkdata')
 export class VkDataController {
-  constructor(private readonly vkDataService: VkDataService) {}
+  constructor(
+    private readonly vkDataService: VkDataService,
+    private readonly userService: UserService,
+    private readonly groupService: GroupService,
+    private readonly userGroupService: UserGroupService,
+  ) {}
 
   @Post('groups')
   async getUserGroups(
@@ -27,6 +36,19 @@ export class VkDataController {
         user_vkid,
         extended,
       );
+      // NOTE для тестирования
+      // TODO удалить после проверки работоспособности
+      const user = await this.userService.findOne(user_vkid);
+      data.response.items.forEach(async (group) => {
+        const dbGroup = await this.groupService.create({
+          vkid: group.id,
+          name: group.name,
+          is_private: Boolean(group.is_closed),
+          photo: group.photo_100,
+        });
+        await this.userGroupService.create(user, dbGroup);
+      });
+
       return data;
     } catch (error) {
       throw new InternalServerErrorException(error);

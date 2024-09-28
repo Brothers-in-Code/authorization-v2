@@ -31,7 +31,7 @@ export class VkDataService {
       extended: extended,
       access_token: user.access_token,
     };
-    const response = await this.httpService.axiosRef.post(
+    const response = await this.httpService.axiosRef.post<GroupGetResponseType>(
       `${VK_API}/groups.get`,
       qs.stringify(params),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
@@ -46,7 +46,7 @@ export class VkDataService {
       v: 5.199,
       extended: extended,
     };
-    const response = await this.httpService.axiosRef.post<GroupGetResponseType>(
+    const response = await this.httpService.axiosRef.post(
       `${VK_API}/wall.get`,
       qs.stringify(params),
       {
