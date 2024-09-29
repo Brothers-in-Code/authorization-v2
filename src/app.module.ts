@@ -8,12 +8,14 @@ import { configuration } from './configuration';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
 import { VkDataModule } from './vk-data/vkdata.module';
+import { FrontModule } from './front/front.module';
 
 @Module({
   imports: [
     AuthModule,
     DBModule,
     VkDataModule,
+    FrontModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
