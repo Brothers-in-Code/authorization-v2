@@ -1,3 +1,5 @@
+// TODO если только для внутреннего использования - удалить
+
 import {
   Body,
   Controller,
@@ -58,18 +60,26 @@ export class VkDataController {
   @Post('wall')
   async getWallGroup(
     @Body()
-    { owner_id, extended = 1 }: { owner_id: number; extended?: number },
+    {
+      user_vkid,
+      owner_id,
+      extended = 1,
+    }: {
+      owner_id: number;
+      user_vkid: number;
+      extended?: number;
+    },
   ) {
     try {
       //   const data = await this.vkDataService.getWallPublicGroup(
       //     owner_id,
       //     extended,
       //   );
-      const data = await this.vkDataService.getWallPrivetGroup(
+      const data = await this.vkDataService.getWallPrivetGroup({
         owner_id,
+        user_vkid,
         extended,
-        1267318,
-      );
+      });
       return data;
     } catch (error) {
       throw new InternalServerErrorException(error);

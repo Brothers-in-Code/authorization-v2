@@ -4,7 +4,6 @@ import { UserGroup } from '../entities/user_group.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
-import { group } from 'console';
 
 @Injectable()
 export class UserGroupService {
@@ -29,7 +28,7 @@ export class UserGroupService {
   ): Promise<{ user_vkid: number; groups: Group[] }> {
     const userGroups = await this.userGroupRepository
       .find({
-        where: { user: { user_vkid: user_vkid } },
+        where: { user: { user_vkid } },
         relations: ['group'],
       })
       .then((data) =>
@@ -46,5 +45,19 @@ export class UserGroupService {
       user_vkid,
       groups: userGroups,
     };
+  }
+
+  async remove(user_vkid: number, group_vkid: number): Promise<DeleteResult> {
+    return await this.userGroupRepository.delete({
+      user: { user_vkid },
+      group: { vkid: group_vkid },
+    });
+  }
+
+  async add(user: User, group: Group): Promise<UserGroup> {
+    const userGroup = new UserGroup();
+    userGroup.user = user;
+    userGroup.group = group;
+    return await this.userGroupRepository.save(userGroup);
   }
 }

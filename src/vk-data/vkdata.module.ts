@@ -8,5 +8,6 @@ import { DBModule } from 'src/db/db.module';
   imports: [HttpModule, DBModule],
   providers: [VkDataService],
   controllers: [VkDataController],
+  exports: [VkDataService],
 })
 export class VkDataModule {}

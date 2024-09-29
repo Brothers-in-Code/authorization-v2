@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../entities/abstract.entity';
 
+// TODO добавить поле domain
 @Entity()
 export class Group extends AbstractEntity {
   @Column()
