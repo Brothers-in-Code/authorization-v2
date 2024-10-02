@@ -4,6 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { log } from 'console';
 import { AuthService } from 'src/auth/services/auth.service';
+import { GroupService } from 'src/db/services/group.service';
 import { VkDataService } from 'src/vk-data/services/vkdata.service';
 import { DataSource } from 'typeorm';
 
@@ -23,6 +24,7 @@ export class ScanService {
     private configService: ConfigService,
     private authService: AuthService,
     private vkDataService: VkDataService,
+    private groupService: GroupService,
   ) {}
   private readonly logger = new Logger(ScanService.name);
 
@@ -39,7 +41,6 @@ export class ScanService {
     const queryResultList = await this.executeQuery();
     if (queryResultList) {
       for (const queryResult of queryResultList) {
-        this.logger.log('queryResult', queryResult);
         const tokenResult = await this.getNewAccessToken(
           queryResult.refresh_token,
           queryResult.device_id,
@@ -64,18 +65,36 @@ export class ScanService {
     }
   }
 
+  /*
+   TODO 
+   использовать execute 
+   https://dev.vk.com/ru/method/execute
+   (должно подойти для получения постов за определенный промежуток времени)
+   */
+
   async scanGroupList(
     access_token: string,
-    groupIdList: number[],
+    groupVKIdList: number[],
     limitDate: Date,
   ) {
-    for (const groupId of groupIdList) {
+    for (const groupVKId of groupVKIdList) {
       try {
         const response = await this.vkDataService.getWallPrivetGroup({
           access_token,
-          owner_id: groupId,
-          extended: 1,
+          owner_id: groupVKId,
+          extended: 0,
         });
+        if (response) {
+          log(response);
+          const group = await this.groupService.findOne(groupVKId);
+          const postParamsList = response.response.items.map((item) => {
+            return {
+              post_vkid: item.id,
+              json: JSON.stringify(item),
+            };
+          });
+          await this.vkDataService.savePostList(group.id, postParamsList);
+        }
       } catch (error) {
         this.logger.error(error);
       }

@@ -63,7 +63,7 @@ export class VkDataController {
     {
       user_vkid,
       owner_id,
-      extended = 1,
+      extended = 0,
     }: {
       user_vkid: number;
       owner_id: number;

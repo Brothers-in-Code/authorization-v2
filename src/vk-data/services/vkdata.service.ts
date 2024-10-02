@@ -6,6 +6,9 @@ import { UserService } from 'src/db/services/user.service';
 
 // TYPES
 import { GroupGetResponseType } from 'src/types/vk-group-get-response-type';
+import { PostService } from 'src/db/services/post.service';
+import { Post } from 'src/db/entities/post.entity';
+import { VKWallType } from 'src/types/vk-wall-type';
 
 const VK_API = 'https://api.vk.com/method';
 
@@ -15,6 +18,7 @@ export class VkDataService {
     private httpService: HttpService,
     private configService: ConfigService,
     private userService: UserService,
+    private postService: PostService,
   ) {}
 
   async getUserGroupListFromVK(user_vkid: number, extended: number) {
@@ -81,7 +85,7 @@ export class VkDataService {
       extended: extended,
       access_token,
     };
-    const response = await this.httpService.axiosRef.post(
+    const response = await this.httpService.axiosRef.post<VKWallType>(
       `${VK_API}/wall.get`,
       qs.stringify(params),
       {
@@ -124,5 +128,22 @@ export class VkDataService {
       },
     );
     return response.data;
+  }
+
+  async savePostList(
+    group_id: number,
+    postParamsList: {
+      post_vkid: number;
+      json: string;
+    }[],
+  ) {
+    const posts = postParamsList.map((postParams) => {
+      const newPost = new Post();
+      newPost.group_id = group_id;
+      newPost.post_vkid = postParams.post_vkid;
+      newPost.json = postParams.json;
+      return newPost;
+    });
+    await this.postService.createPostList(posts);
   }
 }

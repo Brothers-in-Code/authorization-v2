@@ -1,7 +1,9 @@
 // TODO доделать все типы
 type VKWallType = {
-  count: number;
-  items: PostType[];
+  response: {
+    count: number;
+    items: PostType[];
+  };
 };
 
 type PostType = {
