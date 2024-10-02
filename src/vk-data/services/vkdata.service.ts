@@ -59,22 +59,23 @@ export class VkDataService {
     return response.data;
   }
 
+  /*
+  NOTE 
+  создать функцию получения инфы о группе по id groups.getById
+  https://dev.vk.com/ru/method/groups.getById
+  */
+
   async getWallPrivetGroup({
-    user_vkid,
+    access_token,
     owner_id,
     extended,
   }: {
+    access_token: string;
     owner_id: number;
     extended: number;
-    user_vkid: number;
   }) {
-    const user = await this.userService.findOne(user_vkid);
-    if (!user) {
-      throw new Error(`User with id = ${user_vkid} not found`);
-    }
-    const access_token = user.access_token;
     const params = {
-      owner_id: owner_id,
+      owner_id: -owner_id,
       client_id: this.configService.get('vk.appId'),
       v: 5.199,
       extended: extended,
