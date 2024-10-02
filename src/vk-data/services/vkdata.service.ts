@@ -9,6 +9,8 @@ import { GroupGetResponseType } from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
 import { Post } from 'src/db/entities/post.entity';
 import { VKWallType } from 'src/types/vk-wall-type';
+import { log } from 'console';
+import { Group } from 'src/db/entities/group.entity';
 
 const VK_API = 'https://api.vk.com/method';
 
@@ -131,7 +133,7 @@ export class VkDataService {
   }
 
   async savePostList(
-    group_id: number,
+    group: Group,
     postParamsList: {
       post_vkid: number;
       json: string;
@@ -139,11 +141,11 @@ export class VkDataService {
   ) {
     const posts = postParamsList.map((postParams) => {
       const newPost = new Post();
-      newPost.group_id = group_id;
+      newPost.group = group;
       newPost.post_vkid = postParams.post_vkid;
       newPost.json = postParams.json;
       return newPost;
     });
-    await this.postService.createPostList(posts);
+    return await this.postService.createPostList(posts);
   }
 }

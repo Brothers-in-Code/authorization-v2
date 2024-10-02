@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { log } from 'console';
+import { group, log } from 'console';
 import { AuthService } from 'src/auth/services/auth.service';
 import { GroupService } from 'src/db/services/group.service';
 import { VkDataService } from 'src/vk-data/services/vkdata.service';
@@ -85,7 +85,6 @@ export class ScanService {
           extended: 0,
         });
         if (response) {
-          log(response);
           const group = await this.groupService.findOne(groupVKId);
           const postParamsList = response.response.items.map((item) => {
             return {
@@ -93,10 +92,19 @@ export class ScanService {
               json: JSON.stringify(item),
             };
           });
-          await this.vkDataService.savePostList(group.id, postParamsList);
+          const postList = await this.vkDataService.savePostList(
+            group,
+            postParamsList,
+          );
+          if (postList) {
+            await this.groupService.updateGroupScanDate(groupVKId, limitDate);
+          }
         }
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(
+          `ошибка получения постов группы ${groupVKId}: ${error}`,
+          error,
+        );
       }
     }
   }
