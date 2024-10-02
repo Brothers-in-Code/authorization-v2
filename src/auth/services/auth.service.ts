@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { getVerifier, getAppState } from '../../utils/verifiers';
 import { UserService } from '../../db/services/user.service';
+import { log } from 'console';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -14,7 +15,7 @@ type getAccessTokenOutputType = {
   device_id: string;
 };
 
-type refreshTokenOutputType = {
+type RefreshTokenOutputType = {
   access_token: string;
   refresh_token: string;
   expires_in: number;
@@ -107,9 +108,8 @@ export class AuthService {
   async refreshAccessToken(
     refresh_token: string,
     device_id: string,
-  ): Promise<refreshTokenOutputType> {
+  ): Promise<RefreshTokenOutputType> {
     const state = getAppState();
-
     const refresh_params = {
       grant_type: 'refresh_token',
       refresh_token,
@@ -118,8 +118,6 @@ export class AuthService {
       scope: ['groups'],
       device_id,
     };
-
-    this.logger.log(refresh_params);
 
     const response = await this.httpService.axiosRef.post(
       'https://id.vk.com/oauth2/auth',
@@ -133,10 +131,11 @@ export class AuthService {
     }
 
     if (state !== response.data.state) {
-      this.logger.error(`test`);
       this.logger.error(`access_token не получен. ${response.data}`);
       throw new UnauthorizedException(`state не совпадает. ${response.data}`);
     }
+
+    log('from refreshAccessToken - token получен');
 
     return {
       access_token: response.data.access_token,
@@ -152,6 +151,7 @@ export class AuthService {
     device_id: string,
     expires_date: Date,
   ) {
+    this.logger.log(`function saveUser`);
     const user = await this.userService.findOne(user_vkid);
     const params = {
       user_vkid,
@@ -160,6 +160,7 @@ export class AuthService {
       device_id,
       expires_date,
     };
+
     if (user) {
       return this.userService.updateToken(params);
     } else {

@@ -63,21 +63,25 @@ export class VkDataController {
     {
       user_vkid,
       owner_id,
-      extended = 1,
+      extended = 0,
     }: {
-      owner_id: number;
       user_vkid: number;
+      owner_id: number;
       extended?: number;
     },
   ) {
+    const user = await this.userService.findOne(user_vkid);
+    if (!user) {
+      throw new Error(`User with id = ${user_vkid} not found`);
+    }
     try {
       //   const data = await this.vkDataService.getWallPublicGroup(
       //     owner_id,
       //     extended,
       //   );
       const data = await this.vkDataService.getWallPrivetGroup({
+        access_token: user.access_token,
         owner_id,
-        user_vkid,
         extended,
       });
       return data;

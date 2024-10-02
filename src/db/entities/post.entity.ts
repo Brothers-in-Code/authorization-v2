@@ -7,9 +7,8 @@ import { Group } from './group.entity';
 @Entity()
 export class Post extends AbstractEntity {
   @ManyToOne(() => Group, (group) => group.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id' })
-  @Column()
-  group_id: number;
+  @JoinColumn({ name: 'group_id' })
+  group: Group;
 
   @Column()
   post_vkid: number;

@@ -9,6 +9,8 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
 import { VkDataModule } from './vk-data/vkdata.module';
 import { FrontModule } from './front/front.module';
+import { ScanService } from './scan/scan-service/scan-service.service';
+import { ScanModule } from 'src/scan/scan.module';
 
 @Module({
   imports: [
@@ -40,8 +42,9 @@ import { FrontModule } from './front/front.module';
         };
       },
     }),
+    ScanModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ScanService],
 })
 export class AppModule {}

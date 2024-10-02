@@ -29,6 +29,7 @@ export class GroupService {
     return this.groupRepository.findOneBy({ vkid });
   }
 
+  //   TODO сделать проверку на наличие группы
   create(groupParams: CreateGroupParamsType): Promise<Group> {
     const newGroup = new Group();
     Object.assign(newGroup, groupParams);

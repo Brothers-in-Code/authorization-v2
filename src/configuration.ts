@@ -3,8 +3,9 @@ export function configuration() {
     app: {
       frontend: process.env.FRONT_REDIRECT_PATH,
       encryptKey: process.env.APP_ENCRYPT_KEY,
-
       host: process.env.APP_HOST,
+      scanDaysDepth: process.env.SCAN_DAYS_DEPTH,
+
       protocol: process.env.APP_PROTOCOL,
       port: parseInt(process.env.PORT, 10) || 3000,
       front: process.env.APP_REDIRECT_PATH,

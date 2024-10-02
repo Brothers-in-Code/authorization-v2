@@ -23,6 +23,7 @@ export class UserService {
   }
 
   findOne(user_vkid: number): Promise<User> {
+    Logger.log(`findOne user_vkid = ${user_vkid}`);
     return this.userRepository.findOneBy({ user_vkid });
   }
 
