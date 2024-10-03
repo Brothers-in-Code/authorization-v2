@@ -1,15 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
 
-// TYPES
 import { GroupGetResponseType } from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
 import { Post } from 'src/db/entities/post.entity';
 import { VKWallType } from 'src/types/vk-wall-type';
-import { log } from 'console';
 import { Group } from 'src/db/entities/group.entity';
 
 const VK_API = 'https://api.vk.com/method';

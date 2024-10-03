@@ -29,11 +29,19 @@ export class GroupService {
     return this.groupRepository.findOneBy({ vkid });
   }
 
-  //   TODO сделать проверку на наличие группы
-  create(groupParams: CreateGroupParamsType): Promise<Group> {
-    const newGroup = new Group();
-    Object.assign(newGroup, groupParams);
-    return this.groupRepository.save(newGroup);
+  async create(groupParams: CreateGroupParamsType): Promise<Group> {
+    let group = await this.groupRepository.findOneBy({
+      vkid: groupParams.vkid,
+    });
+    if (!group) {
+      group = new Group();
+    }
+    Object.assign(group, groupParams);
+    return this.groupRepository.save(group);
+  }
+
+  createGroupList(groupList: Group[]): Promise<Group[]> {
+    return this.groupRepository.save(groupList);
   }
 
   async updateGroupScanDate(
@@ -45,22 +53,24 @@ export class GroupService {
     });
 
     if (!group_id) {
-      throw new NotFoundException(`Group id: ${vkid} not found`);
+      throw new NotFoundException(`Group vkid: ${vkid} not found`);
     }
 
-    return (
-      this.groupRepository
-        .update(group_id.id, {
-          last_group_scan_date,
-        })
-        //    TODO сделать проверку на affectedRows
-        .then(() => ({
+    return this.groupRepository
+      .update(group_id.id, {
+        last_group_scan_date,
+      })
+      .then((result) => {
+        if (result.affected === 0) {
+          throw new Error(`Group vkid ${vkid} scan date not updated`);
+        }
+        return {
           result: last_group_scan_date,
           message: 'Group scan date updated successfully',
-        }))
-        .catch((error) => {
-          throw new InternalServerErrorException(error);
-        })
-    );
+        };
+      })
+      .catch((error) => {
+        throw new InternalServerErrorException(error);
+      });
   }
 }
