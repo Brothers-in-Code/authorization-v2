@@ -1,12 +1,12 @@
-type GroupGetResponseType = {
+type VKGroupGetResponseType = {
   response: {
     count: number;
-    items: GroupType[];
+    items: VKGroupType[];
     last_updated_time: number;
   };
 };
 
-type GroupType = {
+type VKGroupType = {
   id: number;
   is_closed: number;
   name: string;
@@ -17,4 +17,4 @@ type GroupType = {
   type: string;
 };
 
-export { GroupGetResponseType, GroupType };
+export { VKGroupGetResponseType, VKGroupType };

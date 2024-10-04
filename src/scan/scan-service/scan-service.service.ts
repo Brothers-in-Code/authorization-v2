@@ -2,11 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { group, log } from 'console';
+import { DataSource } from 'typeorm';
+
 import { AuthService } from 'src/auth/services/auth.service';
 import { GroupService } from 'src/db/services/group.service';
 import { VkDataService } from 'src/vk-data/services/vkdata.service';
-import { DataSource } from 'typeorm';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
@@ -30,11 +30,11 @@ export class ScanService {
 
   @Cron('0 12 * * *')
   async run() {
-    console.log('scan service start');
+    this.logger.log('scan service start');
 
     if (!this.dataSource.isInitialized) {
       await this.dataSource.initialize();
-      log('Data Source has been initialized!');
+      this.logger.log('Data Source has been initialized!');
     }
     const limitDate = this.calcLimitDate();
 
@@ -84,14 +84,16 @@ export class ScanService {
           owner_id: groupVKId,
           extended: 0,
         });
-        if (response) {
+        if (response && response.response.items) {
           const group = await this.groupService.findOne(groupVKId);
+
           const postParamsList = response.response.items.map((item) => {
             return {
               post_vkid: item.id,
               json: JSON.stringify(item),
             };
           });
+
           const postList = await this.vkDataService.savePostList(
             group,
             postParamsList,
@@ -99,6 +101,8 @@ export class ScanService {
           if (postList) {
             await this.groupService.updateGroupScanDate(groupVKId, limitDate);
           }
+        } else {
+          this.logger.error(`у группы ${groupVKId} нет постов`);
         }
       } catch (error) {
         this.logger.error(
@@ -144,7 +148,6 @@ export class ScanService {
     device_id: string,
     expires_in: number,
   ) {
-    this.logger.log(`saving user`);
     const expires_date = this.authService.calcExpiresDate(expires_in);
     const user = await this.authService.saveUser(
       user_id,
@@ -220,57 +223,3 @@ export class ScanService {
     return result[0]['result'];
   }
 }
-[
-  {
-    userVkId: 1267318,
-    access_token:
-      'vk2.a.4rlp1h7R_gUm8KHGntp92Ai4DoC6YLV353zw5Eq6j0PoWmawJKEuu3fj0JC3hcO6tX0Hefu4YbkzfEqV67rwuVUgiwJSGo0pqstPDk7IF7iutRhizaY36yG3_08QlzG3dUL5IoVFRqAa4buG0LmfV26DVJRKjbkXGK3aOlZVgqMNGFSRJZHTY7JMOAyjOV8M5xXclUsllI_l0xq-zN4b4pRSTXyUQG9LjJt1inurLIXO_KFwwysqIfiFvsSAkbgE',
-    groupVkIdList: [
-      157411113, 194722794, 194548696, 183845132, 181923456, 179726290,
-      178555683, 174313131, 174175575, 165655866, 164521091, 161210648,
-      198042875, 157234982, 153091152, 149991234, 138866927, 119887842,
-      103444168, 102708953, 100356170, 93479367, 85093379, 82867919, 212994058,
-      225911196, 225730539, 224942913, 222360594, 220330144, 218587147,
-      218009387, 217748033, 216095736, 215410459, 213136015, 70369416,
-      212880886, 212827933, 212203269, 212119662, 211402835, 211332957,
-      210262775, 205182240, 203875097, 200079914, 64406181, 365, 486, 174093,
-      220768, 265492, 3188704, 4693353, 4784251, 5639392, 5868563, 6113019,
-      7540224, 11073348, 14403612, 11737413, 61427000, 51837938, 42967112,
-      36723693, 31393841, 31036611, 29604206, 22098901, 20056116, 19098821,
-    ],
-    refresh_token:
-      'vk2.a.MxHHUuWciOr-TqrhUvnRgv1JnQIuH8lrl9G3Ayt1bb84PrzeXZPcI7hOBXKAUoZDnJ5pfX69moUgr7Gg21HaQm9cmgUyPHPzyCaRHlGeujclxlDXbp6WQjj8mZ36_A9mXDr80x2TdPqP-sT5cTw_il5qCvvV0Ebac3jAjudPVFyzbem1psJQUzfP2XbjUozn9fr4BEfd38dTIUNYLYqqGtSNHKi3uJCqNcFZzmL-z9Q',
-  },
-  {
-    userVkId: 1267322,
-    access_token:
-      'vk2.a.IM5iAqpe8b5tmEEpYnH58pjt2OLYFlCuQPY2cGU_NGpRsZBGIT2yGsg1YGtWXjr0FjFpF10GWVAp615Xv9Xw9IDSHftqliMSKQ_ggHPnsWEQ-2f9x4fSP-5qOQJG6jOGgBt7gvyYasN2UgyBzVnwDAGzz2rkX2oQbIXNxKzky5qfnJxS0WrGf-oCGpo5zCRTI2OJISBPCu1Pkcrg7LgZvEOdNGS92odkSxXOiRkMlVEKItdFDbOJYgMqfSw3PgxZ',
-    groupVkIdList: [116, 115, 114, 113, 112, 111, 110, 109, 108],
-    refresh_token:
-      'vk2.a.roVa7F4u-Xr3Znw8mH3q6-hSSTe3kHp5D7FLr3w_p6O0K_Ud7z-uBNfCf4xjcPOZjAlQANJBQqCmGTnwnqJFofRHe4OVVJxgKy1yfqasAD1GtlX5WvynllVxXU2JTr-Ndy8x5uPSrr9prK1JuGiooAdBiY0doBXD1ce_FyOgYeFQNWkxnvbNKE3W0YmDxjxSu4GGBg9W6qT8fR5dZQBv_DoNkXFx95F3qJGyyUbursU',
-  },
-  {
-    userVkId: 1267320,
-    access_token:
-      'vk2.a.IM5iAqpe8b5tmEEpYnH58pjt2OLYFlCuQPY2cGU_NGpRsZBGIT2yGsg1YGtWXjr0FjFpF10GWVAp615Xv9Xw9IDSHftqliMSKQ_ggHPnsWEQ-2f9x4fSP-5qOQJG6jOGgBt7gvyYasN2UgyBzVnwDAGzz2rkX2oQbIXNxKzky5qfnJxS0WrGf-oCGpo5zCRTI2OJISBPCu1Pkcrg7LgZvEOdNGS92odkSxXOiRkMlVEKItdFDbOJYgMqfSw3PgxZ',
-    groupVkIdList: [102, 104, 105, 106, 107, 100],
-    refresh_token:
-      'vk2.a.roVa7F4u-Xr3Znw8mH3q6-hSSTe3kHp5D7FLr3w_p6O0K_Ud7z-uBNfCf4xjcPOZjAlQANJBQqCmGTnwnqJFofRHe4OVVJxgKy1yfqasAD1GtlX5WvynllVxXU2JTr-Ndy8x5uPSrr9prK1JuGiooAdBiY0doBXD1ce_FyOgYeFQNWkxnvbNKE3W0YmDxjxSu4GGBg9W6qT8fR5dZQBv_DoNkXFx95F3qJGyyUbursU',
-  },
-  {
-    userVkId: 1267324,
-    access_token:
-      'vk2.a.IM5iAqpe8b5tmEEpYnH58pjt2OLYFlCuQPY2cGU_NGpRsZBGIT2yGsg1YGtWXjr0FjFpF10GWVAp615Xv9Xw9IDSHftqliMSKQ_ggHPnsWEQ-2f9x4fSP-5qOQJG6jOGgBt7gvyYasN2UgyBzVnwDAGzz2rkX2oQbIXNxKzky5qfnJxS0WrGf-oCGpo5zCRTI2OJISBPCu1Pkcrg7LgZvEOdNGS92odkSxXOiRkMlVEKItdFDbOJYgMqfSw3PgxZ',
-    groupVkIdList: [118, 119, 120],
-    refresh_token:
-      'vk2.a.roVa7F4u-Xr3Znw8mH3q6-hSSTe3kHp5D7FLr3w_p6O0K_Ud7z-uBNfCf4xjcPOZjAlQANJBQqCmGTnwnqJFofRHe4OVVJxgKy1yfqasAD1GtlX5WvynllVxXU2JTr-Ndy8x5uPSrr9prK1JuGiooAdBiY0doBXD1ce_FyOgYeFQNWkxnvbNKE3W0YmDxjxSu4GGBg9W6qT8fR5dZQBv_DoNkXFx95F3qJGyyUbursU',
-  },
-  {
-    userVkId: 1267326,
-    access_token:
-      'vk2.a.IM5iAqpe8b5tmEEpYnH58pjt2OLYFlCuQPY2cGU_NGpRsZBGIT2yGsg1YGtWXjr0FjFpF10GWVAp615Xv9Xw9IDSHftqliMSKQ_ggHPnsWEQ-2f9x4fSP-5qOQJG6jOGgBt7gvyYasN2UgyBzVnwDAGzz2rkX2oQbIXNxKzky5qfnJxS0WrGf-oCGpo5zCRTI2OJISBPCu1Pkcrg7LgZvEOdNGS92odkSxXOiRkMlVEKItdFDbOJYgMqfSw3PgxZ',
-    groupVkIdList: [122, 123],
-    refresh_token:
-      'vk2.a.roVa7F4u-Xr3Znw8mH3q6-hSSTe3kHp5D7FLr3w_p6O0K_Ud7z-uBNfCf4xjcPOZjAlQANJBQqCmGTnwnqJFofRHe4OVVJxgKy1yfqasAD1GtlX5WvynllVxXU2JTr-Ndy8x5uPSrr9prK1JuGiooAdBiY0doBXD1ce_FyOgYeFQNWkxnvbNKE3W0YmDxjxSu4GGBg9W6qT8fR5dZQBv_DoNkXFx95F3qJGyyUbursU',
-  },
-];

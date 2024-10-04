@@ -8,7 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { VkDataService } from '../services/vkdata.service';
-import { GroupService } from 'src/db/services/group.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
 
@@ -24,7 +23,6 @@ export class VkDataController {
   constructor(
     private readonly vkDataService: VkDataService,
     private readonly userService: UserService,
-    private readonly groupService: GroupService,
     private readonly userGroupService: UserGroupService,
   ) {}
 
@@ -41,15 +39,10 @@ export class VkDataController {
       // NOTE для тестирования
       // TODO удалить после проверки работоспособности
       const user = await this.userService.findOne(user_vkid);
-      data.response.items.forEach(async (group) => {
-        const dbGroup = await this.groupService.create({
-          vkid: group.id,
-          name: group.name,
-          is_private: Boolean(group.is_closed),
-          photo: group.photo_100,
-        });
-        await this.userGroupService.create(user, dbGroup);
-      });
+      const groupList = await this.vkDataService.saveGroupList(
+        data.response.items.map((item) => item),
+      );
+      await this.userGroupService.createUserGroupList(user, groupList);
 
       return data;
     } catch (error) {
