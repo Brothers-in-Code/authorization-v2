@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from '../entities/group.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 type CreateGroupParamsType = {
   vkid: number;
@@ -40,8 +40,25 @@ export class GroupService {
     return this.groupRepository.save(group);
   }
 
-  createGroupList(groupList: Group[]): Promise<Group[]> {
-    return this.groupRepository.save(groupList);
+  createNewGroup() {
+    return new Group();
+  }
+
+  async createGroupList(groupList: Group[]): Promise<Group[]> {
+    const vkidList = groupList.map((group) => group.id);
+    const existingVkIdList = await this.groupRepository
+      .find({
+        where: { vkid: In(vkidList) },
+      })
+      .then((groupList) => groupList.map((group) => group.vkid));
+
+    const newGroupList = groupList.filter(
+      (group) => !existingVkIdList.includes(group.vkid),
+    );
+    if (newGroupList.length > 0) {
+      return this.groupRepository.save(newGroupList);
+    }
+    return [];
   }
 
   async updateGroupScanDate(

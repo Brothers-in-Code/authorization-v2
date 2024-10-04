@@ -4,11 +4,15 @@ import * as qs from 'qs';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
 
-import { GroupGetResponseType } from 'src/types/vk-group-get-response-type';
+import {
+  VKGroupGetResponseType,
+  VKGroupType,
+} from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
 import { Post } from 'src/db/entities/post.entity';
 import { VKWallType } from 'src/types/vk-wall-type';
 import { Group } from 'src/db/entities/group.entity';
+import { GroupService } from 'src/db/services/group.service';
 
 const VK_API = 'https://api.vk.com/method';
 
@@ -19,6 +23,7 @@ export class VkDataService {
     private configService: ConfigService,
     private userService: UserService,
     private postService: PostService,
+    private groupService: GroupService,
   ) {}
 
   async getUserGroupListFromVK(user_vkid: number, extended: number) {
@@ -35,12 +40,31 @@ export class VkDataService {
       extended: extended,
       access_token: user.access_token,
     };
-    const response = await this.httpService.axiosRef.post<GroupGetResponseType>(
-      `${VK_API}/groups.get`,
-      qs.stringify(params),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-    );
+    const response =
+      await this.httpService.axiosRef.post<VKGroupGetResponseType>(
+        `${VK_API}/groups.get`,
+        qs.stringify(params),
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+      );
     return response.data;
+  }
+
+  /**
+   * сохраняя группы вспомни, что их надо привязать к пользователю
+   * UserGroupService create
+   */
+  async saveGroupList(vkGroupList: VKGroupType[]) {
+    const groupList = vkGroupList.map((item) => {
+      const newGroup = this.groupService.createNewGroup();
+      Object.assign(newGroup, {
+        vkid: item.id,
+        name: item.name,
+        is_private: Boolean(item.is_closed),
+        photo: item.photo_100,
+      });
+      return newGroup;
+    });
+    return this.groupService.createGroupList(groupList);
   }
 
   async getWallPublicGroup(owner_id: number, extended: number) {
@@ -138,7 +162,7 @@ export class VkDataService {
     }[],
   ) {
     const posts = postParamsList.map((postParams) => {
-      const newPost = new Post();
+      const newPost = this.postService.createNewPost();
       newPost.group = group;
       newPost.post_vkid = postParams.post_vkid;
       newPost.json = postParams.json;

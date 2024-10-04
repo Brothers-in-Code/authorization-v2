@@ -37,6 +37,10 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
+  createNewPost() {
+    return new Post();
+  }
+
   createPostList(postList: Post[]): Promise<Post[]> {
     return this.postRepository.save(postList);
   }

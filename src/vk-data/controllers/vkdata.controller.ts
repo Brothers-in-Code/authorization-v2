@@ -41,15 +41,21 @@ export class VkDataController {
       // NOTE для тестирования
       // TODO удалить после проверки работоспособности
       const user = await this.userService.findOne(user_vkid);
-      data.response.items.forEach(async (group) => {
-        const dbGroup = await this.groupService.create({
-          vkid: group.id,
-          name: group.name,
-          is_private: Boolean(group.is_closed),
-          photo: group.photo_100,
-        });
-        await this.userGroupService.create(user, dbGroup);
-      });
+      const groupList = await this.vkDataService.saveGroupList(
+        data.response.items.map((item) => item),
+      );
+      for (const group of groupList) {
+        await this.userGroupService.create(user, group);
+      }
+      //   data.response.items.forEach(async (group) => {
+      //     const dbGroup = await this.groupService.create({
+      //       vkid: group.id,
+      //       name: group.name,
+      //       is_private: Boolean(group.is_closed),
+      //       photo: group.photo_100,
+      //     });
+      //     await this.userGroupService.create(user, dbGroup);
+      //   });
 
       return data;
     } catch (error) {
