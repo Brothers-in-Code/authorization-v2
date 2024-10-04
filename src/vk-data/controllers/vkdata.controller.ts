@@ -4,7 +4,6 @@ import {
   Body,
   Controller,
   InternalServerErrorException,
-  Logger,
   Post,
 } from '@nestjs/common';
 import { VkDataService } from '../services/vkdata.service';
@@ -32,13 +31,18 @@ export class VkDataController {
     { user_vkid, extended = 1 }: { user_vkid: number; extended?: number },
   ) {
     try {
+      const user = await this.userService.findOne(user_vkid);
+      if (!user) {
+        throw new Error(`User with id = ${user_vkid} not found`);
+      }
       const data = await this.vkDataService.getUserGroupListFromVK(
         user_vkid,
+        user.access_token,
         extended,
       );
       // NOTE для тестирования
       // TODO удалить после проверки работоспособности
-      const user = await this.userService.findOne(user_vkid);
+
       const groupList = await this.vkDataService.saveGroupList(
         data.response.items.map((item) => item),
       );
