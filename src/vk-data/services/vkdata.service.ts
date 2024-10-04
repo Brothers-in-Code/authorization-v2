@@ -51,7 +51,7 @@ export class VkDataService {
 
   /**
    * сохраняя группы вспомни, что их надо привязать к пользователю
-   * UserGroupService create
+   * UserGroupService create или createUserGroupList
    */
   async saveGroupList(vkGroupList: VKGroupType[]) {
     const groupList = vkGroupList.map((item) => {

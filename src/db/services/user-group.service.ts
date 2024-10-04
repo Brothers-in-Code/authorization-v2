@@ -19,6 +19,22 @@ export class UserGroupService {
     return await this.userGroupRepository.save(userGroup);
   }
 
+  async createUserGroupList(
+    user: User,
+    groupList: Group[],
+  ): Promise<UserGroup[]> {
+    const existingVkIdList = await this.findUsersGroupList(user.user_vkid);
+    const newGroupList = groupList.filter((group) => {
+      return !existingVkIdList.groups.some(
+        (existingGroup) => existingGroup.vkid === group.vkid,
+      );
+    });
+    if (newGroupList.length > 0) {
+      return this.userGroupRepository.save(newGroupList);
+    }
+    return [];
+  }
+
   async findAll(): Promise<UserGroup[]> {
     return await this.userGroupRepository.find();
   }
