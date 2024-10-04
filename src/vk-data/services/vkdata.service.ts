@@ -9,12 +9,13 @@ import {
   VKGroupType,
 } from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
-import { Post } from 'src/db/entities/post.entity';
+
 import { VKWallType } from 'src/types/vk-wall-type';
 import { Group } from 'src/db/entities/group.entity';
 import { GroupService } from 'src/db/services/group.service';
 
 const VK_API = 'https://api.vk.com/method';
+const VK_API_VERSION = 5.199;
 
 @Injectable()
 export class VkDataService {
@@ -26,19 +27,33 @@ export class VkDataService {
     private groupService: GroupService,
   ) {}
 
-  async getUserGroupListFromVK(user_vkid: number, extended: number) {
-    const user = await this.userService.findOne(user_vkid);
-    if (!user) {
-      throw new Error(`User with id = ${user_vkid} not found`);
-    }
-    // TODO добавить проверку date_expires
+  async getGroupInfo(access_token: string, groupIdList: (string | number)[]) {
+    const params = {
+      group_ids: groupIdList.join(','),
+      v: VK_API_VERSION,
+      access_token,
+    };
+    const response =
+      await this.httpService.axiosRef.get<VKGroupGetResponseType>(
+        `${VK_API}/groups.getById`,
+        {
+          params,
+        },
+      );
+    return response.data;
+  }
 
+  async getUserGroupListFromVK(
+    user_vkid: number,
+    access_token: string,
+    extended: number,
+  ) {
     const params = {
       user_id: user_vkid,
       client_id: this.configService.get('vk.appId'),
-      v: 5.199,
+      v: VK_API_VERSION,
       extended: extended,
-      access_token: user.access_token,
+      access_token,
     };
     const response =
       await this.httpService.axiosRef.post<VKGroupGetResponseType>(
@@ -71,7 +86,7 @@ export class VkDataService {
     const params = {
       owner_id: -owner_id,
       client_id: this.configService.get('vk.appId'),
-      v: 5.199,
+      v: VK_API_VERSION,
       extended: extended,
     };
     const response = await this.httpService.axiosRef.post(
@@ -87,12 +102,6 @@ export class VkDataService {
     return response.data;
   }
 
-  /*
-  NOTE 
-  создать функцию получения инфы о группе по id groups.getById
-  https://dev.vk.com/ru/method/groups.getById
-  */
-
   async getWallPrivetGroup({
     access_token,
     owner_id,
@@ -105,7 +114,7 @@ export class VkDataService {
     const params = {
       owner_id: -owner_id,
       client_id: this.configService.get('vk.appId'),
-      v: 5.199,
+      v: VK_API_VERSION,
       extended: extended,
       access_token,
     };
@@ -138,7 +147,7 @@ export class VkDataService {
     const params = {
       domain,
       client_id: this.configService.get('vk.appId'),
-      v: 5.199,
+      v: VK_API_VERSION,
       access_token,
       extended,
     };
