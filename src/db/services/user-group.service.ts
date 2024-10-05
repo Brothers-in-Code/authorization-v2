@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserGroup } from '../entities/user_group.entity';
+import { UserGroup } from 'src/db/entities/user_group.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';

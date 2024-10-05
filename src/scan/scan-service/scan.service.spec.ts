@@ -1,12 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ScanService } from './scan-service.service';
 
-describe('ScanServiceService', () => {
+import { DataSource } from 'typeorm';
+
+describe('ScanService', () => {
   let service: ScanService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ScanService],
+      providers: [ScanService, DataSource],
     }).compile();
 
     service = module.get<ScanService>(ScanService);
