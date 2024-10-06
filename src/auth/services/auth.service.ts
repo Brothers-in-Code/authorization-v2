@@ -4,9 +4,11 @@ import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { getVerifier, getAppState } from '../../utils/verifiers';
 import { UserService } from '../../db/services/user.service';
-import { log } from 'console';
+
 import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
-import { VKErrorType } from 'src/types/vk-error-type';
+import { VKResponseAuthErrorType } from 'src/types/vk-error-type';
+import { VK_AUTH_Error } from 'src/errors/vk-errors';
+import { DatabaseServiceError } from 'src/errors/service-errors';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -129,21 +131,27 @@ export class AuthService {
       },
     );
 
-    if (!response.data.hasOwnProperty('access_token')) {
+    if (response.data.hasOwnProperty('error')) {
       this.logger.error(response.data);
-      throw new UnauthorizedException(`access_token не получен.`);
+      const error = response.data as unknown as VKResponseAuthErrorType;
+      throw new VK_AUTH_Error(
+        `access_token не получен. ${error.error_description}`,
+      );
     }
 
-    if (state !== response.data.state) {
-      this.logger.error(`access_token не получен. ${response.data}`);
-      throw new UnauthorizedException(`state не совпадает. ${response.data}`);
-    }
+    if (response.data.hasOwnProperty('access_token')) {
+      if (state !== response.data.state) {
+        throw new UnauthorizedException(
+          `state не совпадает. local_state: ${state}, vk_state: ${response.data.state}`,
+        );
+      }
 
-    return {
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-      expires_in: response.data.expires_in,
-    };
+      return {
+        access_token: response.data.access_token,
+        refresh_token: response.data.refresh_token,
+        expires_in: response.data.expires_in,
+      };
+    }
   }
 
   async saveUser(
@@ -153,7 +161,6 @@ export class AuthService {
     device_id: string,
     expires_date: Date,
   ) {
-    this.logger.log(`function saveUser`);
     const user = await this.userService.findOne(user_vkid);
     const params = {
       user_vkid,
@@ -164,9 +171,21 @@ export class AuthService {
     };
 
     if (user) {
-      return this.userService.updateToken(params);
+      const updatedUser = await this.userService.updateToken(params);
+      if (!updatedUser) {
+        throw new DatabaseServiceError(
+          `func: saveUser.Не удалось обновить токен пользователя ${user_vkid}`,
+        );
+      }
+      return updatedUser;
     } else {
-      return this.userService.createUser(params);
+      const newUser = this.userService.createUser(params);
+      if (!newUser) {
+        throw new DatabaseServiceError(
+          `func: saveUser.Не удалось создать пользователя ${user_vkid}`,
+        );
+      }
+      return newUser;
     }
   }
 

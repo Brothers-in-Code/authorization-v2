@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -7,6 +7,11 @@ import { DataSource } from 'typeorm';
 import { AuthService } from 'src/auth/services/auth.service';
 import { GroupService } from 'src/db/services/group.service';
 import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
+import {
+  DatabaseServiceError,
+  RegularServiceError,
+} from 'src/errors/service-errors';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
@@ -45,22 +50,25 @@ export class ScanService {
           queryResult.refresh_token,
           queryResult.device_id,
         );
+        this.logger.log('получен новый access_token');
 
-        if (tokenResult) {
-          await this.saveUser(
-            queryResult.userVkId,
-            tokenResult.access_token,
-            tokenResult.refresh_token,
-            queryResult.device_id,
-            tokenResult.expires_in,
-          );
+        await this.saveUser(
+          queryResult.userVkId,
+          tokenResult.access_token,
+          tokenResult.refresh_token,
+          queryResult.device_id,
+          tokenResult.expires_in,
+        );
+        this.logger.log(
+          `Сохранение пользователя завершено. userVkId = ${queryResult.userVkId}`,
+        );
 
-          await this.scanGroupList(
-            tokenResult.access_token,
-            queryResult.groupVkIdList,
-            limitDate,
-          );
-        }
+        const scanGroupListResult = await this.scanGroupList(
+          tokenResult.access_token,
+          queryResult.groupVkIdList,
+          limitDate,
+        );
+        this.logger.log(`Сканирование групп завершено. ${scanGroupListResult}`);
       }
     }
   }
@@ -77,6 +85,8 @@ export class ScanService {
     groupVKIdList: number[],
     limitDate: Date,
   ) {
+    let errorsCounter = 0;
+
     for (const groupVKId of groupVKIdList) {
       try {
         const response = await this.vkDataService.getWallPrivetGroup({
@@ -84,7 +94,7 @@ export class ScanService {
           owner_id: groupVKId,
           extended: 0,
         });
-        if (response && response.response.items) {
+        if (response.response.items) {
           const group = await this.groupService.findOne(groupVKId);
 
           const postParamsList = response.response.items.map((item) => {
@@ -94,23 +104,46 @@ export class ScanService {
             };
           });
 
-          const postList = await this.vkDataService.savePostList(
-            group,
-            postParamsList,
-          );
-          if (postList) {
-            await this.groupService.updateGroupScanDate(groupVKId, limitDate);
-          }
+          await this.vkDataService.savePostList(group, postParamsList);
+          this.logger.log(`посты группы groupVKId = ${groupVKId} сохранены`);
+
+          await this.groupService.updateGroupScanDate(groupVKId, limitDate);
+          this.logger.log(`дата сканирования группы ${groupVKId} обновлена`);
         } else {
-          this.logger.error(`у группы ${groupVKId} нет постов`);
+          throw new RegularServiceError(
+            `у группы ${groupVKId} нет постов или закрыта стена`,
+          );
         }
       } catch (error) {
-        this.logger.error(
-          `ошибка получения постов группы ${groupVKId}: ${error}`,
-          error,
-        );
+        if (error instanceof VK_API_Error) {
+          errorsCounter++;
+          this.logger.error(
+            `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+          );
+        } else if (error instanceof RegularServiceError) {
+          errorsCounter++;
+          this.logger.error(
+            `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+          );
+        } else if (error instanceof UnauthorizedException) {
+          errorsCounter++;
+          this.logger.error(
+            `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+          );
+        } else if (error instanceof DatabaseServiceError) {
+          errorsCounter++;
+          this.logger.error(
+            `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+          );
+        } else {
+          errorsCounter++;
+          this.logger.error(
+            `неизвестная ошибка ПОЛУЧЕНИЯ или СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+          );
+        }
       }
     }
+    return `группы отсканированы. Количество ошибок: ${errorsCounter}`;
   }
 
   async getNewAccessToken(
@@ -126,18 +159,24 @@ export class ScanService {
         refresh_token,
         device_id,
       );
-      if (!response.hasOwnProperty('access_token')) {
-        this.logger.error(
-          `ошибка получения access_token через refresh_token: ${response}`,
-        );
-        return null;
-      }
       return response;
     } catch (error) {
-      this.logger.error(
-        `ошибка получения access_token через refresh_token: ${error}`,
-      );
-      return null;
+      if (error instanceof VK_AUTH_Error) {
+        this.logger.error(`ошибка получения access_token! ${error.message}`);
+        return null;
+      } else if (error instanceof UnauthorizedException) {
+        this.logger.error(`ошибка получения access_token! ${error.message}`);
+        return null;
+      } else {
+        this.logger.error(
+          `неизвестная ошибка получения access_token! ${error.message}`,
+        );
+        throw new Error(
+          `неизвестная ошибка получения access_token! ${JSON.stringify(
+            error.message,
+          )}`,
+        );
+      }
     }
   }
 
@@ -149,17 +188,28 @@ export class ScanService {
     expires_in: number,
   ) {
     const expires_date = this.authService.calcExpiresDate(expires_in);
-    const user = await this.authService.saveUser(
-      user_id,
-      access_token,
-      refresh_token,
-      device_id,
-      expires_date,
-    );
-    if (user) {
-      this.logger.log(`user ${user_id} saved`);
-    } else {
-      this.logger.error(`user ${user_id} not saved`);
+    try {
+      await this.authService.saveUser(
+        user_id,
+        access_token,
+        refresh_token,
+        device_id,
+        expires_date,
+      );
+      return `user ${user_id} saved`;
+    } catch (error) {
+      if (error instanceof DatabaseServiceError) {
+        this.logger.error(`ошибка сохранения user ${error.message}`);
+      } else {
+        this.logger.error(
+          `неизвестная ошибка сохранения user ${user_id}! ${error.message}`,
+        );
+        throw new Error(
+          `неизвестная ошибка сохранения user ${user_id}! ${JSON.stringify(
+            error.message,
+          )}`,
+        );
+      }
     }
   }
 
@@ -219,6 +269,13 @@ export class ScanService {
         ) AS grouped;
     `;
     const result = await this.dataSource.query(query);
+
+    if (!result[0]['result']) {
+      this.logger.error(
+        `func: executeQuery. Ошибка выполнения запроса к БД: ${result[0]['message']}`,
+      );
+      throw new Error('func: executeQuery. Ошибка выполнения запроса к БД');
+    }
 
     return result[0]['result'];
   }
