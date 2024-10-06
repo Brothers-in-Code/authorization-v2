@@ -29,8 +29,16 @@ export class UserGroupService {
         (existingGroup) => existingGroup.vkid === group.vkid,
       );
     });
+
+    const newUserGroupList = newGroupList.map((group) => {
+      const userGroup = new UserGroup();
+      userGroup.user = user;
+      userGroup.group = group;
+      return userGroup;
+    });
     if (newGroupList.length > 0) {
-      return this.userGroupRepository.save(newGroupList);
+      const result = await this.userGroupRepository.save(newUserGroupList);
+      return result;
     }
     return [];
   }
