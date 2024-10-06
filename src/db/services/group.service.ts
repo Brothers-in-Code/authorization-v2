@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from '../entities/group.entity';
 import { In, Repository } from 'typeorm';
+import { DatabaseServiceError } from 'src/errors/service-errors';
 
 type CreateGroupParamsType = {
   vkid: number;
@@ -70,7 +71,9 @@ export class GroupService {
     });
 
     if (!group_id) {
-      throw new NotFoundException(`Group vkid: ${vkid} not found`);
+      throw new NotFoundException(
+        `func: updateGroupScanDate. Group vkid: ${vkid} not found`,
+      );
     }
 
     return this.groupRepository
@@ -79,7 +82,9 @@ export class GroupService {
       })
       .then((result) => {
         if (result.affected === 0) {
-          throw new Error(`Group vkid ${vkid} scan date not updated`);
+          throw new DatabaseServiceError(
+            `Group vkid ${vkid} scan date not updated`,
+          );
         }
         return {
           result: last_group_scan_date,

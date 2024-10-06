@@ -13,6 +13,9 @@ import { PostService } from 'src/db/services/post.service';
 import { VKWallType } from 'src/types/vk-wall-type';
 import { Group } from 'src/db/entities/group.entity';
 import { GroupService } from 'src/db/services/group.service';
+import { VK_API_Error } from 'src/errors/vk-errors';
+import { VKResponseApiErrorType } from 'src/types/vk-error-type';
+import { DatabaseServiceError } from 'src/errors/service-errors';
 
 const VK_API = 'https://api.vk.com/method';
 const VK_API_VERSION = 5.199;
@@ -127,6 +130,10 @@ export class VkDataService {
         },
       },
     );
+    if (response.data.hasOwnProperty('error')) {
+      const error = response.data as unknown as VKResponseApiErrorType;
+      throw new VK_API_Error(error.error.error_msg);
+    }
     return response.data;
   }
 
@@ -177,6 +184,12 @@ export class VkDataService {
       newPost.json = postParams.json;
       return newPost;
     });
-    return await this.postService.createPostList(posts);
+    const postList = await this.postService.createPostList(posts);
+    if (!postList) {
+      throw new DatabaseServiceError(
+        'func: savePostList. Ошибка сохранения постов',
+      );
+    }
+    return postList;
   }
 }
