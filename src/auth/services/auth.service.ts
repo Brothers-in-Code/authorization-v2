@@ -5,6 +5,8 @@ import * as qs from 'qs';
 import { getVerifier, getAppState } from '../../utils/verifiers';
 import { UserService } from '../../db/services/user.service';
 import { log } from 'console';
+import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
+import { VKErrorType } from 'src/types/vk-error-type';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -119,10 +121,12 @@ export class AuthService {
       device_id,
     };
 
-    const response = await this.httpService.axiosRef.post(
+    const response = await this.httpService.axiosRef.post<VKResponseTokenType>(
       'https://id.vk.com/oauth2/auth',
       qs.stringify(refresh_params),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
     );
 
     if (!response.data.hasOwnProperty('access_token')) {
@@ -134,8 +138,6 @@ export class AuthService {
       this.logger.error(`access_token не получен. ${response.data}`);
       throw new UnauthorizedException(`state не совпадает. ${response.data}`);
     }
-
-    log('from refreshAccessToken - token получен');
 
     return {
       access_token: response.data.access_token,
