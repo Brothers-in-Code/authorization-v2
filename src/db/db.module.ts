@@ -11,11 +11,27 @@ import { GroupService } from './services/group.service';
 import { Group } from './entities/group.entity';
 import { UserGroupService } from './services/user-group.service';
 import { UserGroup } from './entities/user_group.entity';
+import { UserPermissionService } from './services/user-permission.service';
+import { UserPermission } from './entities/user_permission.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, Group, UserGroup])],
+  imports: [
+    TypeOrmModule.forFeature([Post, User, Group, UserGroup, UserPermission]),
+  ],
 
-  providers: [PostService, UserService, GroupService, UserGroupService],
-  exports: [PostService, UserService, GroupService, UserGroupService],
+  providers: [
+    PostService,
+    UserService,
+    GroupService,
+    UserGroupService,
+    UserPermissionService,
+  ],
+  exports: [
+    PostService,
+    UserService,
+    GroupService,
+    UserGroupService,
+    UserPermissionService,
+  ],
 })
 export class DBModule {}
