@@ -9,7 +9,7 @@ import {
 import { GroupService } from 'src/db/services/group.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
-import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 
 @Controller('user-work-group')
 export class UserWorkGroupController {

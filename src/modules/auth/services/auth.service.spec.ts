@@ -1,18 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-
-import { AuthService } from './services/auth.service';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from '../db/services/user.service';
 import { HttpService } from '@nestjs/axios';
+import { AuthService } from 'src/modules/auth/services/auth.service';
+import { UserService } from 'src/db/services/user.service';
 
-describe('AuthController', () => {
-  let controller: AuthController;
+describe('AuthService', () => {
+  let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
       providers: [
+        AuthService,
         {
           provide: AuthService,
           useValue: {},
@@ -32,10 +30,10 @@ describe('AuthController', () => {
       ],
     }).compile();
 
-    controller = module.get<AuthController>(AuthController);
+    service = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });

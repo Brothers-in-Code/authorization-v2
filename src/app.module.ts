@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configuration } from './configuration';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
-import { VkDataModule } from './vk-data/vkdata.module';
-import { FrontModule } from './front/front.module';
-import { ScanService } from './scan/scan-service/scan-service.service';
-import { ScanModule } from 'src/scan/scan.module';
+import { VkDataModule } from './modules/vk-data/vkdata.module';
+import { FrontModule } from './modules/front/front.module';
+import { ScanService } from './modules/scan/scan-service/scan-service.service';
+import { ScanModule } from 'src/modules/scan/scan.module';
 
 @Module({
   imports: [
