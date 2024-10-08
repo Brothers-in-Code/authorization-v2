@@ -17,9 +17,7 @@ export class UserGuard implements CanActivate {
       throw new UnauthorizedException('There is no user_token in cookies');
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.APP_JWT_SECRET,
-      });
+      const payload = await this.jwtService.verifyAsync(token);
 
       request['user'] = {
         id: payload.sub,

@@ -20,9 +20,7 @@ export class SubscriptionGuard implements CanActivate {
       );
     }
     try {
-      await this.jwtService.verifyAsync(subscriptionToken, {
-        secret: process.env.APP_JWT_SECRET,
-      });
+      await this.jwtService.verifyAsync(subscriptionToken);
 
       request['subscription'] = {
         subscription: true,
