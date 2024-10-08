@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VkDataController } from '../vkdata.controller';
-import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { UserService } from 'src/db/services/user.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserWorkGroupController } from '../user-work-group.controller';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
-import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { GroupService } from 'src/db/services/group.service';
 import { HttpModule } from '@nestjs/axios';
 import { DBModule } from 'src/db/db.module';

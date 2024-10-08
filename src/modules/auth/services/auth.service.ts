@@ -2,13 +2,17 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
-import { getVerifier, getAppState } from '../../utils/verifiers';
-import { UserService } from '../../db/services/user.service';
+import { getVerifier, getAppState } from 'src/utils/verifiers';
+import { UserService } from 'src/db/services/user.service';
 
 import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
-import { VKResponseAuthErrorType } from 'src/types/vk-error-type';
-import { VK_AUTH_Error } from 'src/errors/vk-errors';
+import {
+  VKResponseApiErrorType,
+  VKResponseAuthErrorType,
+} from 'src/types/vk-error-type';
+import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
+import { VKUserInfoType } from 'src/types/vk-user-info-type';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -24,6 +28,8 @@ type RefreshTokenOutputType = {
   refresh_token: string;
   expires_in: number;
 };
+
+const AUTH_API = 'https://id.vk.com/oauth2';
 
 @Injectable()
 export class AuthService {
@@ -88,7 +94,7 @@ export class AuthService {
     };
 
     const response = await this.httpService.axiosRef.post(
-      'https://id.vk.com/oauth2/auth',
+      `${AUTH_API}/auth`,
       qs.stringify(authorization_params),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
@@ -124,7 +130,7 @@ export class AuthService {
     };
 
     const response = await this.httpService.axiosRef.post<VKResponseTokenType>(
-      'https://id.vk.com/oauth2/auth',
+      `${AUTH_API}/auth`,
       qs.stringify(refresh_params),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -152,6 +158,25 @@ export class AuthService {
         expires_in: response.data.expires_in,
       };
     }
+  }
+
+  async getUserInfo(id_token: string) {
+    const info_params = {
+      id_token,
+      client_id: this.configService.get('vk.appId'),
+    };
+    const response = await this.httpService.axiosRef.post<VKUserInfoType>(
+      `${AUTH_API}/public_info`,
+      qs.stringify(info_params),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
+    );
+    if (response.data.hasOwnProperty('error')) {
+      const error = response.data as unknown as VKResponseAuthErrorType;
+      throw new VK_API_Error(error.error_description);
+    }
+    return response.data;
   }
 
   async saveUser(

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ScanService } from 'src/scan/scan-service/scan-service.service';
+import { ScanService } from 'src/modules/scan/scan-service/scan-service.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

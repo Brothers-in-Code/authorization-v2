@@ -12,9 +12,10 @@ import {
 import { AuthService } from './services/auth.service';
 import { Response } from 'express';
 
-import { encrypt, decrypt } from '../utils/crypting';
+import { encrypt, decrypt } from 'src/utils/crypting';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 type VerificationOutputType = {
   client_id: number;
@@ -46,6 +47,7 @@ export class AuthController {
     private configService: ConfigService,
     private authService: AuthService,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   private readonly logger = new Logger(AuthController.name);
@@ -70,6 +72,7 @@ export class AuthController {
   @Post('get-token')
   async handleGetToken(
     @Req() req: any,
+    @Res({ passthrough: true }) res: Response,
     @Body()
     {
       code,
@@ -85,8 +88,10 @@ export class AuthController {
     const cookieState = req.cookies?.state || null;
     const hashCodeVerifier = req.cookies?.code_verifier || null;
     const codeVerifier = decrypt(hashCodeVerifier, encryptKey);
+    // TODO выкинуть ошибку при отсутствии cookieState или hashCodeVerifier
 
     const isStateVerified = this.authService.verifyState(state, cookieState);
+    // TODO выкинуть ошибку при  isStateVerified === false
 
     if (isStateVerified && codeVerifier) {
       try {
@@ -104,11 +109,14 @@ export class AuthController {
           };
         }
 
+        const userInfo = await this.authService.getUserInfo(response.id_token);
+
         const expires_date = this.authService.calcExpiresDate(
           response.expires_in,
         );
 
-        await this.authService.saveUser(
+        // TODO сохранить имя и ссылку на фото пользователя
+        const user = await this.authService.saveUser(
           response.user_id,
           response.access_token,
           response.refresh_token,
@@ -116,9 +124,19 @@ export class AuthController {
           expires_date,
         );
 
+        const payload = {
+          sub: user.id,
+          user_name: userInfo.response.user.first_name,
+          email: userInfo.response.user.email,
+        };
+
+        const userToken = await this.jwtService.signAsync(payload);
+
+        res.cookie('user_token', userToken, cookieOptions);
+
         return { message: 'Token successfully received', status: 'ok' };
       } catch (e) {
-        this.logger.error(`Failed to get access token. ${e}`);
+        this.logger.error(`Failed to get access token. ${e.message}`);
         throw new InternalServerErrorException(e.message);
       }
     }

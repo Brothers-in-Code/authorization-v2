@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ScanService } from '../scan-service/scan-service.service';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from 'src/auth/services/auth.service';
-import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { AuthService } from 'src/modules/auth/services/auth.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { GroupService } from 'src/db/services/group.service';
 import { Logger } from '@nestjs/common';
 

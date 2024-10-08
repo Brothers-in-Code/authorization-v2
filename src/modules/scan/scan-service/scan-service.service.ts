@@ -4,9 +4,9 @@ import { Cron } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-import { AuthService } from 'src/auth/services/auth.service';
+import { AuthService } from 'src/modules/auth/services/auth.service';
 import { GroupService } from 'src/db/services/group.service';
-import { VkDataService } from 'src/vk-data/services/vkdata.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import {
   DatabaseServiceError,
