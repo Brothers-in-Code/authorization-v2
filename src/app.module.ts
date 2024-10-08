@@ -18,6 +18,7 @@ import { ScanModule } from 'src/modules/scan/scan.module';
     DBModule,
     VkDataModule,
     FrontModule,
+    ScanModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -42,7 +43,6 @@ import { ScanModule } from 'src/modules/scan/scan.module';
         };
       },
     }),
-    ScanModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScanService],

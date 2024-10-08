@@ -23,7 +23,7 @@ export class UserGuard implements CanActivate {
 
       request['user'] = {
         id: payload.sub,
-        name: payload.username,
+        name: payload.user_name,
         email: payload.email,
       };
     } catch (error) {

@@ -1,8 +1,35 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class SubscriptionGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+  constructor(private jwtService: JwtService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const subscriptionToken = request.cookies?.subscription_token;
+
+    if (!subscriptionToken) {
+      throw new UnauthorizedException(
+        'There is no subscription_token in cookies',
+      );
+    }
+    try {
+      await this.jwtService.verifyAsync(subscriptionToken, {
+        secret: process.env.APP_JWT_SECRET,
+      });
+
+      request['subscription'] = {
+        subscription: true,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Wrong subscription_token');
+    }
     return true;
   }
 }
