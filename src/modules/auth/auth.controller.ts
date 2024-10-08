@@ -131,7 +131,8 @@ export class AuthController {
         expires_date,
       );
 
-      const userToken = await this.authService.createUserToken(
+      //   TODO протестировать возможность использовать метод createJWTToken
+      const userToken = await this.authService.createJWTUserToken(
         user.id,
         userInfo.response.user.first_name,
         userInfo.response.user.email,
@@ -140,7 +141,13 @@ export class AuthController {
 
       const userSubscription =
         await this.userSubscriptionService.findPermission(user.id);
-      res.cookie('user_subscription', userSubscription, cookieOptions);
+      if (userSubscription) {
+        const subscriptionToken = await this.authService.createJWTToken(
+          user.id,
+          userSubscription,
+        );
+        res.cookie('user_subscription', subscriptionToken, cookieOptions);
+      }
 
       return { message: 'Token successfully received', status: 'ok' };
     } catch (e) {

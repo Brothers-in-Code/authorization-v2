@@ -66,7 +66,7 @@ export class AuthService {
     return cookieState === state;
   }
 
-  async createUserToken(
+  async createJWTUserToken(
     useId: number,
     user_name: string,
     email: string,
@@ -74,9 +74,17 @@ export class AuthService {
     const payload = {
       sub: useId,
       user_name,
-      email: email,
+      email,
     };
 
+    return await this.jwtService.signAsync(payload);
+  }
+
+  async createJWTToken(userId: number, ...rest: any): Promise<string> {
+    const payload = {
+      sub: userId,
+      ...rest,
+    };
     return await this.jwtService.signAsync(payload);
   }
 
