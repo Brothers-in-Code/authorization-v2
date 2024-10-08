@@ -47,7 +47,6 @@ export class AuthController {
     private configService: ConfigService,
     private authService: AuthService,
     private userService: UserService,
-    private jwtService: JwtService,
   ) {}
 
   private readonly logger = new Logger(AuthController.name);
@@ -124,13 +123,11 @@ export class AuthController {
           expires_date,
         );
 
-        const payload = {
-          sub: user.id,
-          user_name: userInfo.response.user.first_name,
-          email: userInfo.response.user.email,
-        };
-
-        const userToken = await this.jwtService.signAsync(payload);
+        const userToken = await this.authService.createUserToken(
+          user.id,
+          userInfo.response.user.first_name,
+          userInfo.response.user.email,
+        );
 
         res.cookie('user_token', userToken, cookieOptions);
 

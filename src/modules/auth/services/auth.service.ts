@@ -13,6 +13,7 @@ import {
 import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { VKUserInfoType } from 'src/types/vk-user-info-type';
+import { JwtService } from '@nestjs/jwt';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -37,6 +38,7 @@ export class AuthService {
     private configService: ConfigService,
     private httpService: HttpService,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   private readonly logger = new Logger(AuthService.name);
@@ -65,6 +67,20 @@ export class AuthService {
 
   verifyState(state: string, cookieState: string) {
     return cookieState === state;
+  }
+
+  async createUserToken(
+    useId: number,
+    user_name: string,
+    email: string,
+  ): Promise<string> {
+    const payload = {
+      sub: useId,
+      user_name,
+      email: email,
+    };
+
+    return await this.jwtService.signAsync(payload);
   }
 
   /**
