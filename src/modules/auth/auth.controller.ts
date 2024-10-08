@@ -132,15 +132,16 @@ export class AuthController {
       );
 
       //   TODO протестировать возможность использовать метод createJWTToken
-      const userToken = await this.authService.createJWTUserToken(
+      const userToken = await this.authService.createJWTToken(
         user.id,
-        userInfo.response.user.first_name,
-        userInfo.response.user.email,
+        userInfo.user.first_name,
+        userInfo.user.email,
       );
       res.cookie('user_token', userToken, cookieOptions);
 
       const userSubscription =
         await this.userSubscriptionService.findPermission(user.id);
+
       if (userSubscription) {
         const subscriptionToken = await this.authService.createJWTToken(
           user.id,

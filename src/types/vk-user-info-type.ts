@@ -1,5 +1,5 @@
 export type VKUserInfoType = {
-  response: { user: VKUser };
+  user: VKUser;
 };
 
 export type VKUser = {
