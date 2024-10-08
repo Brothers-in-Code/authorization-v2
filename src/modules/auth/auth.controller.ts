@@ -9,13 +9,14 @@ import {
   Logger,
   Req,
 } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+
+import { UserService } from 'src/db/services/user.service';
+import { UserSubscriptionService } from 'src/db/services/user-subscription.service';
+import { AuthService } from './services/auth.service';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
-import { ConfigService } from '@nestjs/config';
-import { UserService } from 'src/db/services/user.service';
-import { JwtService } from '@nestjs/jwt';
 
 type VerificationOutputType = {
   client_id: number;
@@ -47,6 +48,7 @@ export class AuthController {
     private configService: ConfigService,
     private authService: AuthService,
     private userService: UserService,
+    private userSubscriptionService: UserSubscriptionService,
   ) {}
 
   private readonly logger = new Logger(AuthController.name);
@@ -128,8 +130,11 @@ export class AuthController {
           userInfo.response.user.first_name,
           userInfo.response.user.email,
         );
-
         res.cookie('user_token', userToken, cookieOptions);
+
+        const userSubscription =
+          await this.userSubscriptionService.findPermission(user.id);
+        res.cookie('user_subscription', userSubscription, cookieOptions);
 
         return { message: 'Token successfully received', status: 'ok' };
       } catch (e) {
