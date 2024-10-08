@@ -88,64 +88,65 @@ export class AuthController {
     const encryptKey = this.configService.get('app.encryptKey');
     const cookieState = req.cookies?.state || null;
     const hashCodeVerifier = req.cookies?.code_verifier || null;
+
+    if (!cookieState || !hashCodeVerifier) {
+      throw new UnauthorizedException(
+        `There is no state (${cookieState}) or code_verifier (${hashCodeVerifier}) in cookies`,
+      );
+    }
     const codeVerifier = decrypt(hashCodeVerifier, encryptKey);
-    // TODO выкинуть ошибку при отсутствии cookieState или hashCodeVerifier
-
     const isStateVerified = this.authService.verifyState(state, cookieState);
-    // TODO выкинуть ошибку при  isStateVerified === false
 
-    if (isStateVerified && codeVerifier) {
-      try {
-        const response = await this.authService.getAccessToken(
-          code,
-          device_id,
-          codeVerifier,
-        );
-
-        if (!response.hasOwnProperty('access_token')) {
-          return {
-            message: 'Token not received',
-            status: 'error',
-            error: response,
-          };
-        }
-
-        const userInfo = await this.authService.getUserInfo(response.id_token);
-
-        const expires_date = this.authService.calcExpiresDate(
-          response.expires_in,
-        );
-
-        // TODO сохранить имя и ссылку на фото пользователя
-        const user = await this.authService.saveUser(
-          response.user_id,
-          response.access_token,
-          response.refresh_token,
-          response.device_id,
-          expires_date,
-        );
-
-        const userToken = await this.authService.createUserToken(
-          user.id,
-          userInfo.response.user.first_name,
-          userInfo.response.user.email,
-        );
-        res.cookie('user_token', userToken, cookieOptions);
-
-        const userSubscription =
-          await this.userSubscriptionService.findPermission(user.id);
-        res.cookie('user_subscription', userSubscription, cookieOptions);
-
-        return { message: 'Token successfully received', status: 'ok' };
-      } catch (e) {
-        this.logger.error(`Failed to get access token. ${e.message}`);
-        throw new InternalServerErrorException(e.message);
-      }
+    if (!isStateVerified) {
+      throw new UnauthorizedException('state did not through verification');
     }
 
-    throw new UnauthorizedException(
-      'State verification failed or missing code_verifier',
-    );
+    try {
+      const response = await this.authService.getAccessToken(
+        code,
+        device_id,
+        codeVerifier,
+      );
+
+      if (!response.hasOwnProperty('access_token')) {
+        return {
+          message: 'Token not received',
+          status: 'error',
+          error: response,
+        };
+      }
+
+      const userInfo = await this.authService.getUserInfo(response.id_token);
+
+      const expires_date = this.authService.calcExpiresDate(
+        response.expires_in,
+      );
+
+      // TODO сохранить имя и ссылку на фото пользователя
+      const user = await this.authService.saveUser(
+        response.user_id,
+        response.access_token,
+        response.refresh_token,
+        response.device_id,
+        expires_date,
+      );
+
+      const userToken = await this.authService.createUserToken(
+        user.id,
+        userInfo.response.user.first_name,
+        userInfo.response.user.email,
+      );
+      res.cookie('user_token', userToken, cookieOptions);
+
+      const userSubscription =
+        await this.userSubscriptionService.findPermission(user.id);
+      res.cookie('user_subscription', userSubscription, cookieOptions);
+
+      return { message: 'Token successfully received', status: 'ok' };
+    } catch (e) {
+      this.logger.error(`Failed to get access token. ${e.message}`);
+      throw new InternalServerErrorException(e.message);
+    }
   }
 
   @Post('refresh-token')

@@ -6,10 +6,7 @@ import { getVerifier, getAppState } from 'src/utils/verifiers';
 import { UserService } from 'src/db/services/user.service';
 
 import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
-import {
-  VKResponseApiErrorType,
-  VKResponseAuthErrorType,
-} from 'src/types/vk-error-type';
+import { VKResponseAuthErrorType } from 'src/types/vk-error-type';
 import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { VKUserInfoType } from 'src/types/vk-user-info-type';
@@ -96,15 +93,12 @@ export class AuthService {
     device_id: string,
     code_verifier: string,
   ): Promise<getAccessTokenOutputType> {
-    const vk = this.configService.get('vk');
-    const app = this.configService.get('app');
-
     const authorization_params = {
       grant_type: 'authorization_code',
       code,
       device_id,
-      client_id: vk.appId,
-      redirect_uri: app.frontend,
+      client_id: this.configService.get('vk.appId'),
+      redirect_uri: this.configService.get('app.frontend'),
       code_challenge_method: 's256',
       code_verifier,
     };
@@ -116,8 +110,9 @@ export class AuthService {
     );
 
     if (!response.data.hasOwnProperty('access_token')) {
+      const error = response.data as unknown as VKResponseAuthErrorType;
       throw new UnauthorizedException(
-        `access_token не получен. ${response.data}`,
+        `access_token не получен. ${error.error_description}`,
       );
     }
 
@@ -154,7 +149,6 @@ export class AuthService {
     );
 
     if (response.data.hasOwnProperty('error')) {
-      this.logger.error(response.data);
       const error = response.data as unknown as VKResponseAuthErrorType;
       throw new VK_AUTH_Error(
         `access_token не получен. ${error.error_description}`,
