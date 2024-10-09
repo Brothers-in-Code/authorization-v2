@@ -55,7 +55,7 @@ export class AuthService {
       code_challenge,
       code_challenge_method: 's256',
       state,
-      scopes: 'groups email',
+      scope: 'groups email',
       display: 'page',
     };
 
@@ -64,20 +64,6 @@ export class AuthService {
 
   verifyState(state: string, cookieState: string) {
     return cookieState === state;
-  }
-
-  async createJWTUserToken(
-    useId: number,
-    user_name: string,
-    email: string,
-  ): Promise<string> {
-    const payload = {
-      sub: useId,
-      user_name,
-      email,
-    };
-
-    return await this.jwtService.signAsync(payload);
   }
 
   async createJWTToken(userId: number, ...rest: any): Promise<string> {
@@ -109,6 +95,7 @@ export class AuthService {
       redirect_uri: this.configService.get('app.frontend'),
       code_challenge_method: 's256',
       code_verifier,
+      scope: 'groups email',
     };
 
     const response = await this.httpService.axiosRef.post(
@@ -144,7 +131,7 @@ export class AuthService {
       refresh_token,
       client_id: this.configService.get('vk.appId'),
       state,
-      scope: ['groups'],
+      scope: ['groups, email'],
       device_id,
     };
 
@@ -178,21 +165,25 @@ export class AuthService {
     }
   }
 
-  async getUserInfo(id_token: string) {
+  async getUserInfo(access_token: string) {
     const info_params = {
-      id_token,
+      access_token,
       client_id: this.configService.get('vk.appId'),
+      scope: 'email',
     };
     const response = await this.httpService.axiosRef.post<VKUserInfoType>(
-      `${AUTH_API}/public_info`,
+      `${AUTH_API}/user_info`,
       qs.stringify(info_params),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       },
     );
+
     if (response.data.hasOwnProperty('error')) {
       const error = response.data as unknown as VKResponseAuthErrorType;
-      throw new VK_API_Error(error.error_description);
+      throw new VK_API_Error(
+        `user_info не получен. ${error.error_description}`,
+      );
     }
     return response.data;
   }

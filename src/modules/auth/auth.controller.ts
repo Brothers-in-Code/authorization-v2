@@ -26,7 +26,7 @@ type VerificationOutputType = {
   code_challenge: string;
   code_challenge_method: string;
   state: string;
-  scopes: string;
+  scope: string;
   display: string;
 };
 
@@ -116,8 +116,10 @@ export class AuthController {
         };
       }
 
-      const userInfo = await this.authService.getUserInfo(response.id_token);
-
+      const userInfo = await this.authService.getUserInfo(
+        response.access_token,
+      );
+      Logger.debug(JSON.stringify(userInfo.user.email));
       const expires_date = this.authService.calcExpiresDate(
         response.expires_in,
       );
@@ -135,7 +137,6 @@ export class AuthController {
       const userToken = await this.authService.createJWTToken(
         user.id,
         userInfo.user.first_name,
-        userInfo.user.email,
       );
       res.cookie('user_token', userToken, cookieOptions);
 
