@@ -11,7 +11,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   app.setViewEngine('ejs');
-  app.setBaseViewsDir(join(__dirname, '..', '/views'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.useStaticAssets(join(__dirname, '..', '/public'));
 
   const port = parseInt(process.env.PORT, 10) || 3000;

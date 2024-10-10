@@ -1,0 +1,46 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px 5px $color-shadow-black;
+  border-radius: 4px;
+
+  &__body {
+    padding-inline: 1rem;
+  }
+
+  &__footer {
+    padding-inline: 1rem;
+  }
+
+  &__background {
+    position: absolute;
+    inset: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: -10;
+  }
+
+  .paper {
+    background-image: url('../../img/icons/paper.png');
+  }
+  .group {
+    background-image: url('../../img/icons/group.png');
+  }
+  .report {
+    background-image: url('../../img/icons/report.png');
+  }
+}
+
+.card--dashboard {
+  min-width: 250px;
+  min-height: 300px;
+  height: 100%;
+
+  .card__background {
+    background-position: center bottom;
+    margin: 10px;
+  }
+}

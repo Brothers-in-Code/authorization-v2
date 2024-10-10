@@ -22,6 +22,10 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  findOneById(id: number): Promise<User> {
+    return this.userRepository.findOneBy({ id });
+  }
+  //  TODO переименовать в findOneByVkId
   findOne(user_vkid: number): Promise<User> {
     return this.userRepository.findOneBy({ user_vkid });
   }
