@@ -1,0 +1,21 @@
+@mixin wrap-absolute {
+  position: absolute;
+  inset: 0;
+}
+
+@mixin transition-basic {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+}
+
+@mixin border {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: $border-radius-basic;
+}
+
+@mixin background {
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
