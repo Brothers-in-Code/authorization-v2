@@ -11,14 +11,18 @@
 
   &__header {
     grid-area: header;
-    outline: 1px solid greenyellow;
   }
   &__aside {
     grid-area: aside;
-    outline: 1px solid greenyellow;
   }
   &__main {
     grid-area: main;
-    outline: 1px solid greenyellow;
+  }
+
+  &__section {
+    padding: 0.5em;
+    border-radius: 10px;
+    box-shadow: 1px 1px 7px var(--bs-gray-400);
+    background-color: var(--bs-white);
   }
 }
