@@ -1,0 +1,24 @@
+.page-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 'header header' 'aside main';
+  min-height: 100vh;
+  grid-template-areas:
+    'header header'
+    'aside main';
+
+  &__header {
+    grid-area: header;
+    grid-template-columns: 2;
+    outline: 1px solid greenyellow;
+  }
+  &__aside {
+    grid-area: aside;
+    outline: 1px solid greenyellow;
+  }
+  &__main {
+    grid-area: main;
+    outline: 1px solid greenyellow;
+  }
+}

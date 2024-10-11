@@ -1,5 +1,26 @@
-@import './libs/normalize.css';
-@import './libs/skeleton.css';
+@import './libs/bootstrap.css';
+.page-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "header header" "aside main";
+  min-height: 100vh;
+  grid-template-areas: "header header" "aside main";
+}
+.page-layout__header {
+  grid-area: header;
+  grid-template-columns: 2;
+  outline: 1px solid greenyellow;
+}
+.page-layout__aside {
+  grid-area: aside;
+  outline: 1px solid greenyellow;
+}
+.page-layout__main {
+  grid-area: main;
+  outline: 1px solid greenyellow;
+}
+
 :root {
   --medium-screen: 991px;
   --screen-width: 100vm;

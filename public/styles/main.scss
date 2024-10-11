@@ -1,5 +1,10 @@
-@import './libs/normalize.css';
-@import './libs/skeleton.css';
+// @import './libs/normalize.css';
+// @import './libs/skeleton.css';
+// libs
+@import './libs/bootstrap.css';
+// layout
+@import './layout/page-layout.scss';
+// tools
 @import './vars/_vars';
 @import './mixins/reset-mixins';
 @import './mixins/components-mixins';
