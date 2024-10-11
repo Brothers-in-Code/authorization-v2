@@ -14,5 +14,9 @@
   &__link {
     @include link-reset;
     width: 100%;
+
+    &--active {
+      color: var(--bs-gray-900);
+    }
   }
 }

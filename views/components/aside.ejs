@@ -1,15 +1,18 @@
+<% const pageList = [{name: 'Группы ВК', url: './groups'}, {name: 'Посты', url: './posts'}, {name: 'Отчеты', url: './reports'}];%>
+
 <aside class="page-layout__aside page-layout__section aside">
   <nav class="nav">
     <ul class="nav__list">
+      <% pageList.forEach((page) => { %>
       <li class="nav__item">
-        <a class="nav__link" href="./groups">Группы ВК</a>
+        <a
+          class="nav__link <% if (page.url.includes(data.currentPage)) { %> nav__link--active <% } %>"
+          href="<%=page.url%>"
+        >
+          <%=page.name%>
+        </a>
       </li>
-      <li class="nav__item">
-        <a class="nav__link" href="./posts">Посты</a>
-      </li>
-      <li class="nav__item">
-        <a class="nav__link" href="./reports">Отчеты</a>
-      </li>
+      <% }); %>
     </ul>
   </nav>
 </aside>

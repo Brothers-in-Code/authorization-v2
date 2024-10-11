@@ -76,5 +76,8 @@
   outline: none;
   width: 100%;
 }
+.nav__link--active {
+  color: var(--bs-gray-900);
+}
 
 /*# sourceMappingURL=styles.css.map */
