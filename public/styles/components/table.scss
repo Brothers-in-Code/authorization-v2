@@ -1,0 +1,22 @@
+.table {
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    vertical-align: top;
+    background-color: var(--bs-gray-200);
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.table--groups {
+  th:nth-child(2) {
+    text-align: center;
+  }
+  td:nth-child(4) {
+    text-align: center;
+  }
+}

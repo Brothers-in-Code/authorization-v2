@@ -3,12 +3,12 @@
   grid-template-columns: 200px 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas: 'header header' 'aside main';
-  min-height: 100vh;
   gap: 10px;
   grid-template-areas:
     'header header'
     'aside main';
 
+  height: 100vh;
   &__header {
     grid-area: header;
   }
@@ -24,5 +24,18 @@
     border-radius: 10px;
     box-shadow: 1px 1px 7px var(--bs-gray-400);
     background-color: var(--bs-white);
+  }
+
+  &__wrapper {
+    position: relative;
+    max-height: 100%;
+    overflow-y: scroll;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
   }
 }

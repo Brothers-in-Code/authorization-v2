@@ -10,7 +10,40 @@
         <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
 
         <main class="page-layout__main page-layout__section main">
-          <div>Groups</div>
+          <div class="page-layout__wrapper">
+            <table class="table table--groups">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th colspan="2">Название</th>
+                  <th>Сканировать</th>
+                  <th>Тип группы</th>
+                  <th>Последнее обновление</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% data.userGroupList.forEach((group) => { %>
+                <tr>
+                  <td><%= group.vkid %></td>
+                  <td>
+                    <img
+                      class="logo"
+                      src="<%= group.photo %>"
+                      alt="иконка группы ВК"
+                    />
+                  </td>
+                  <td><%= group.name %></td>
+                  <!--  TODO добавить отображение статуса сканирования и весь функционал -->
+                  <td><input type="checkbox" /></td>
+                  <td><%= group.is_private ? 'Приватная' : 'Публичная' %></td>
+                  <td>
+                    <%= Intl.DateTimeFormat().format(group.last_group_scan_date) %>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
         </main>
       </div>
     </div>
