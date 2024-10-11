@@ -2,25 +2,29 @@
 <html lang="en">
   <%- include('../components/head.ejs', {title: data.pageTitle}) %>
   <body>
-    <div class="page-layout">
-      <header class="page-layout__header">
-        <div>SSM Менеджер</div>
-        <div>
-          <img src="" alt="" />
-        </div>
-      </header>
-      <aside class="page-layout__aside">
-        <nav>
-          <ul>
-            <li><a href="/">Группы ВК</a></li>
-            <li><a href="/">Посты</a></li>
-            <li><a href="/">Отчеты</a></li>
-          </ul>
-        </nav>
-      </aside>
-      <main class="page-layout__main">
-        <div>Main</div>
-      </main>
+    <div id="root">
+      <div class="page-layout">
+        <header class="page-layout__header header">
+          <div>SSM Менеджер</div>
+          <img
+            class="header__user-icon"
+            src="/img/bootstrap-icons/person.svg"
+            alt="user icon"
+          />
+        </header>
+        <aside class="page-layout__aside">
+          <nav>
+            <ul>
+              <li><a href="/">Группы ВК</a></li>
+              <li><a href="/">Посты</a></li>
+              <li><a href="/">Отчеты</a></li>
+            </ul>
+          </nav>
+        </aside>
+        <main class="page-layout__main">
+          <div>Main</div>
+        </main>
+      </div>
     </div>
   </body>
 </html>

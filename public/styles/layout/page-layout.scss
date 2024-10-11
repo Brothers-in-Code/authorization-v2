@@ -4,13 +4,13 @@
   grid-template-rows: auto 1fr;
   grid-template-areas: 'header header' 'aside main';
   min-height: 100vh;
+  gap: 10px;
   grid-template-areas:
     'header header'
     'aside main';
 
   &__header {
     grid-area: header;
-    grid-template-columns: 2;
     outline: 1px solid greenyellow;
   }
   &__aside {

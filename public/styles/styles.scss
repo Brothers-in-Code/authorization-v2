@@ -4,12 +4,15 @@
 @import './libs/bootstrap.css';
 // layout
 @import './layout/page-layout.scss';
+@import './layout/header.scss';
+@import './layout/main.scss';
+@import './layout/aside.scss';
 // tools
 @import './vars/_vars';
 @import './mixins/reset-mixins';
 @import './mixins/components-mixins';
 @import './base';
 // components
-@import './components/button';
-@import './components/card';
-@import './components//dashboard.scss';
+// @import './components/button';
+// @import './components/card';
+// @import './components//dashboard.scss';

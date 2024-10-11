@@ -8,7 +8,7 @@
   "scripts": {
     "scan": "npm run build && node dist/scan.main",
     "build": "nest build",
-    "build:scss": "sass --watch public/styles/main.scss public/styles/styles.css",
+    "build:scss": "sass --watch public/styles/styles.scss public/styles/styles.css",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
