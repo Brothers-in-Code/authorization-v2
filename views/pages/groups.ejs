@@ -4,24 +4,8 @@
   <body>
     <div id="root">
       <div class="page-layout">
-        <header class="page-layout__header page-layout__section header">
-          <div>SSM Менеджер</div>
-          <img
-            class="header__user-icon"
-            src="/img/bootstrap-icons/person.svg"
-            alt="user icon"
-          />
-        </header>
-
-        <aside class="page-layout__aside page-layout__section aside">
-          <nav>
-            <ul>
-              <li><a href="/">Группы ВК</a></li>
-              <li><a href="/">Посты</a></li>
-              <li><a href="/">Отчеты</a></li>
-            </ul>
-          </nav>
-        </aside>
+        <%- include('../components/header.ejs') %> <%-
+        include('../components/aside.ejs') %>
 
         <main class="page-layout__main page-layout__section main">
           <div>Main</div>

@@ -18,7 +18,7 @@
   grid-area: main;
 }
 .page-layout__section {
-  padding: 0.5em;
+  padding: 1em;
   border-radius: 10px;
   box-shadow: 1px 1px 7px var(--bs-gray-400);
   background-color: var(--bs-white);
@@ -57,6 +57,25 @@
 }
 #root {
   padding-inline: 10px;
+}
+
+.nav__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.nav__item {
+  width: 100%;
+}
+.nav__link {
+  text-decoration: none;
+  outline: none;
+  display: inline-block;
+  width: 100%;
 }
 
 /*# sourceMappingURL=styles.css.map */
