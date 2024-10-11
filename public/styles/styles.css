@@ -1,7 +1,7 @@
 @import './libs/bootstrap.css';
 .page-layout {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 200px 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas: "header header" "aside main";
   min-height: 100vh;
