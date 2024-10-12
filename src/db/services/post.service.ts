@@ -1,8 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
+import { group } from 'console';
+
+type PostListOutputType = {
+  group: { id: number; name: string };
+  post: string;
+};
 
 @Injectable()
 export class PostService {
@@ -19,6 +25,30 @@ export class PostService {
 
   findOne(id: number): Promise<Post> {
     return this.postRepository.findOneBy({ id });
+  }
+
+  async findPostsByGroupList(
+    groupList: Group[],
+  ): Promise<PostListOutputType[]> {
+    const idList = groupList.map((group) => group.id);
+    const postList = await this.postRepository
+      .find({
+        where: { group: { id: In(idList) } },
+        relations: { group: true },
+      })
+      .then((postList) =>
+        postList.map((post) => {
+          return {
+            group: {
+              id: post.group.vkid,
+              name: post.group.name,
+            },
+            post: post.json,
+          };
+        }),
+      );
+    Logger.debug(postList[1]);
+    return postList;
   }
 
   async createPost(postParams: {

@@ -11,6 +11,10 @@
 
         <main class="page-layout__main page-layout__section main">
           <div>Posts</div>
+          <div><%= data.pageTitle %></div>
+          <% data.postList.forEach((post) => { %>
+          <div><%= post %></div>
+          <% }) %>
         </main>
       </div>
     </div>

@@ -33,8 +33,15 @@ export class WorkSpaceController {
 
   @Get('work-space/:id/posts')
   @Render('pages/posts')
-  renderPosts(@Param('id') id: string) {
-    const data = { page_title: 'Посты', user_id: id, currentPage: 'posts' };
+  async renderPosts(@Param('id') id: string) {
+    const userGroupList = await this.workSpaceService.getGroupList(Number(id));
+    const postList = await this.workSpaceService.getPostList(userGroupList);
+    const data = {
+      pageTitle: 'Посты',
+      userId: id,
+      currentPage: 'posts',
+      postList,
+    };
     return { data };
   }
 
