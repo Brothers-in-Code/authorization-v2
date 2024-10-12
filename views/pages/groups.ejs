@@ -15,7 +15,16 @@
             <table class="table table--groups">
               <thead>
                 <tr>
-                  <th colspan="2">Название</th>
+                  <th colspan="2">
+                    Название
+                    <input
+                      class="form-control"
+                      placeholder="номер или название группы"
+                      type="text"
+                      aria-label="Search"
+                      id="nameSearch"
+                    />
+                  </th>
                   <th>Сканировать</th>
                   <th>Тип группы</th>
                   <th>
@@ -40,7 +49,7 @@
                   </td>
 
                   <!--  TODO добавить отображение статуса сканирования и весь функционал -->
-                  <td><input type="checkbox" /></td>
+                  <td><input class="form-check-input" type="checkbox" /></td>
                   <td>
                     <%= group.is_private ? 'Приватная' : 'Публичная' %>
                   </td>
@@ -56,5 +65,6 @@
         </main>
       </div>
     </div>
+    <script src="/js/table-interact.js"></script>
   </body>
 </html>
