@@ -39,5 +39,38 @@
         </table>
       </main>
     </div>
+
+    <script src="/js/tabulator/tabulator.min.js"></script>
+    <script>
+
+
+              let dataTable = <%- JSON.stringify(data.userGroupList) %>;
+              dataTable = dataTable.map((group) => {
+                  return {
+                      ...group,
+                      scan: true
+                  }
+              })
+      console.log(typeof dataTable[0].scan);
+            const groupsTable = new Tabulator('#groups-table', {
+              data: dataTable,
+              layout: 'fitColumns',
+              columns: [
+                { title: 'ID', field: 'vkid' },
+                {title:"photo", field:"photo", formatter:"image", formatterParams:{
+                    height:"50px",
+                    width:"50px",
+                }},
+                { title: 'Название', field: 'name' },
+                { title: 'Сканировать' , field: 'scan', hozAlign: "center", formatter: "adaptable",
+                cellClick: function(e, cell) {
+                    alert(e);
+                }
+            },
+                { title: 'Тип группы', field: 'is_private', formatter: "buttonCross", hozAlign: "center", headerSort: false},
+                { title: 'Последнее обновление', field: 'last_group_scan_date' },
+            ]
+            });
+    </script>
   </body>
 </html>

@@ -1,7 +1,7 @@
-// @import './libs/normalize.css';
-// @import './libs/skeleton.css';
 // libs
-@import './libs/bootstrap.css';
+@import './libs/bootstrap/bootstrap.min.css';
+@import './libs/tabulator/tabulator.min.css';
+
 // layout
 @import './layout/page-layout.scss';
 @import './layout/header.scss';

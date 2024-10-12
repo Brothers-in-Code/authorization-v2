@@ -7,8 +7,14 @@ export class WorkSpaceController {
 
   @Get('work-space/:id')
   @Render('pages/groups')
-  renderWorkSpace(@Param('id') id: string) {
-    const data = { page_title: 'Группы ВК', user_id: id };
+  async renderWorkSpace(@Param('id') id: string) {
+    const userGroupList = await this.workSpaceService.getGroupList(Number(id));
+    const data = {
+      pageTitle: 'Группы ВК',
+      userId: id,
+      currentPage: 'groups',
+      userGroupList,
+    };
     return { data };
   }
 
