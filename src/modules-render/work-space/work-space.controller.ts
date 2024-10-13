@@ -32,18 +32,22 @@ export class WorkSpaceController {
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
+    @Query('is_scan') is_scan?: number,
   ) {
     const userGroupList = await this.workSpaceService.getGroupList(
       Number(id),
       Number(offset),
       Number(limit),
+      is_scan !== undefined ? Number(is_scan) : undefined,
     );
     const data = {
       pageTitle: 'Группы ВК',
       userId: id,
       currentPage: 'groups',
+      currentIsScan: is_scan,
       userGroupList,
     };
+
     return { data };
   }
 

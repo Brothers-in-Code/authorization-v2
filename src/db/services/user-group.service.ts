@@ -23,10 +23,14 @@ export class UserGroupService {
     user: User,
     groupList: Group[],
   ): Promise<UserGroup[]> {
-    const existingVkIdList = await this.findUsersGroupList(user.user_vkid);
+    const existingUserGroupList = await this.userGroupRepository.find({
+      where: { user: { user_vkid: user.user_vkid } },
+      relations: ['group'],
+    });
+
     const newGroupList = groupList.filter((group) => {
-      return !existingVkIdList.groups.some(
-        (existingGroup) => existingGroup.vkid === group.vkid,
+      return !existingUserGroupList.some(
+        (existingGroup) => existingGroup.group.vkid === group.vkid,
       );
     });
 
@@ -47,11 +51,17 @@ export class UserGroupService {
     return await this.userGroupRepository.find();
   }
 
-  async findUsersGroupList(
-    user_vkid: number,
-    offset = 0,
-    limit = 20,
-  ): Promise<{
+  async findUsersGroupList({
+    user_vkid,
+    offset,
+    limit,
+    is_scan,
+  }: {
+    user_vkid: number;
+    offset: number;
+    limit: number;
+    is_scan?: number;
+  }): Promise<{
     total: number;
     offset: number;
     limit: number;
@@ -62,9 +72,17 @@ export class UserGroupService {
       where: { user: { user_vkid } },
     });
 
+    const whereConditions: any = {
+      user: { user_vkid },
+    };
+
+    if (is_scan !== undefined) {
+      whereConditions.is_scan = is_scan;
+    }
+
     const userGroups = await this.userGroupRepository
       .find({
-        where: { user: { user_vkid } },
+        where: whereConditions,
         relations: ['group'],
         skip: offset,
         take: limit,

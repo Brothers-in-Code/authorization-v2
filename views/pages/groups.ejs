@@ -33,7 +33,19 @@
                       id="nameSearch"
                     />
                   </th>
-                  <th>Сканировать</th>
+                  <th>
+                    Сканировать
+                    <select
+                      class="form-select"
+                      aria-label="Фильтр по значению сканировать"
+                      onchange="createRequest('is_scan', this.value)"
+                    >
+                      <!-- prettier-ignore -->
+                      <option value="">Все</option>
+                      <option <% if (data.currentIsScan == 1) { %>selected<% } %> value="1">Да</option>
+                      <option <% if (data.currentIsScan == 0) { %>selected<% } %> value="0">Нет</option>
+                    </select>
+                  </th>
                   <th>Тип группы</th>
                   <th>
                     Последнее <br />
@@ -73,6 +85,6 @@
         </main>
       </div>
     </div>
-    <script src="/js/table-interact.js"></script>
+    <script src="/js/search-data.js"></script>
   </body>
 </html>

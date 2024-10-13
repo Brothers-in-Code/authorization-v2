@@ -55,6 +55,15 @@
   margin-bottom: 10px;
 }
 
+.btn-reset {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
 :root {
   --medium-screen: 991px;
   --screen-width: 100vm;
