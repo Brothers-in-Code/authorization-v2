@@ -14,15 +14,51 @@
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->
             <%- include('../components/pagination.ejs', 
-                    {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit,} ) 
-                %>
+                {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit,} ) 
+            %>
             <table class="table">
               <thead>
                 <tr>
                   <td colspan="3" class="table__pagination-cell"></td>
                 </tr>
                 <tr>
-                  <th>Текст</th>
+                  <td colspan="3">
+                    <form class="form">
+                      <label>
+                        <div>Мин. кол-во лайков</div>
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="likes-min"
+                        />
+                      </label>
+
+                      <label>
+                        <div>Мин. кол-во просмотров</div>
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="view-min"
+                        />
+                      </label>
+
+                      <label>
+                        <div>Дата от</div>
+                        <input class="form-control" type="date" id="view-min" />
+                      </label>
+
+                      <label>
+                        <div>Дата до</div>
+                        <input class="form-control" type="date" id="view-min" />
+                      </label>
+                      <button class="btn btn-primary form__submit">
+                        Отправить
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Пост</th>
                   <th>
                     <img src="/img/bootstrap-icons/eye-fill.svg" alt="" />
                   </th>

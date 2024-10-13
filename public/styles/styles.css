@@ -151,6 +151,22 @@
   list-style: none;
   display: flex;
   column-gap: 20px;
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.pagination__list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.form {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+.form__submit {
+  margin-left: auto;
 }
 
 /*# sourceMappingURL=styles.css.map */
