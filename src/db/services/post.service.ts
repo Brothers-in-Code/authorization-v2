@@ -47,7 +47,6 @@ export class PostService {
           };
         }),
       );
-    Logger.debug(postList[1]);
     return postList;
   }
 

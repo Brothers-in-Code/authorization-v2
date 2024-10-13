@@ -72,5 +72,19 @@
             ]
             });
     </script>
+
+    <script>
+      let dataTable = <%- JSON.stringify(data.postList) %>;
+
+      const postsTable = new Tabulator('#posts-table', {
+          data: dataTable,
+          layout: 'fitColumns',
+          columns: [
+              { title: 'Группа', field: 'group.name' },
+              { title: 'Текст', field: 'post.json.text' },
+              { title: 'Дата', field: 'date' },
+          ]
+      });
+    </script>
   </body>
 </html>
