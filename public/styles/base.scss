@@ -7,3 +7,10 @@
   height: auto;
   border-radius: 50%;
 }
+
+.link {
+  @include link-reset;
+  &--active {
+    color: var(--bs-gray-900);
+  }
+}

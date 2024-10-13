@@ -78,6 +78,14 @@
   border-radius: 50%;
 }
 
+.link {
+  text-decoration: none;
+  outline: none;
+}
+.link--active {
+  color: var(--bs-gray-900);
+}
+
 .nav__list {
   margin: 0;
   padding: 0;
@@ -99,10 +107,15 @@
   color: var(--bs-gray-900);
 }
 
-.table th {
+.table thead {
   position: sticky;
   top: 0;
   z-index: 10;
+}
+.table__pagination-cell {
+  border-style: unset;
+}
+.table th {
   vertical-align: top;
   background-color: var(--bs-gray-200);
 }
@@ -121,6 +134,14 @@
 }
 .table--groups .id {
   color: var(--bs-gray-600);
+}
+
+.pagination__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  column-gap: 20px;
 }
 
 /*# sourceMappingURL=styles.css.map */

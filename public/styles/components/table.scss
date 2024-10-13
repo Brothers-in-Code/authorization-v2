@@ -1,8 +1,15 @@
 .table {
-  th {
+  thead {
     position: sticky;
     top: 0;
     z-index: 10;
+  }
+
+  &__pagination-cell {
+    border-style: unset;
+  }
+
+  th {
     vertical-align: top;
     background-color: var(--bs-gray-200);
   }

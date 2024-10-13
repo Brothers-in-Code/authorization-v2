@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Group } from 'src/db/entities/group.entity';
 import { GroupService } from 'src/db/services/group.service';
 import { PostService } from 'src/db/services/post.service';
@@ -14,15 +14,17 @@ export class WorkSpaceService {
     private readonly postService: PostService,
   ) {}
 
-  async getGroupList(user_id: number) {
+  async getGroupList(user_id: number, offset: number, limit: number) {
     const user = await this.userService.findOneById(user_id);
     if (!user) {
       throw new NotFoundException('Пользователь не найден');
     }
     const response = await this.userGroupService.findUsersGroupList(
       user.user_vkid,
+      offset,
+      limit,
     );
-    return response.groups;
+    return response;
   }
 
   async getPostList(groupList: Group[]) {

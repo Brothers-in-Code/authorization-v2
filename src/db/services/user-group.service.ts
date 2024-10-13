@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserGroup } from 'src/db/entities/user_group.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -49,11 +49,25 @@ export class UserGroupService {
 
   async findUsersGroupList(
     user_vkid: number,
-  ): Promise<{ user_vkid: number; groups: Group[] }> {
+    offset = 0,
+    limit = 20,
+  ): Promise<{
+    total: number;
+    offset: number;
+    limit: number;
+    user_vkid: number;
+    groups: Group[];
+  }> {
+    const total = await this.userGroupRepository.count({
+      where: { user: { user_vkid } },
+    });
+
     const userGroups = await this.userGroupRepository
       .find({
         where: { user: { user_vkid } },
         relations: ['group'],
+        skip: offset,
+        take: limit,
       })
       .then((data) =>
         data.map((group) => {
@@ -66,6 +80,9 @@ export class UserGroupService {
       );
 
     return {
+      total,
+      offset,
+      limit,
       user_vkid,
       groups: userGroups,
     };

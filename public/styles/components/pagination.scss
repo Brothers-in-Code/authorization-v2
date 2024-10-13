@@ -1,0 +1,7 @@
+.pagination {
+  &__list {
+    @include list-reset;
+    display: flex;
+    column-gap: 20px;
+  }
+}
