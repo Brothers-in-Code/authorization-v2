@@ -3,11 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import { In, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
-import { group } from 'console';
 
 type PostListOutputType = {
-  group: { id: number; name: string };
-  post: string;
+  total: number;
+  offset: number;
+  limit: number;
+  posts: { group: { id: number; name: string }; post: string }[];
 };
 
 @Injectable()
@@ -27,14 +28,25 @@ export class PostService {
     return this.postRepository.findOneBy({ id });
   }
 
-  async findPostsByGroupList(
-    groupList: Group[],
-  ): Promise<PostListOutputType[]> {
+  async getPostsByGroupList({
+    groupList,
+    offset,
+    limit,
+  }: {
+    groupList: Group[];
+    offset: number;
+    limit: number;
+  }): Promise<PostListOutputType> {
     const idList = groupList.map((group) => group.id);
-    const postList = await this.postRepository
+    const total = await this.postRepository.count({
+      where: { group: { id: In(idList) } },
+    });
+    const posts = await this.postRepository
       .find({
         where: { group: { id: In(idList) } },
         relations: { group: true },
+        skip: offset,
+        take: limit,
       })
       .then((postList) =>
         postList.map((post) => {
@@ -47,7 +59,12 @@ export class PostService {
           };
         }),
       );
-    return postList;
+    return {
+      total,
+      offset,
+      limit,
+      posts,
+    };
   }
 
   async createPost(postParams: {

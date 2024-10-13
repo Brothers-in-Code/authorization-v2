@@ -51,7 +51,7 @@ export class UserGroupService {
     return await this.userGroupRepository.find();
   }
 
-  async findUsersGroupList({
+  async getUsersGroupList({
     user_vkid,
     offset,
     limit,
@@ -80,7 +80,7 @@ export class UserGroupService {
       whereConditions.is_scan = is_scan;
     }
 
-    const userGroups = await this.userGroupRepository
+    const groups = await this.userGroupRepository
       .find({
         where: whereConditions,
         relations: ['group'],
@@ -102,8 +102,27 @@ export class UserGroupService {
       offset,
       limit,
       user_vkid,
-      groups: userGroups,
+      groups,
     };
+  }
+
+  async findAllByUser(user_id: number): Promise<Group[]> {
+    const groups = await this.userGroupRepository
+      .find({
+        where: { user: { id: user_id } },
+        relations: ['group'],
+      })
+      .then((data) =>
+        data.map((group) => {
+          const localGroup = group.group;
+          delete localGroup.created_at;
+          delete localGroup.deleted_at;
+          delete localGroup.updated_at;
+          return localGroup;
+        }),
+      );
+
+    return groups;
   }
 
   async remove(user_vkid: number, group_vkid: number): Promise<DeleteResult> {

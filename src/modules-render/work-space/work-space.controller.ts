@@ -54,14 +54,15 @@ export class WorkSpaceController {
   //   NOTE продумать как получать из getGroupList все записи
   @Get('work-space/:id/posts')
   @Render('pages/posts')
-  async renderPosts(@Param('id') id: string) {
-    const userGroupList = await this.workSpaceService.getGroupList(
-      Number(id),
-      0,
-      20,
-    );
+  async renderPosts(
+    @Param('id') id: string,
+    @Query('offset') offset = 0,
+    @Query('limit') limit = 20,
+  ) {
     const postList = await this.workSpaceService.getPostList(
-      userGroupList.groups,
+      Number(id),
+      Number(offset),
+      Number(limit),
     );
     const data = {
       pageTitle: 'Посты',

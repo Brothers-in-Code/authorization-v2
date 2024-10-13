@@ -1,6 +1,4 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Group } from 'src/db/entities/group.entity';
-import { GroupService } from 'src/db/services/group.service';
 import { PostService } from 'src/db/services/post.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
@@ -8,7 +6,6 @@ import { UserService } from 'src/db/services/user.service';
 @Injectable()
 export class WorkSpaceService {
   constructor(
-    private readonly groupService: GroupService,
     private readonly userService: UserService,
     private readonly userGroupService: UserGroupService,
     private readonly postService: PostService,
@@ -35,12 +32,17 @@ export class WorkSpaceService {
       params['is_scan'] = is_scan;
     }
 
-    const response = await this.userGroupService.findUsersGroupList(params);
+    const response = await this.userGroupService.getUsersGroupList(params);
     return response;
   }
 
-  async getPostList(groupList: Group[]) {
-    const response = await this.postService.findPostsByGroupList(groupList);
+  async getPostList(user_id: number, offset: number, limit: number) {
+    const groupList = await this.userGroupService.findAllByUser(user_id);
+    const response = await this.postService.getPostsByGroupList({
+      groupList,
+      offset,
+      limit,
+    });
     return response;
   }
 }

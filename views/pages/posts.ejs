@@ -11,11 +11,50 @@
 
         <main class="page-layout__main page-layout__section main">
           <h2><%= data.pageTitle %></h2>
-          <div id="posts-table"></div>
+          <div class="page-layout__wrapper">
+            <!-- prettier-ignore -->
+            <%- include('../components/pagination.ejs', 
+                    {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit,} ) 
+                %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <td colspan="3" class="table__pagination-cell"></td>
+                </tr>
+                <tr>
+                  <th>Текст</th>
+                  <th>
+                    <img src="/img/bootstrap-icons/eye-fill.svg" alt="" />
+                  </th>
+                  <th>
+                    <img src="/img/bootstrap-icons/heart-fill.svg" alt="" />
+                  </th>
+                </tr>
+                <tr></tr>
+              </thead>
+
+              <tbody>
+                <% data.postList.posts.forEach((item) => { %>
+                <tr>
+                  <td>
+                    <div>
+                      <strong><%= item.group.name %></strong>
+                    </div>
+                    <div><%= item.post.text.slice(0, 200) %>...</div>
+                  </td>
+                  <td>
+                    <%= item.post.views.count %>
+                  </td>
+                  <td>
+                    <%= item.post.likes.count %>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
         </main>
       </div>
     </div>
-
-    <script src="/js/tabulator/tabulator.min.js"></script>
   </body>
 </html>

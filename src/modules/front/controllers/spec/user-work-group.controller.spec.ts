@@ -18,7 +18,7 @@ describe('UserWorkGroupController', () => {
   beforeEach(async () => {
     // Моки для всех зависимостей
     userGroupServiceMock = {
-      findUsersGroupList: jest.fn().mockResolvedValue([]),
+      getUsersGroupList: jest.fn().mockResolvedValue([]),
     };
     userServiceMock = {
       findOne: jest.fn().mockResolvedValue({ id: 1, name: 'Test User' }),

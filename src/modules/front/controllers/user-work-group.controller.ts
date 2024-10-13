@@ -23,7 +23,7 @@ export class UserWorkGroupController {
   //   TODO сделать limit и offset
   @Get(':id')
   findAll(@Param('id') user_vkid: number): Promise<any> {
-    return this.userGroupService.findUsersGroupList({
+    return this.userGroupService.getUsersGroupList({
       user_vkid,
       offset: 0,
       limit: 20,
