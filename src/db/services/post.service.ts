@@ -79,6 +79,7 @@ export class PostService {
 
     post.group = group;
     post.post_vkid = postParams.post_vkid;
+
     post.json = postParams.json;
     return this.postRepository.save(post);
   }

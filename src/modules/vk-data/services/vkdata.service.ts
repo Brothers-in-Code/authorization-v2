@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { ConfigService } from '@nestjs/config';
@@ -174,15 +174,16 @@ export class VkDataService {
     group: Group,
     postParamsList: {
       post_vkid: number;
+      likes: number;
+      views: number;
+      timestamp_post: number;
       json: string;
     }[],
   ) {
     const posts = postParamsList.map((postParams) => {
       const newPost = this.postService.createNewPost();
-      newPost.group = group;
-      newPost.post_vkid = postParams.post_vkid;
-      newPost.json = postParams.json;
-      return newPost;
+      Logger.debug(JSON.stringify({ ...newPost, ...postParams, group: group }));
+      return { ...newPost, ...postParams, group: group };
     });
     const postList = await this.postService.createPostList(posts);
     if (!postList) {

@@ -13,6 +13,15 @@ export class Post extends AbstractEntity {
   @Column()
   post_vkid: number;
 
+  @Column()
+  likes: number;
+
+  @Column()
+  views: number;
+
+  @Column({ type: 'bigint' })
+  timestamp_post: number;
+
   @Column('json')
   json: any;
 }
