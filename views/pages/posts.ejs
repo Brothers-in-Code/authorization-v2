@@ -23,13 +23,18 @@
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <form class="form">
+                    <form
+                      class="form"
+                      method="post"
+                      accept-charset="utf-8"
+                      url="./?offset=0&limit=20"
+                    >
                       <label>
                         <div>Мин. кол-во лайков</div>
                         <input
                           class="form-control"
                           type="number"
-                          id="likes-min"
+                          name="likesMin"
                         />
                       </label>
 
@@ -38,20 +43,31 @@
                         <input
                           class="form-control"
                           type="number"
-                          id="view-min"
+                          name="viewsMin"
                         />
                       </label>
 
                       <label>
                         <div>Дата от</div>
-                        <input class="form-control" type="date" id="view-min" />
+                        <input
+                          class="form-control"
+                          type="date"
+                          name="begDate"
+                        />
                       </label>
 
                       <label>
                         <div>Дата до</div>
-                        <input class="form-control" type="date" id="view-min" />
+                        <input
+                          class="form-control"
+                          type="date"
+                          name="endDate"
+                        />
                       </label>
-                      <button class="btn btn-primary form__submit">
+                      <button
+                        class="btn btn-primary form__submit"
+                        type="submit"
+                      >
                         Отправить
                       </button>
                     </form>

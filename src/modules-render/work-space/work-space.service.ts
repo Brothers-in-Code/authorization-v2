@@ -36,7 +36,16 @@ export class WorkSpaceService {
     return response;
   }
 
-  async getPostList(user_id: number, offset: number, limit: number) {
+  async getPostList(data: {
+    user_id: number;
+    offset: number;
+    limit: number;
+    likesMin?: string;
+    viewsMin?: string;
+    begDate?: string;
+    endDate?: string;
+  }) {
+    const { user_id, offset, limit } = data;
     const groupList = await this.userGroupService.findAllByUser(user_id);
     const response = await this.postService.getPostsByGroupList({
       groupList,

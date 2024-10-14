@@ -1,4 +1,13 @@
-import { Controller, Get, Logger, Param, Query, Render } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
 
 @Controller()
@@ -59,11 +68,12 @@ export class WorkSpaceController {
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
-    const postList = await this.workSpaceService.getPostList(
-      Number(id),
-      Number(offset),
-      Number(limit),
-    );
+    const postList = await this.workSpaceService.getPostList({
+      user_id: Number(id),
+      offset: Number(offset),
+      limit: Number(limit),
+    });
+
     const data = {
       pageTitle: 'Посты',
       userId: id,
@@ -71,6 +81,20 @@ export class WorkSpaceController {
       postList,
     };
     return { data };
+  }
+
+  @Post('work-space/:id/posts')
+  async filterPosts(
+    @Param('id') id: string,
+    @Body()
+    data: {
+      likesMin: string;
+      viewsMin: string;
+      begDate: string;
+      endDate: string;
+    },
+  ) {
+    Logger.debug(data);
   }
 
   @Get('work-space/:id/reports')
