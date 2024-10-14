@@ -26,13 +26,13 @@ export class WorkSpaceController {
       offset,
       limit,
     );
-    const data = {
+    const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,
       currentPage: 'groups',
       userGroupList,
     };
-    return { data };
+    return { data: dataToRender };
   }
 
   @Get('work-space/:id/groups')
@@ -49,7 +49,7 @@ export class WorkSpaceController {
       Number(limit),
       is_scan !== undefined ? Number(is_scan) : undefined,
     );
-    const data = {
+    const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,
       currentPage: 'groups',
@@ -57,7 +57,7 @@ export class WorkSpaceController {
       userGroupList,
     };
 
-    return { data };
+    return { data: dataToRender };
   }
 
   //   NOTE продумать как получать из getGroupList все записи
@@ -74,17 +74,18 @@ export class WorkSpaceController {
       limit: Number(limit),
     });
 
-    const data = {
+    const dataToRender = {
       pageTitle: 'Посты',
       userId: id,
       currentPage: 'posts',
       postList,
     };
-    return { data };
+    return { data: dataToRender };
   }
 
   @Post('work-space/:id/posts')
-  async filterPosts(
+  @Render('pages/posts')
+  async receiveFilterPosts(
     @Param('id') id: string,
     @Body()
     data: {
@@ -94,14 +95,39 @@ export class WorkSpaceController {
       endDate: string;
     },
   ) {
-    Logger.debug(data);
+    const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
+    const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
+    const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
+    const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+
+    const postList = await this.workSpaceService.getPostList({
+      user_id: Number(id),
+      offset: 0,
+      limit: 20,
+      likesMin,
+      viewsMin,
+      begDate,
+      endDate,
+    });
+
+    const dataToRender = {
+      pageTitle: 'Посты',
+      userId: id,
+      currentPage: 'posts',
+      postList,
+    };
+    return { data: dataToRender };
   }
 
   @Get('work-space/:id/reports')
   @Render('pages/reports')
   renderReports(@Param('id') id: string) {
-    const data = { page_title: 'Отчеты', user_id: id, currentPage: 'reports' };
+    const dataToRender = {
+      page_title: 'Отчеты',
+      user_id: id,
+      currentPage: 'reports',
+    };
 
-    return { data };
+    return { data: dataToRender };
   }
 }

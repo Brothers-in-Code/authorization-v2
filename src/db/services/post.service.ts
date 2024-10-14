@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
-import { In, Repository } from 'typeorm';
+import { In, LessThan, MoreThan, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
 
 type PostListOutputType = {
@@ -28,25 +28,43 @@ export class PostService {
     return this.postRepository.findOneBy({ id });
   }
 
-  async getPostsByGroupList({
-    groupList,
-    offset,
-    limit,
-  }: {
+  async getPostsByGroupList(data: {
     groupList: Group[];
     offset: number;
     limit: number;
+    likesMin?: number;
+    viewsMin?: number;
+    begDate?: number;
+    endDate?: number;
   }): Promise<PostListOutputType> {
-    const idList = groupList.map((group) => group.id);
+    const idList = data.groupList.map((group) => group.id);
+
+    const whereConditions = {
+      group: { id: In(idList) },
+    };
+    if (data.likesMin) {
+      whereConditions['likes'] = MoreThan(data.likesMin);
+    }
+    if (data.viewsMin) {
+      whereConditions['views'] = MoreThan(data.viewsMin);
+    }
+    if (data.begDate) {
+      whereConditions['timestamp_post'] = MoreThan(data.begDate);
+    }
+    if (data.endDate) {
+      whereConditions['timestamp_post'] = LessThan(data.endDate);
+    }
     const total = await this.postRepository.count({
-      where: { group: { id: In(idList) } },
+      where: whereConditions,
     });
+
     const posts = await this.postRepository
       .find({
-        where: { group: { id: In(idList) } },
+        where: whereConditions,
         relations: { group: true },
-        skip: offset,
-        take: limit,
+        skip: data.offset,
+        take: data.limit,
+        order: { likes: 'DESC' },
       })
       .then((postList) =>
         postList.map((post) => {
@@ -61,8 +79,8 @@ export class PostService {
       );
     return {
       total,
-      offset,
-      limit,
+      offset: data.offset,
+      limit: data.limit,
       posts,
     };
   }

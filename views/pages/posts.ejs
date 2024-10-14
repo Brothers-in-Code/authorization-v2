@@ -76,10 +76,16 @@
                 <tr>
                   <th>Пост</th>
                   <th>
-                    <img src="/img/bootstrap-icons/eye-fill.svg" alt="" />
+                    <img
+                      src="/img/bootstrap-icons/heart-fill.svg"
+                      alt="Нравится"
+                    />
                   </th>
                   <th>
-                    <img src="/img/bootstrap-icons/heart-fill.svg" alt="" />
+                    <img
+                      src="/img/bootstrap-icons/eye-fill.svg"
+                      alt="Просмотры"
+                    />
                   </th>
                 </tr>
                 <tr></tr>
@@ -95,11 +101,10 @@
                     <div><%= item.post.text.slice(0, 200) %>...</div>
                   </td>
                   <td>
-                    <%= item.post.views.count %>
-                    <%= item.post.date %>
+                    <%= item.post.likes.count %>
                   </td>
                   <td>
-                    <%= item.post.likes.count %>
+                    <%= item.post.views.count %>
                   </td>
                 </tr>
                 <% }) %>

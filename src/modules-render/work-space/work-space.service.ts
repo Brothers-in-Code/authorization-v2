@@ -36,14 +36,25 @@ export class WorkSpaceService {
     return response;
   }
 
+  /**
+ * getPostList
+ *  @param user_id: number;
+    @param offset: number;
+    @param limit: number;
+    @param likesMin?: number;
+    @param viewsMin?: number;
+    @param begDate?: number;  в виде timestamp
+    @param endDate?: number;  в виде timestamp
+ */
+
   async getPostList(data: {
     user_id: number;
     offset: number;
     limit: number;
-    likesMin?: string;
-    viewsMin?: string;
-    begDate?: string;
-    endDate?: string;
+    likesMin?: number;
+    viewsMin?: number;
+    begDate?: number;
+    endDate?: number;
   }) {
     const { user_id, offset, limit } = data;
     const groupList = await this.userGroupService.findAllByUser(user_id);
@@ -51,6 +62,10 @@ export class WorkSpaceService {
       groupList,
       offset,
       limit,
+      likesMin: data.likesMin ?? undefined,
+      viewsMin: data.viewsMin ?? undefined,
+      begDate: data.begDate ?? undefined,
+      endDate: data.endDate ?? undefined,
     });
     return response;
   }
