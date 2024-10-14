@@ -43,11 +43,14 @@ export class WorkSpaceController {
     @Query('limit') limit = 20,
     @Query('is_scan') is_scan?: number,
   ) {
+    const is_scan_local = is_scan ? Number(is_scan) : undefined;
+
+    Logger.log(is_scan_local);
     const userGroupList = await this.workSpaceService.getGroupList(
       Number(id),
       Number(offset),
       Number(limit),
-      is_scan !== undefined ? Number(is_scan) : undefined,
+      is_scan_local,
     );
     const dataToRender = {
       pageTitle: 'Группы ВК',
@@ -67,11 +70,24 @@ export class WorkSpaceController {
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
+    @Query('likesMin') likesMin: string,
+    @Query('viewsMin') viewsMin: string,
+    @Query('begDate') begDate: string,
+    @Query('endDate') endDate: string,
   ) {
+    const likesMinLocal = likesMin ? Number(likesMin) : undefined;
+    const viewsMinLocal = viewsMin ? Number(viewsMin) : undefined;
+    const begDateLocal = begDate ? new Date(begDate).getTime() : undefined;
+    const endDateLocal = endDate ? new Date(endDate).getTime() : undefined;
+
     const postList = await this.workSpaceService.getPostList({
       user_id: Number(id),
       offset: Number(offset),
       limit: Number(limit),
+      likesMin: likesMinLocal,
+      viewsMin: viewsMinLocal,
+      begDate: begDateLocal,
+      endDate: endDateLocal,
     });
 
     const dataToRender = {
@@ -79,6 +95,10 @@ export class WorkSpaceController {
       userId: id,
       currentPage: 'posts',
       postList,
+      likesMin,
+      viewsMin,
+      begDate,
+      endDate,
     };
     return { data: dataToRender };
   }
@@ -115,6 +135,10 @@ export class WorkSpaceController {
       userId: id,
       currentPage: 'posts',
       postList,
+      likesMin,
+      viewsMin,
+      begDate: data.begDate,
+      endDate: data.endDate,
     };
     return { data: dataToRender };
   }

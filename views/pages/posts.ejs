@@ -13,8 +13,10 @@
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->
+            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}` %>
             <%- include('../components/pagination.ejs', 
-                {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit,} ) 
+
+                {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, params } ) 
             %>
             <table class="table">
               <thead>
@@ -35,6 +37,7 @@
                           class="form-control"
                           type="number"
                           name="likesMin"
+                          value="<%= data.likesMin %>"
                         />
                       </label>
 
@@ -44,6 +47,7 @@
                           class="form-control"
                           type="number"
                           name="viewsMin"
+                          value="<%= data.viewsMin %>"
                         />
                       </label>
 
@@ -101,10 +105,10 @@
                     <div><%= item.post.text.slice(0, 200) %>...</div>
                   </td>
                   <td>
-                    <%= item.post.likes.count %>
+                    <%= item.post.likes?.count || 0 %>
                   </td>
                   <td>
-                    <%= item.post.views.count %>
+                    <%= item.post.views?.count || 0 %>
                   </td>
                 </tr>
                 <% }) %>
