@@ -131,6 +131,9 @@
 .table td {
   vertical-align: middle;
 }
+.table .td--form {
+  padding-left: 0;
+}
 
 .table--groups {
   width: unset;

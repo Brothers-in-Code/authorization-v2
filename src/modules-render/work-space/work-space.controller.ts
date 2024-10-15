@@ -41,22 +41,54 @@ export class WorkSpaceController {
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
-    @Query('is_scan') is_scan: string,
+    @Query('isScan') isScan: string,
   ) {
-    const is_scan_local = isNaN(Number(is_scan)) ? undefined : Number(is_scan);
+    const isScanLocal = isNaN(Number(isScan)) ? undefined : Number(isScan);
 
-    Logger.log(is_scan);
     const userGroupList = await this.workSpaceService.getGroupList({
       user_id: Number(id),
       offset: Number(offset),
       limit: Number(limit),
-      is_scan: is_scan_local,
+      is_scan: isScanLocal,
     });
     const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,
       currentPage: 'groups',
-      currentIsScan: is_scan,
+      currentIsScan: isScan,
+      userGroupList,
+    };
+
+    return { data: dataToRender };
+  }
+
+  @Post('work-space/:id/groups')
+  @Render('pages/groups')
+  async receiveFilterGroups(
+    @Param('id') id: string,
+    @Query('offset') offset = 0,
+    @Query('limit') limit = 20,
+    @Body()
+    body: {
+      isScan: string;
+      searchName: string;
+    },
+  ) {
+    const isScanLocal = isNaN(Number(body.isScan))
+      ? undefined
+      : Number(body.isScan);
+
+    const userGroupList = await this.workSpaceService.getGroupList({
+      user_id: Number(id),
+      offset: Number(offset),
+      limit: Number(limit),
+      is_scan: isScanLocal,
+    });
+    const dataToRender = {
+      pageTitle: 'Группы ВК',
+      userId: id,
+      currentPage: 'groups',
+      currentIsScan: body.isScan,
       userGroupList,
     };
 
@@ -108,17 +140,17 @@ export class WorkSpaceController {
   async receiveFilterPosts(
     @Param('id') id: string,
     @Body()
-    data: {
+    body: {
       likesMin: string;
       viewsMin: string;
       begDate: string;
       endDate: string;
     },
   ) {
-    const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
-    const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
-    const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
-    const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+    const likesMin = body.likesMin ? Number(body.likesMin) : undefined;
+    const viewsMin = body.viewsMin ? Number(body.viewsMin) : undefined;
+    const begDate = body.begDate ? new Date(body.begDate).getTime() : undefined;
+    const endDate = body.endDate ? new Date(body.endDate).getTime() : undefined;
 
     const postList = await this.workSpaceService.getPostList({
       user_id: Number(id),
@@ -137,8 +169,8 @@ export class WorkSpaceController {
       postList,
       likesMin,
       viewsMin,
-      begDate: data.begDate,
-      endDate: data.endDate,
+      begDate: body.begDate,
+      endDate: body.endDate,
     };
     return { data: dataToRender };
   }

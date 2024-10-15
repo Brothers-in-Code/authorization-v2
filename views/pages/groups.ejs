@@ -23,30 +23,46 @@
                   </td>
                 </tr>
                 <tr>
-                  <th colspan="2">
-                    Название
-                    <input
-                      class="form-control"
-                      placeholder="номер или название группы"
-                      type="text"
-                      aria-label="Search"
-                      id="nameSearch"
-                    />
-                  </th>
-                  <th>
-                    Сканировать
-                    <select
-                      class="form-select"
-                      aria-label="Фильтр по значению сканировать"
-                      onchange="createRequest('is_scan', this.value)"
+                  <td colspan="3" class="td--form">
+                    <form class="form"
+                        method="post"
+                        accept-charset="utf-8"
+                        url="./?offset=0&limit=20"
                     >
-                      <!-- prettier-ignore -->
-                      <option value="">Все</option>
-                      <option <% if (data.currentIsScan == 1) { %>selected<% } %> value="1">Да</option>
-                      <option <% if (data.currentIsScan == 0) { %>selected<% } %> value="0">Нет</option>
-                    </select>
-                  </th>
-                  <th>Тип группы</th>
+                      <label>
+                        <input
+                          class="form-control"
+                          placeholder="номер или название группы"
+                          type="text"
+                          aria-label="Search"
+                          id="nameSearch"
+                          name="searchName"
+                        />
+                      </label>
+                      <label>
+                        <select
+                        class="form-select"
+                        aria-label="Фильтр по значению сканировать"
+                        name="isScan"
+                      >
+                        <!-- prettier-ignore -->
+                        <option value="">Все группы</option>
+                        <option <% if (data.currentIsScan == 1) { %>selected<% } %> value="1">Сканируются</option>
+                        <option <% if (data.currentIsScan == 0) { %>selected<% } %> value="0">Не сканируются</option>
+                      </select>
+                      </label>
+                      <button
+                        class="btn btn-primary form__submit"
+                        type="submit"
+                      >
+                        Фильтровать
+                    </button>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2">Название</th>
+                  <th>Сканировать</th>
                   <th>
                     Последнее <br />
                     обновление
@@ -70,13 +86,12 @@
 
                   <!--  TODO добавить отображение статуса сканирования и весь функционал -->
                   <td>
-                    <input 
-                        class="form-check-input" type="checkbox" 
-                        onchange="createRequest('is_scan', this.checked)" value="<%= group.vkid %>" 
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      onchange="createRequest('is_scan', this.checked)"
+                      value="<%= group.vkid %>"
                     />
-                  </td>
-                  <td>
-                    <%= group.is_private ? 'Приватная' : 'Публичная' %>
                   </td>
                   <td>
                     <!-- prettier-ignore -->
