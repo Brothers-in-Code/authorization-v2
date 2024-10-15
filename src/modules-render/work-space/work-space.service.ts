@@ -11,25 +11,25 @@ export class WorkSpaceService {
     private readonly postService: PostService,
   ) {}
 
-  async getGroupList(
-    user_id: number,
-    offset: number,
-    limit: number,
-    is_scan?: number,
-  ) {
-    const user = await this.userService.findOneById(user_id);
+  async getGroupList(data: {
+    user_id: number;
+    offset: number;
+    limit: number;
+    is_scan?: number;
+  }) {
+    const user = await this.userService.findOneById(data.user_id);
     if (!user) {
       throw new NotFoundException('Пользователь не найден');
     }
 
     const params = {
       user_vkid: user.user_vkid,
-      offset,
-      limit,
+      offset: data.offset,
+      limit: data.limit,
     };
 
-    if (is_scan !== undefined) {
-      params['is_scan'] = is_scan;
+    if (data.is_scan !== undefined) {
+      params['is_scan'] = data.is_scan;
     }
 
     const response = await this.userGroupService.getUsersGroupList(params);

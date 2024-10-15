@@ -12,6 +12,8 @@ export class UserGroupService {
     private readonly userGroupRepository: Repository<UserGroup>,
   ) {}
 
+  private readonly logger = new Logger(UserGroupService.name);
+
   async create(user: User, group: Group): Promise<UserGroup> {
     const userGroup = new UserGroup();
     userGroup.user = user;
@@ -68,17 +70,18 @@ export class UserGroupService {
     user_vkid: number;
     groups: Group[];
   }> {
-    const total = await this.userGroupRepository.count({
-      where: { user: { user_vkid } },
-    });
-
     const whereConditions: any = {
       user: { user_vkid },
     };
 
+    this.logger.debug('is_scan = ' + is_scan);
     if (is_scan !== undefined) {
-      whereConditions.is_scan = is_scan;
+      whereConditions['is_scan'] = is_scan;
+      offset = 0;
     }
+    const total = await this.userGroupRepository.count({
+      where: whereConditions,
+    });
 
     const groups = await this.userGroupRepository
       .find({

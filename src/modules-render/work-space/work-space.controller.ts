@@ -21,11 +21,11 @@ export class WorkSpaceController {
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
-    const userGroupList = await this.workSpaceService.getGroupList(
-      Number(id),
-      offset,
-      limit,
-    );
+    const userGroupList = await this.workSpaceService.getGroupList({
+      user_id: Number(id),
+      offset: Number(offset),
+      limit: Number(limit),
+    });
     const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,
@@ -41,17 +41,17 @@ export class WorkSpaceController {
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
-    @Query('is_scan') is_scan?: number,
+    @Query('is_scan') is_scan: string,
   ) {
-    const is_scan_local = is_scan ? Number(is_scan) : undefined;
+    const is_scan_local = isNaN(Number(is_scan)) ? undefined : Number(is_scan);
 
-    Logger.log(is_scan_local);
-    const userGroupList = await this.workSpaceService.getGroupList(
-      Number(id),
-      Number(offset),
-      Number(limit),
-      is_scan_local,
-    );
+    Logger.log(is_scan);
+    const userGroupList = await this.workSpaceService.getGroupList({
+      user_id: Number(id),
+      offset: Number(offset),
+      limit: Number(limit),
+      is_scan: is_scan_local,
+    });
     const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,

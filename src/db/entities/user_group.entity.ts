@@ -15,5 +15,5 @@ export class UserGroup extends AbstractEntity {
   group: Group;
 
   @Column({ default: 0 })
-  is_scan: boolean;
+  is_scan: number;
 }
