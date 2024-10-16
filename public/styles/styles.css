@@ -4,10 +4,10 @@
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: "header header" "aside main";
+  grid-template-areas: "header main context" "aside main context";
   gap: 10px;
-  grid-template-areas: "header header" "aside main";
   height: 100vh;
+  padding-block: 10px;
 }
 .page-layout__header {
   grid-area: header;
@@ -17,6 +17,9 @@
 }
 .page-layout__main {
   grid-area: main;
+}
+.page-layout__context {
+  grid-area: context;
 }
 .page-layout__section {
   padding: 1em;
@@ -40,19 +43,41 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
 }
 .header__user-icon {
   width: 25px;
 }
 
 .main {
-  margin-bottom: 10px;
   overflow: hidden;
 }
 
-.aside {
-  margin-bottom: 10px;
+.context {
+  position: relative;
+  width: auto;
+  max-width: 300px;
+  overflow: hidden;
+  padding-top: 32px;
+  transition: max-width 0.2s ease-out;
+}
+.context__btn-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  padding: 5px 0;
+  z-index: 20;
+}
+
+.context--close {
+  max-width: 32px;
+  z-index: 10;
+}
+.context--close .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bs-white);
+  backdrop-filter: blur(10px);
 }
 
 .btn-reset {

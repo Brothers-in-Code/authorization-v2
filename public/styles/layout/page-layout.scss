@@ -2,13 +2,15 @@
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: 'header header' 'aside main';
-  gap: 10px;
-  grid-template-areas:
-    'header header'
-    'aside main';
 
+  grid-template-areas:
+    'header main context'
+    'aside main context';
+
+  gap: 10px;
   height: 100vh;
+  padding-block: 10px;
+
   &__header {
     grid-area: header;
   }
@@ -17,6 +19,10 @@
   }
   &__main {
     grid-area: main;
+  }
+
+  &__context {
+    grid-area: context;
   }
 
   &__section {
