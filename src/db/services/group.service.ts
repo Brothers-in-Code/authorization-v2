@@ -30,6 +30,10 @@ export class GroupService {
     return this.groupRepository.findOneBy({ vkid });
   }
 
+  async findGroupListByVkIdList(vkidList: number[]): Promise<Group[]> {
+    return this.groupRepository.findBy({ vkid: In(vkidList) });
+  }
+
   async create(groupParams: CreateGroupParamsType): Promise<Group> {
     let group = await this.groupRepository.findOneBy({
       vkid: groupParams.vkid,

@@ -4,12 +4,15 @@ import { UserGroup } from 'src/db/entities/user_group.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
+import { GroupService } from './group.service';
+import { group } from 'console';
 
 @Injectable()
 export class UserGroupService {
   constructor(
     @InjectRepository(UserGroup)
     private readonly userGroupRepository: Repository<UserGroup>,
+    private readonly groupService: GroupService,
   ) {}
 
   private readonly logger = new Logger(UserGroupService.name);
@@ -126,6 +129,26 @@ export class UserGroupService {
       );
 
     return groups;
+  }
+
+  //   TODO логер и ответ
+  async updateIsScanStatus(
+    userId: number,
+    dataList: { groupVkId: string; isScan: boolean }[],
+  ) {
+    for (const data of dataList) {
+      const group = await this.groupService.findOne(Number(data.groupVkId));
+      await this.userGroupRepository.update(
+        {
+          user: { id: userId },
+          group: { id: group.id },
+        },
+        {
+          is_scan: data.isScan ? 1 : 0,
+        },
+      );
+    }
+    return true;
   }
 
   async remove(user_vkid: number, group_vkid: number): Promise<DeleteResult> {

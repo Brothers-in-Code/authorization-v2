@@ -10,10 +10,16 @@ import {
   Render,
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
+import { UserGroupService } from 'src/db/services/user-group.service';
 
 @Controller()
 export class WorkSpaceController {
-  constructor(private readonly workSpaceService: WorkSpaceService) {}
+  constructor(
+    private readonly workSpaceService: WorkSpaceService,
+    private readonly userGroupService: UserGroupService,
+  ) {}
+
+  private readonly logger = new Logger(WorkSpaceController.name);
 
   @Get('work-space/:id')
   @Render('pages/groups')
@@ -72,17 +78,18 @@ export class WorkSpaceController {
     body: {
       isScan: string;
       searchName: string;
-      scanGroupStatus?: string;
+      scanGroupStatus?: { groupVkId: string; isScan: boolean }[];
     },
   ) {
-    Logger.debug(body.scanGroupStatus);
     const isScanLocal = isNaN(Number(body.isScan))
       ? undefined
       : Number(body.isScan);
 
     if (body.scanGroupStatus !== undefined) {
-      const list = body.scanGroupStatus;
-      Logger.debug(list);
+      await this.userGroupService.updateIsScanStatus(
+        Number(id),
+        body.scanGroupStatus,
+      );
     }
 
     const userGroupList = await this.workSpaceService.getGroupList({
@@ -91,6 +98,7 @@ export class WorkSpaceController {
       limit: Number(limit),
       is_scan: isScanLocal,
     });
+
     const dataToRender = {
       pageTitle: 'Группы ВК',
       userId: id,

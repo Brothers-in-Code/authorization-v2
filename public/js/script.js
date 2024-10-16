@@ -41,7 +41,7 @@
     const data = [];
     for (let [key, value] of scanGroupMap.entries()) {
       const obj = {
-        vkid: key,
+        groupVkId: key,
         isScan: value,
       };
       data.push(obj);
