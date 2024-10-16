@@ -68,16 +68,14 @@ export class UserGroupService {
     offset: number;
     limit: number;
     user_vkid: number;
-    groups: Group[];
+    groups: { group: Group; isScan: number }[];
   }> {
     const whereConditions: any = {
       user: { user_vkid },
     };
 
-    this.logger.debug('is_scan = ' + is_scan);
     if (is_scan !== undefined) {
       whereConditions['is_scan'] = is_scan;
-      offset = 0;
     }
     const total = await this.userGroupRepository.count({
       where: whereConditions,
@@ -96,10 +94,12 @@ export class UserGroupService {
           delete localGroup.created_at;
           delete localGroup.deleted_at;
           delete localGroup.updated_at;
-          return localGroup;
+          return {
+            group: localGroup,
+            isScan: group.is_scan,
+          };
         }),
       );
-
     return {
       total,
       offset,

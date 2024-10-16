@@ -18,12 +18,13 @@
                   <td colspan="5" class="table__pagination-cell">
                     <!-- prettier-ignore -->
                     <%- include('../components/pagination.ejs', 
-                        {total: data.userGroupList.total, offset: data.userGroupList.offset, limit: data.userGroupList.limit, params: `&is_scan=${data.currentIsScan}`} ) 
+                        {total: data.userGroupList.total, offset: data.userGroupList.offset, limit: data.userGroupList.limit, params: `&isScan=${data.currentIsScan}`} ) 
                     %>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="3" class="td--form">
+                    <div class="flex">
                     <form class="form"
                         method="post"
                         accept-charset="utf-8"
@@ -46,7 +47,7 @@
                         name="isScan"
                       >
                         <!-- prettier-ignore -->
-                        <option value="">Все группы</option>
+                        <option value="undefined">Все группы</option>
                         <option <% if (data.currentIsScan == 1) { %>selected<% } %> value="1">Сканируются</option>
                         <option <% if (data.currentIsScan == 0) { %>selected<% } %> value="0">Не сканируются</option>
                       </select>
@@ -58,6 +59,8 @@
                         Фильтровать
                     </button>
                     </form>
+                    <button disabled class="btn btn-disabled btn-danger" id="btn-save-scan-group-status">Сохранить</button>
+                    </div>
                   </td>
                 </tr>
                 <tr>
@@ -75,22 +78,26 @@
                   <td>
                     <img
                       class="logo"
-                      src="<%= group.photo %>"
+                      src="<%= group.group.photo %>"
                       alt="иконка группы ВК"
                     />
                   </td>
                   <td>
-                    <div><%= group.name %></div>
-                    <div class="id"><%= group.vkid %></div>
+                    <div><%= group.group.name %></div>
+                    <div class="id"><%= group.group.vkid %></div>
                   </td>
 
                   <!--  TODO добавить отображение статуса сканирования и весь функционал -->
                   <td>
+
                     <input
-                      class="form-check-input"
+                      class="form-check-input scan-group-status-checkbox"
                       type="checkbox"
-                      onchange="createRequest('is_scan', this.checked)"
+                      name="isScan"
                       value="<%= group.vkid %>"
+                      data-group-vk-id="<%= group.group.vkid %>"
+                      data-group-is-scan="<% group.isScan %>"
+                      <%= group.is_scan ? 'checked' : '' %>
                     />
                   </td>
                   <td>
@@ -105,6 +112,6 @@
         </main>
       </div>
     </div>
-    <script src="/js/search-data.js"></script>
+    <script src="/js/script.js"></script>
   </body>
 </html>

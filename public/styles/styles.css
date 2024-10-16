@@ -95,6 +95,13 @@
   color: var(--bs-gray-900);
 }
 
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
 .nav__list {
   margin: 0;
   padding: 0;
@@ -170,6 +177,12 @@
 }
 .form__submit {
   margin-left: auto;
+}
+
+.btn-disabled {
+  filter: grayscale(50%);
+  opacity: 0.5;
+  cursor: not-allowed !important;
 }
 
 /*# sourceMappingURL=styles.css.map */

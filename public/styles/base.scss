@@ -14,3 +14,10 @@
     color: var(--bs-gray-900);
   }
 }
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}

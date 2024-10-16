@@ -4,6 +4,7 @@ import {
   Get,
   Logger,
   Param,
+  Patch,
   Post,
   Query,
   Render,
@@ -58,7 +59,6 @@ export class WorkSpaceController {
       currentIsScan: isScan,
       userGroupList,
     };
-
     return { data: dataToRender };
   }
 
@@ -72,11 +72,18 @@ export class WorkSpaceController {
     body: {
       isScan: string;
       searchName: string;
+      scanGroupStatus?: string;
     },
   ) {
+    Logger.debug(body.scanGroupStatus);
     const isScanLocal = isNaN(Number(body.isScan))
       ? undefined
       : Number(body.isScan);
+
+    if (body.scanGroupStatus !== undefined) {
+      const list = body.scanGroupStatus;
+      Logger.debug(list);
+    }
 
     const userGroupList = await this.workSpaceService.getGroupList({
       user_id: Number(id),
