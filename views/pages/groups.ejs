@@ -15,7 +15,7 @@
             <table class="table table--groups">
               <thead>
                 <tr>
-                  <td colspan="5" class="table__pagination-cell">
+                  <td colspan="4" class="table__pagination-cell">
                     <!-- prettier-ignore -->
                     <%- include('../components/pagination.ejs', 
                         {total: data.userGroupList.total, offset: data.userGroupList.offset, limit: data.userGroupList.limit, params: `&isScan=${data.currentIsScan}`} ) 
@@ -23,7 +23,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3" class="td--form">
+                  <td colspan="4" class="td--form ">
                     <div class="flex">
                     <form class="form"
                         method="post"

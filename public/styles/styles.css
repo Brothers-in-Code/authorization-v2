@@ -140,6 +140,8 @@
 }
 .table .td--form {
   padding-left: 0;
+  border-style: unset;
+  background-color: var(--bs-white);
 }
 
 .table--groups {
