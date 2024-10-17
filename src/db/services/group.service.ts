@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,14 +24,22 @@ export class GroupService {
     private readonly groupRepository: Repository<Group>,
   ) {}
 
+  private readonly logger = new Logger(GroupService.name);
+
   findAll(): Promise<Group[]> {
     return this.groupRepository.find();
   }
 
+  async findByKey<T>(key: string, value: T[]): Promise<Group> {
+    return this.groupRepository.findOneBy({ [key]: In(value) });
+  }
+
+  //   TODO везде изменить на findByKey и удалить
   findOne(vkid: number): Promise<Group> {
     return this.groupRepository.findOneBy({ vkid });
   }
 
+  //   TODO везде изменить на findByKey и удалить
   async findGroupListByVkIdList(vkidList: number[]): Promise<Group[]> {
     return this.groupRepository.findBy({ vkid: In(vkidList) });
   }
@@ -51,7 +60,8 @@ export class GroupService {
   }
 
   async createGroupList(groupList: Group[]): Promise<Group[]> {
-    const vkidList = groupList.map((group) => group.id);
+    const vkidList = groupList.map((group) => group.vkid);
+
     const existingVkIdList = await this.groupRepository
       .find({
         where: { vkid: In(vkidList) },

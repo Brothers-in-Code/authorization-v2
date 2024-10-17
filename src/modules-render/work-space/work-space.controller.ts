@@ -79,7 +79,8 @@ export class WorkSpaceController {
       isScan: string;
       searchName: string;
       scanGroupStatus?: { groupVkId: string; isScan: boolean }[];
-      groupIdOrDomainAdd?: string;
+      addGroupByIdOrDomain?: string;
+      searchGroupByIdOrDomain?: string;
     },
   ) {
     const isScanLocal = isNaN(Number(body.isScan))
@@ -93,9 +94,9 @@ export class WorkSpaceController {
       );
     }
 
-    if (body.groupIdOrDomainAdd !== undefined) {
+    if (body.addGroupByIdOrDomain !== undefined) {
       await this.workSpaceService.addGroupToUser(Number(id), {
-        groupIdOrDomain: body.groupIdOrDomainAdd,
+        groupIdOrDomain: body.addGroupByIdOrDomain,
       });
     }
 

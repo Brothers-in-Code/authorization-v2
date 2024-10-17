@@ -83,6 +83,7 @@ export class WorkSpaceService {
       );
     }
 
+    // TODO выполнить поиск группы в БД
     if (!isNaN(Number(data.groupIdOrDomain))) {
       //   this.logger.debug('number');
     } else if (typeof data.groupIdOrDomain === 'string') {
@@ -109,7 +110,7 @@ export class WorkSpaceService {
       user,
       newGroupList,
     );
-
+    // TODO сделать сообщения о сохранении и о наличии группы в списке пользователя
     return newUserGroupList;
   }
 }
