@@ -86,6 +86,7 @@ export class VkDataService {
       Object.assign(newGroup, {
         vkid: item.id,
         name: item.name,
+        screen_name: item.screen_name,
         is_private: Boolean(item.is_closed),
         photo: item.photo_100,
       });

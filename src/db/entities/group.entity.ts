@@ -11,6 +11,9 @@ export class Group extends AbstractEntity {
   name: string;
 
   @Column()
+  screen_name: string;
+
+  @Column({ default: null, type: 'varchar' })
   is_private: boolean;
 
   @Column({ default: null, type: 'varchar', length: 1000 })

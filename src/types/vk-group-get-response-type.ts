@@ -17,10 +17,10 @@ type VKGroupType = {
   id: number;
   is_closed: number;
   name: string;
+  screen_name: string;
   photo_50: string;
   photo_100: string;
   photo_200: string;
-  screen_name: string;
   type: string;
 };
 

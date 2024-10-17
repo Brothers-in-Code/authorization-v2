@@ -11,6 +11,7 @@ import { DatabaseServiceError } from 'src/errors/service-errors';
 type CreateGroupParamsType = {
   vkid: number;
   name: string;
+  screen_name: string;
   is_private: boolean;
   photo?: string;
 };

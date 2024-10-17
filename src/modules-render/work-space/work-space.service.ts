@@ -92,15 +92,15 @@ export class WorkSpaceService {
     const response = await this.vkDataService.getGroupInfo(user.access_token, [
       data.groupIdOrDomain,
     ]);
-    this.logger.debug(response);
+
     const vkGroupList: VKGroupType[] = response.response.groups.map((item) => ({
       id: item.id,
       is_closed: item.is_closed,
       name: item.name,
+      screen_name: item.screen_name,
       photo_50: item.photo_50,
       photo_100: item.photo_100,
       photo_200: item.photo_200,
-      screen_name: item.screen_name,
       type: item.type,
     }));
 
@@ -109,6 +109,7 @@ export class WorkSpaceService {
       user,
       newGroupList,
     );
-    this.logger.debug(JSON.stringify(newUserGroupList));
+
+    return newUserGroupList;
   }
 }
