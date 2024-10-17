@@ -1,3 +1,4 @@
+
 <aside
   class="page-layout__context page-layout__section context"
   id="group-context"
@@ -8,15 +9,22 @@
       alt="кнопка открытия и закрытия контекстного меню"
     />
   </button>
-  <div>
-    Lorem ipsum dolor sit amet consectetur <br />
-    adipisicing elit. Rem repellat nisi voluptatem recusandae molestias,
-    quibusdam <br />
-    atque ratione sapiente unde laborum obcaecati rerum id voluptatibus qui
-    <br />
-    harum sed doloremque. Veritatis, dicta.
-  </div>
   <div class="overlay"></div>
+  <form
+    class="form form--vertical"
+    method="post"
+    accept-charset="utf-8"
+    url=`./?offset=${offset}&limit=${limit}`
+  >
+    <fieldset>
+      <legend>Добавить группу</legend>
+      <label>
+        <div>id или короткое имя сообщества</div>
+        <input class="form-control" type="text" name="groupIdOrDomainAdd" />
+      </label>
+    </fieldset>
+    <button class="btn btn-primary form__submit" type="submit">Добавить</button>
+  </form>
 </aside>
 
 <script src="/js/group-context.js"></script>

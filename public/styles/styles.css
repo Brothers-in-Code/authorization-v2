@@ -206,6 +206,11 @@
   margin-left: auto;
 }
 
+.form--vertical {
+  flex-direction: column;
+  gap: 10px;
+}
+
 .btn-disabled {
   filter: grayscale(50%);
   opacity: 0.5;

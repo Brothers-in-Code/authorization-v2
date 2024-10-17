@@ -11,6 +11,8 @@ export class WorkSpaceService {
     private readonly postService: PostService,
   ) {}
 
+  private readonly logger = new Logger(WorkSpaceService.name);
+
   async getGroupList(data: {
     user_id: number;
     offset: number;
@@ -68,5 +70,20 @@ export class WorkSpaceService {
       endDate: data.endDate ?? undefined,
     });
     return response;
+  }
+
+  async addGroupToUser(user_id: number, data: { groupIdOrDomain: string }) {
+    const user = await this.userService.findOneById(user_id);
+    if (!user) {
+      throw new NotFoundException(
+        'func: addGroupToUser. Пользователь не найден',
+      );
+    }
+
+    if (!isNaN(Number(data.groupIdOrDomain))) {
+      this.logger.debug('number');
+    } else if (typeof data.groupIdOrDomain === 'string') {
+      this.logger.debug('string');
+    }
   }
 }

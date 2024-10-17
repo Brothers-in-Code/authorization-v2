@@ -110,7 +110,7 @@
             </table>
           </div>
         </main>
-        <%- include('../components/group-context.ejs') %>
+        <%- include('../components/group-context.ejs', {total: data.userGroupList.total, limit: data.userGroupList.limit}) %>
       </div>
     </div>
     <script src="/js/script.js"></script>

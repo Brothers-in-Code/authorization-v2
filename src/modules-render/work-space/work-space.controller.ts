@@ -70,7 +70,7 @@ export class WorkSpaceController {
 
   @Post('work-space/:id/groups')
   @Render('pages/groups')
-  async receiveFilterGroups(
+  async receiveDataGroups(
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
@@ -79,6 +79,7 @@ export class WorkSpaceController {
       isScan: string;
       searchName: string;
       scanGroupStatus?: { groupVkId: string; isScan: boolean }[];
+      groupIdOrDomainAdd?: string;
     },
   ) {
     const isScanLocal = isNaN(Number(body.isScan))
@@ -91,6 +92,14 @@ export class WorkSpaceController {
         body.scanGroupStatus,
       );
     }
+
+    if (body.groupIdOrDomainAdd !== undefined) {
+      await this.workSpaceService.addGroupToUser(Number(id), {
+        groupIdOrDomain: body.groupIdOrDomainAdd,
+      });
+    }
+
+    this.logger.debug(body.groupIdOrDomainAdd);
 
     const userGroupList = await this.workSpaceService.getGroupList({
       user_id: Number(id),

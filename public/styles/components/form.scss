@@ -7,3 +7,8 @@
     margin-left: auto;
   }
 }
+
+.form--vertical {
+  flex-direction: column;
+  gap: 10px;
+}
