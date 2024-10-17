@@ -2,6 +2,8 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PostService } from 'src/db/services/post.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
+import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
+import { VKGroupType } from 'src/types/vk-group-get-response-type';
 
 @Injectable()
 export class WorkSpaceService {
@@ -9,6 +11,7 @@ export class WorkSpaceService {
     private readonly userService: UserService,
     private readonly userGroupService: UserGroupService,
     private readonly postService: PostService,
+    private readonly vkDataService: VkDataService,
   ) {}
 
   private readonly logger = new Logger(WorkSpaceService.name);
@@ -81,9 +84,31 @@ export class WorkSpaceService {
     }
 
     if (!isNaN(Number(data.groupIdOrDomain))) {
-      this.logger.debug('number');
+      //   this.logger.debug('number');
     } else if (typeof data.groupIdOrDomain === 'string') {
-      this.logger.debug('string');
+      //   this.logger.debug('string');
     }
+
+    const response = await this.vkDataService.getGroupInfo(user.access_token, [
+      data.groupIdOrDomain,
+    ]);
+    this.logger.debug(response);
+    const vkGroupList: VKGroupType[] = response.response.groups.map((item) => ({
+      id: item.id,
+      is_closed: item.is_closed,
+      name: item.name,
+      photo_50: item.photo_50,
+      photo_100: item.photo_100,
+      photo_200: item.photo_200,
+      screen_name: item.screen_name,
+      type: item.type,
+    }));
+
+    const newGroupList = await this.vkDataService.saveGroupList(vkGroupList);
+    const newUserGroupList = await this.userGroupService.createUserGroupList(
+      user,
+      newGroupList,
+    );
+    this.logger.debug(JSON.stringify(newUserGroupList));
   }
 }

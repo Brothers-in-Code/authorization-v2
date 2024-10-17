@@ -5,8 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
 
 import {
-  VKGroupGetResponseType,
+  VKMethodGroupsGetResponseType,
   VKGroupType,
+  VKMethodGroupsGetByIdResponseType,
 } from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
 
@@ -37,7 +38,7 @@ export class VkDataService {
       access_token,
     };
     const response =
-      await this.httpService.axiosRef.get<VKGroupGetResponseType>(
+      await this.httpService.axiosRef.get<VKMethodGroupsGetByIdResponseType>(
         `${VK_API}/groups.getById`,
         {
           params,
@@ -59,7 +60,7 @@ export class VkDataService {
       access_token,
     };
     const response =
-      await this.httpService.axiosRef.post<VKGroupGetResponseType>(
+      await this.httpService.axiosRef.post<VKMethodGroupsGetResponseType>(
         `${VK_API}/groups.get`,
         qs.stringify(params),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
@@ -70,6 +71,14 @@ export class VkDataService {
   /**
    * сохраняя группы вспомни, что их надо привязать к пользователю
    * UserGroupService create или createUserGroupList
+   * @param id: number;
+   * @param is_closed: number;
+   * @param name: string;
+   * @param photo_50: string;
+   * @param photo_100: string;
+   * @param photo_200: string;
+   * @param screen_name: string;
+   * @param type: string;
    */
   async saveGroupList(vkGroupList: VKGroupType[]) {
     const groupList = vkGroupList.map((item) => {

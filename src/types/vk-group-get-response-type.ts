@@ -1,8 +1,15 @@
-type VKGroupGetResponseType = {
+type VKMethodGroupsGetResponseType = {
   response: {
     count: number;
     items: VKGroupType[];
     last_updated_time: number;
+  };
+};
+
+type VKMethodGroupsGetByIdResponseType = {
+  response: {
+    groups: VKGroupType[];
+    profiles: any[];
   };
 };
 
@@ -17,4 +24,8 @@ type VKGroupType = {
   type: string;
 };
 
-export { VKGroupGetResponseType, VKGroupType };
+export {
+  VKMethodGroupsGetResponseType,
+  VKMethodGroupsGetByIdResponseType,
+  VKGroupType,
+};

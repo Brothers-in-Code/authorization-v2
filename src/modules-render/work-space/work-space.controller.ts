@@ -99,8 +99,6 @@ export class WorkSpaceController {
       });
     }
 
-    this.logger.debug(body.groupIdOrDomainAdd);
-
     const userGroupList = await this.workSpaceService.getGroupList({
       user_id: Number(id),
       offset: Number(offset),
