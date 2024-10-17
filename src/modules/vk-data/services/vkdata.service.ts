@@ -192,7 +192,6 @@ export class VkDataService {
   ) {
     const posts = postParamsList.map((postParams) => {
       const newPost = this.postService.createNewPost();
-      Logger.debug(JSON.stringify({ ...newPost, ...postParams, group: group }));
       return { ...newPost, ...postParams, group: group };
     });
     const postList = await this.postService.createPostList(posts);

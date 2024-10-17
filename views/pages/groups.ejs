@@ -30,6 +30,7 @@
                         accept-charset="utf-8"
                         url="./?offset=0&limit=20"
                     >
+                    
                       <label>
                         <input
                           class="form-control"
@@ -37,7 +38,8 @@
                           type="text"
                           aria-label="Search"
                           id="nameSearch"
-                          name="searchName"
+                          name="filterGroupByIdOrName"
+                        value="<%= data?.filterGroupByIdOrName %>"
                         />
                       </label>
                       <label>

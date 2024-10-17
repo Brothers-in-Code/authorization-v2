@@ -21,6 +21,7 @@ export class WorkSpaceService {
     offset: number;
     limit: number;
     is_scan?: number;
+    filterGroupByIdOrName?: string;
   }) {
     const user = await this.userService.findOneById(data.user_id);
     if (!user) {
@@ -35,6 +36,14 @@ export class WorkSpaceService {
 
     if (data.is_scan !== undefined) {
       params['is_scan'] = data.is_scan;
+    }
+
+    if (data.filterGroupByIdOrName !== '') {
+      if (!isNaN(Number(data.filterGroupByIdOrName))) {
+        params['group_vkid'] = Number(data.filterGroupByIdOrName);
+      } else if (typeof data.filterGroupByIdOrName === 'string') {
+        params['name'] = data.filterGroupByIdOrName;
+      }
     }
 
     const response = await this.userGroupService.getUsersGroupList(params);

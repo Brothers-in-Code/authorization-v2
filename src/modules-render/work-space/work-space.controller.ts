@@ -80,7 +80,7 @@ export class WorkSpaceController {
       searchName: string;
       scanGroupStatus?: { groupVkId: string; isScan: boolean }[];
       addGroupByIdOrDomain?: string;
-      searchGroupByIdOrDomain?: string;
+      filterGroupByIdOrName?: string;
     },
   ) {
     const isScanLocal = isNaN(Number(body.isScan))
@@ -105,6 +105,7 @@ export class WorkSpaceController {
       offset: Number(offset),
       limit: Number(limit),
       is_scan: isScanLocal,
+      filterGroupByIdOrName: body.filterGroupByIdOrName,
     });
 
     const dataToRender = {
@@ -112,6 +113,7 @@ export class WorkSpaceController {
       userId: id,
       currentPage: 'groups',
       currentIsScan: body.isScan,
+      filterGroupByIdOrName: body.filterGroupByIdOrName,
       userGroupList,
     };
 

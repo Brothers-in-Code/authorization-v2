@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserGroup } from 'src/db/entities/user_group.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
 import { GroupService } from './group.service';
@@ -56,30 +56,40 @@ export class UserGroupService {
     return await this.userGroupRepository.find();
   }
 
-  async getUsersGroupList({
-    user_vkid,
-    offset,
-    limit,
-    is_scan,
-  }: {
+  async getUsersGroupList(data: {
     user_vkid: number;
     offset: number;
     limit: number;
     is_scan?: number;
+    group_vkid?: number;
+    name?: string;
   }): Promise<{
     total: number;
     offset: number;
     limit: number;
     user_vkid: number;
+    group_vkid?: number;
+    name?: string;
     groups: { group: Group; isScan: number }[];
   }> {
     const whereConditions: any = {
-      user: { user_vkid },
+      user: { user_vkid: data.user_vkid },
     };
 
-    if (is_scan !== undefined) {
-      whereConditions['is_scan'] = is_scan;
+    if (data.is_scan !== undefined) {
+      whereConditions['is_scan'] = data.is_scan;
     }
+
+    if (data.group_vkid !== undefined) {
+      whereConditions['group'] = { vkid: data.group_vkid };
+    }
+
+    if (data.name !== undefined) {
+      whereConditions['group'] = {
+        name: Like(`%${data.name}%`),
+      };
+    }
+
     const total = await this.userGroupRepository.count({
       where: whereConditions,
     });
@@ -88,8 +98,8 @@ export class UserGroupService {
       .find({
         where: whereConditions,
         relations: ['group'],
-        skip: offset,
-        take: limit,
+        skip: data.offset,
+        take: data.limit,
       })
       .then((data) =>
         data.map((group) => {
@@ -103,11 +113,12 @@ export class UserGroupService {
           };
         }),
       );
+
     return {
       total,
-      offset,
-      limit,
-      user_vkid,
+      offset: data.offset,
+      limit: data.limit,
+      user_vkid: data.user_vkid,
       groups,
     };
   }
