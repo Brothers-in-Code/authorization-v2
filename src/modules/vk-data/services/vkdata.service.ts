@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from 'src/db/services/user.service';
 
 import {
-  VKGroupGetResponseType,
+  VKMethodGroupsGetResponseType,
   VKGroupType,
+  VKMethodGroupsGetByIdResponseType,
 } from 'src/types/vk-group-get-response-type';
 import { PostService } from 'src/db/services/post.service';
 
@@ -37,7 +38,7 @@ export class VkDataService {
       access_token,
     };
     const response =
-      await this.httpService.axiosRef.get<VKGroupGetResponseType>(
+      await this.httpService.axiosRef.get<VKMethodGroupsGetByIdResponseType>(
         `${VK_API}/groups.getById`,
         {
           params,
@@ -59,7 +60,7 @@ export class VkDataService {
       access_token,
     };
     const response =
-      await this.httpService.axiosRef.post<VKGroupGetResponseType>(
+      await this.httpService.axiosRef.post<VKMethodGroupsGetResponseType>(
         `${VK_API}/groups.get`,
         qs.stringify(params),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
@@ -70,6 +71,14 @@ export class VkDataService {
   /**
    * сохраняя группы вспомни, что их надо привязать к пользователю
    * UserGroupService create или createUserGroupList
+   * @param id: number;
+   * @param is_closed: number;
+   * @param name: string;
+   * @param photo_50: string;
+   * @param photo_100: string;
+   * @param photo_200: string;
+   * @param screen_name: string;
+   * @param type: string;
    */
   async saveGroupList(vkGroupList: VKGroupType[]) {
     const groupList = vkGroupList.map((item) => {
@@ -77,6 +86,7 @@ export class VkDataService {
       Object.assign(newGroup, {
         vkid: item.id,
         name: item.name,
+        screen_name: item.screen_name,
         is_private: Boolean(item.is_closed),
         photo: item.photo_100,
       });
@@ -174,15 +184,15 @@ export class VkDataService {
     group: Group,
     postParamsList: {
       post_vkid: number;
+      likes: number;
+      views: number;
+      timestamp_post: number;
       json: string;
     }[],
   ) {
     const posts = postParamsList.map((postParams) => {
       const newPost = this.postService.createNewPost();
-      newPost.group = group;
-      newPost.post_vkid = postParams.post_vkid;
-      newPost.json = postParams.json;
-      return newPost;
+      return { ...newPost, ...postParams, group: group };
     });
     const postList = await this.postService.createPostList(posts);
     if (!postList) {

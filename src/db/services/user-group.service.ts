@@ -1,16 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserGroup } from 'src/db/entities/user_group.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
+import { GroupService } from './group.service';
+import { group } from 'console';
 
 @Injectable()
 export class UserGroupService {
   constructor(
     @InjectRepository(UserGroup)
     private readonly userGroupRepository: Repository<UserGroup>,
+    private readonly groupService: GroupService,
   ) {}
+
+  private readonly logger = new Logger(UserGroupService.name);
 
   async create(user: User, group: Group): Promise<UserGroup> {
     const userGroup = new UserGroup();
@@ -23,10 +28,14 @@ export class UserGroupService {
     user: User,
     groupList: Group[],
   ): Promise<UserGroup[]> {
-    const existingVkIdList = await this.findUsersGroupList(user.user_vkid);
+    const existingUserGroupList = await this.userGroupRepository.find({
+      where: { user: { user_vkid: user.user_vkid } },
+      relations: ['group'],
+    });
+
     const newGroupList = groupList.filter((group) => {
-      return !existingVkIdList.groups.some(
-        (existingGroup) => existingGroup.vkid === group.vkid,
+      return !existingUserGroupList.some(
+        (existingGroup) => existingGroup.group.vkid === group.vkid,
       );
     });
 
@@ -47,12 +56,77 @@ export class UserGroupService {
     return await this.userGroupRepository.find();
   }
 
-  async findUsersGroupList(
-    user_vkid: number,
-  ): Promise<{ user_vkid: number; groups: Group[] }> {
-    const userGroups = await this.userGroupRepository
+  async getUsersGroupList(data: {
+    user_vkid: number;
+    offset: number;
+    limit: number;
+    is_scan?: number;
+    group_vkid?: number;
+    name?: string;
+  }): Promise<{
+    total: number;
+    offset: number;
+    limit: number;
+    user_vkid: number;
+    group_vkid?: number;
+    name?: string;
+    groups: { group: Group; isScan: number }[];
+  }> {
+    const whereConditions: any = {
+      user: { user_vkid: data.user_vkid },
+    };
+
+    if (data.is_scan !== undefined) {
+      whereConditions['is_scan'] = data.is_scan;
+    }
+
+    if (data.group_vkid !== undefined) {
+      whereConditions['group'] = { vkid: data.group_vkid };
+    }
+
+    if (data.name !== undefined) {
+      whereConditions['group'] = {
+        name: Like(`%${data.name}%`),
+      };
+    }
+
+    const total = await this.userGroupRepository.count({
+      where: whereConditions,
+    });
+
+    const groups = await this.userGroupRepository
       .find({
-        where: { user: { user_vkid } },
+        where: whereConditions,
+        relations: ['group'],
+        skip: data.offset,
+        take: data.limit,
+      })
+      .then((data) =>
+        data.map((group) => {
+          const localGroup = group.group;
+          delete localGroup.created_at;
+          delete localGroup.deleted_at;
+          delete localGroup.updated_at;
+          return {
+            group: localGroup,
+            isScan: group.is_scan,
+          };
+        }),
+      );
+
+    return {
+      total,
+      offset: data.offset,
+      limit: data.limit,
+      user_vkid: data.user_vkid,
+      groups,
+    };
+  }
+
+  async findAllByUser(user_id: number): Promise<Group[]> {
+    const groups = await this.userGroupRepository
+      .find({
+        where: { user: { id: user_id } },
         relations: ['group'],
       })
       .then((data) =>
@@ -65,10 +139,27 @@ export class UserGroupService {
         }),
       );
 
-    return {
-      user_vkid,
-      groups: userGroups,
-    };
+    return groups;
+  }
+
+  //   TODO логер и ответ
+  async updateIsScanStatus(
+    userId: number,
+    dataList: { groupVkId: string; isScan: boolean }[],
+  ) {
+    for (const data of dataList) {
+      const group = await this.groupService.findOne(Number(data.groupVkId));
+      await this.userGroupRepository.update(
+        {
+          user: { id: userId },
+          group: { id: group.id },
+        },
+        {
+          is_scan: data.isScan ? 1 : 0,
+        },
+      );
+    }
+    return true;
   }
 
   async remove(user_vkid: number, group_vkid: number): Promise<DeleteResult> {

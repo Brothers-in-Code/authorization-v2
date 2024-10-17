@@ -1,0 +1,10 @@
+{
+  "proxy": "https://stay-in-touch.ru/api",
+  "port": 3010,
+
+  "files": ["public/styles/*.css", "views/**/*.ejs"],
+  "reloadDelay": 500,
+  "reloadDebounce": 500,
+  "open": false,
+  "notify": false
+}

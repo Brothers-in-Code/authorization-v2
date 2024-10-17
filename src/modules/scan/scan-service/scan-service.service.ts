@@ -100,10 +100,14 @@ export class ScanService {
           const postParamsList = response.response.items.map((item) => {
             return {
               post_vkid: item.id,
+              likes: item.likes?.count || 0,
+              views: item.views?.count || 0,
+              timestamp_post: item.date,
               json: JSON.stringify(item),
             };
           });
 
+          //   FIX посты не обновляются
           await this.vkDataService.savePostList(group, postParamsList);
           this.logger.log(`посты группы groupVKId = ${groupVKId} сохранены`);
 

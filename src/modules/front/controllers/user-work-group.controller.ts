@@ -20,9 +20,14 @@ export class UserWorkGroupController {
     private readonly vkDataService: VkDataService,
   ) {}
 
+  //   TODO сделать limit и offset
   @Get(':id')
   findAll(@Param('id') user_vkid: number): Promise<any> {
-    return this.userGroupService.findUsersGroupList(user_vkid);
+    return this.userGroupService.getUsersGroupList({
+      user_vkid,
+      offset: 0,
+      limit: 20,
+    });
   }
 
   @Get('group/:id')

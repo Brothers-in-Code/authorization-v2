@@ -1,4 +1,4 @@
-type VKGroupGetResponseType = {
+type VKMethodGroupsGetResponseType = {
   response: {
     count: number;
     items: VKGroupType[];
@@ -6,15 +6,26 @@ type VKGroupGetResponseType = {
   };
 };
 
+type VKMethodGroupsGetByIdResponseType = {
+  response: {
+    groups: VKGroupType[];
+    profiles: any[];
+  };
+};
+
 type VKGroupType = {
   id: number;
   is_closed: number;
   name: string;
+  screen_name: string;
   photo_50: string;
   photo_100: string;
   photo_200: string;
-  screen_name: string;
   type: string;
 };
 
-export { VKGroupGetResponseType, VKGroupType };
+export {
+  VKMethodGroupsGetResponseType,
+  VKMethodGroupsGetByIdResponseType,
+  VKGroupType,
+};

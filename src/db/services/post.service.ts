@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
-import { Repository } from 'typeorm';
+import { In, LessThan, MoreThan, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
+
+type PostListOutputType = {
+  total: number;
+  offset: number;
+  limit: number;
+  posts: { group: { id: number; name: string }; post: string }[];
+};
 
 @Injectable()
 export class PostService {
@@ -21,6 +28,63 @@ export class PostService {
     return this.postRepository.findOneBy({ id });
   }
 
+  async getPostsByGroupList(data: {
+    groupList: Group[];
+    offset: number;
+    limit: number;
+    likesMin?: number;
+    viewsMin?: number;
+    begDate?: number;
+    endDate?: number;
+  }): Promise<PostListOutputType> {
+    const idList = data.groupList.map((group) => group.id);
+
+    const whereConditions = {
+      group: { id: In(idList) },
+    };
+    if (data.likesMin) {
+      whereConditions['likes'] = MoreThan(data.likesMin);
+    }
+    if (data.viewsMin) {
+      whereConditions['views'] = MoreThan(data.viewsMin);
+    }
+    if (data.begDate) {
+      whereConditions['timestamp_post'] = MoreThan(data.begDate);
+    }
+    if (data.endDate) {
+      whereConditions['timestamp_post'] = LessThan(data.endDate);
+    }
+    const total = await this.postRepository.count({
+      where: whereConditions,
+    });
+
+    const posts = await this.postRepository
+      .find({
+        where: whereConditions,
+        relations: { group: true },
+        skip: data.offset,
+        take: data.limit,
+        order: { likes: 'DESC' },
+      })
+      .then((postList) =>
+        postList.map((post) => {
+          return {
+            group: {
+              id: post.group.vkid,
+              name: post.group.name,
+            },
+            post: post.json,
+          };
+        }),
+      );
+    return {
+      total,
+      offset: data.offset,
+      limit: data.limit,
+      posts,
+    };
+  }
+
   async createPost(postParams: {
     group_vkid: number;
     post_vkid: number;
@@ -33,6 +97,7 @@ export class PostService {
 
     post.group = group;
     post.post_vkid = postParams.post_vkid;
+
     post.json = postParams.json;
     return this.postRepository.save(post);
   }

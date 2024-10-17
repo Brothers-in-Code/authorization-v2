@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../components/head.ejs', {title: data.pageTitle}) %>
+  <body>
+    <div id="root">
+      <div class="page-layout">
+        <!-- prettier-ignore -->
+        <%- include('../components/header.ejs') %>
+        <!-- prettier-ignore -->
+        <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
+
+        <main class="page-layout__main page-layout__section main">
+          <div class="page-layout__wrapper">
+            <div id="groups-table"></div>
+            <table class="table table--groups">
+              <thead>
+                <tr>
+                  <td colspan="4" class="table__pagination-cell">
+                    <!-- prettier-ignore -->
+                    <%- include('../components/pagination.ejs', 
+                        {total: data.userGroupList.total, offset: data.userGroupList.offset, limit: data.userGroupList.limit, params: `&isScan=${data.currentIsScan}`} ) 
+                    %>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4" class="td--form ">
+                    <div class="flex">
+                    <form class="form"
+                        method="post"
+                        accept-charset="utf-8"
+                        url="./?offset=0&limit=20"
+                    >
+                    
+                      <label>
+                        <input
+                          class="form-control"
+                          placeholder="номер или название группы"
+                          type="text"
+                          aria-label="Search"
+                          id="nameSearch"
+                          name="filterGroupByIdOrName"
+                        value="<%= data?.filterGroupByIdOrName %>"
+                        />
+                      </label>
+                      <label>
+                        <select
+                        class="form-select"
+                        aria-label="Фильтр по значению сканировать"
+                        name="isScan"
+                      >
+                        <!-- prettier-ignore -->
+                        <option value="undefined">Все группы</option>
+                        <option <% if (data.currentIsScan == 1) { %>selected<% } %> value="1">Сканируются</option>
+                        <option <% if (data.currentIsScan == 0) { %>selected<% } %> value="0">Не сканируются</option>
+                      </select>
+                      </label>
+                      <button
+                        class="btn btn-primary form__submit"
+                        type="submit"
+                      >
+                        Фильтровать
+                    </button>
+                    </form>
+                    <button disabled class="btn btn-disabled btn-danger" id="btn-save-scan-group-status">Сохранить</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2">Название</th>
+                  <th>Сканировать</th>
+                  <th>
+                    Последнее <br />
+                    обновление
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% data.userGroupList.groups.forEach((group) => { %>
+                <tr>
+                  <td>
+                    <img
+                      class="logo"
+                      src="<%= group.group.photo %>"
+                      alt="иконка группы ВК"
+                    />
+                  </td>
+                  <td>
+                    <div><%= group.group.name %></div>
+                    <div class="id"><%= group.group.vkid %></div>
+                  </td>
+
+                  <!--  TODO добавить отображение статуса сканирования и весь функционал -->
+                  <td>
+
+                    <input
+                      class="form-check-input scan-group-status-checkbox"
+                      type="checkbox"
+                      name="isScan"
+                      value="<%= group.vkid %>"
+                      data-group-vk-id="<%= group.group.vkid %>"
+                      data-group-is-scan="<% group.isScan %>"
+                      <%= group.isScan ? 'checked' : '' %>
+                    />
+                  </td>
+                  <td>
+                    <!-- prettier-ignore -->
+                    <%= Intl.DateTimeFormat().format(group.last_group_scan_date)%>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </main>
+        <%- include('../components/group-context.ejs', {total: data.userGroupList.total, limit: data.userGroupList.limit}) %>
+      </div>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+@mixin reset {
+  margin: 0;
+  padding: 0;
+}
+
+@mixin link-reset {
+  text-decoration: none;
+  outline: none;
+}
+
+@mixin list-reset {
+  @include reset;
+  list-style: none;
+}
+
+@mixin btn-reset {
+  @include reset;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+@mixin input-reset {
+  padding: 0;
+  border: none;
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+}

@@ -1,0 +1,23 @@
+#root {
+  padding-inline: 10px;
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.link {
+  @include link-reset;
+  &--active {
+    color: var(--bs-gray-900);
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}

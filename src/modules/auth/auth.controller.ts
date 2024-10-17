@@ -119,7 +119,6 @@ export class AuthController {
       const userInfo = await this.authService.getUserInfo(
         response.access_token,
       );
-      Logger.debug(JSON.stringify(userInfo.user.email));
       const expires_date = this.authService.calcExpiresDate(
         response.expires_in,
       );

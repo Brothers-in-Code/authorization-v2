@@ -1,0 +1,22 @@
+.nav {
+  &__list {
+    @include list-reset;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  &__item {
+    width: 100%;
+  }
+  // note убрать include, в html поставить класс link
+  &__link {
+    @include link-reset;
+    width: 100%;
+
+    &--active {
+      color: var(--bs-gray-900);
+    }
+  }
+}

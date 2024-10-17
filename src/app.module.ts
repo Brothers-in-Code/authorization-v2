@@ -11,6 +11,7 @@ import { VkDataModule } from './modules/vk-data/vkdata.module';
 import { FrontModule } from './modules/front/front.module';
 import { ScanService } from './modules/scan/scan-service/scan-service.service';
 import { ScanModule } from 'src/modules/scan/scan.module';
+import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ScanModule } from 'src/modules/scan/scan.module';
         };
       },
     }),
+    WorkSpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScanService],

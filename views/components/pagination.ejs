@@ -1,0 +1,32 @@
+<!-- 
+/**
+* @params 
+* total:number
+* offset: number
+* limit: number
+*/ 
+-->
+<div class="pagination">
+  <ul class="pagination__list" id="pagination-list">
+    <!-- prettier-ignore -->
+    <% for (let i = 0; i < Math.ceil(total / limit); i++)
+    {%>
+    <li class="pagination__item">
+      <% let link = `offset=${i * limit}&limit=${limit}${params}` %>
+      <a
+        class="link <%= offset === i * limit ? 'link--active' : '' %>"
+        href="?<%= link %>"
+        ><%= i+1 %></a
+      >
+    </li>
+    <% }%>
+  </ul>
+</div>
+
+<script>
+  const paginationList = document.querySelector('#pagination-list');
+  paginationList.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    paginationList.scrollLeft += event.deltaY;
+  });
+</script>

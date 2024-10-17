@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../components/head.ejs', {title: data.pageTitle}) %>
+  <body>
+    <div>
+      <%- include('../components/header.ejs', {pageTitle: data.pageTitle}) %>
+      <main>
+        <div>
+          <input type="text" placeholder="номер или domain группы" />
+          <button>Добавить в список групп</button>
+        </div>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th colspan="2">Название</th>
+            <th>Сканировать</th>
+            <th>Тип группы</th>
+            <th>Последнее обновление</th>
+          </tr>
+          <% data.userGroupList.forEach((group) => { %>
+          <tr>
+            <td><%= group.vkid %></td>
+            <td>
+              <img
+                class="icon"
+                src="<%= group.photo %>"
+                alt="иконка группы ВК"
+              />
+            </td>
+            <td><%= group.name %></td>
+            <!--  TODO добавить отображение статуса сканирования и весь функционал -->
+            <td><input type="checkbox" /></td>
+            <td><%= group.is_private ? 'Приватная' : 'Публичная' %></td>
+            <td>
+              <%= Intl.DateTimeFormat().format(group.last_group_scan_date) %>
+            </td>
+          </tr>
+          <% }) %>
+        </table>
+      </main>
+    </div>
+
+    <script src="/js/tabulator/tabulator.min.js"></script>
+    <script>
+
+
+              let dataTable = <%- JSON.stringify(data.userGroupList) %>;
+              dataTable = dataTable.map((group) => {
+                  return {
+                      ...group,
+                      scan: true
+                  }
+              })
+      console.log(typeof dataTable[0].scan);
+            const groupsTable = new Tabulator('#groups-table', {
+              data: dataTable,
+              layout: 'fitColumns',
+              columns: [
+                { title: 'ID', field: 'vkid' },
+                {title:"photo", field:"photo", formatter:"image", formatterParams:{
+                    height:"50px",
+                    width:"50px",
+                }},
+                { title: 'Название', field: 'name' },
+                { title: 'Сканировать' , field: 'scan', hozAlign: "center", formatter: "adaptable",
+                cellClick: function(e, cell) {
+                    alert(e);
+                }
+            },
+                { title: 'Тип группы', field: 'is_private', formatter: "buttonCross", hozAlign: "center", headerSort: false},
+                { title: 'Последнее обновление', field: 'last_group_scan_date' },
+            ]
+            });
+    </script>
+
+    <script>
+      let dataTable = <%- JSON.stringify(data.postList) %>;
+
+      const postsTable = new Tabulator('#posts-table', {
+          data: dataTable,
+          layout: 'fitColumns',
+          columns: [
+              { title: 'Группа', field: 'group.name' },
+              { title: 'Текст', field: 'post.json.text' },
+              { title: 'Дата', field: 'date' },
+          ]
+      });
+    </script>
+  </body>
+</html>
+
+<div class="pagination">
+  <ul class="pagination__list">
+    <% let limit = 20 %> <% for (let i = 0; i <
+    Math.ceil(data.userGroupList.total / limit); i++) {%>
+    <li class="pagination__item">
+      <a
+        class="link <%= data.userGroupList.offset === i * limit ? 'link--active' : '' %>"
+        href="?offset=<%= i * limit %>&limit=<%= limit %>"
+        ><%= i+1 %></a
+      >
+    </li>
+    <% }%>
+  </ul>
+</div>

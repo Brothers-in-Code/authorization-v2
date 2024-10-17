@@ -1,0 +1,15 @@
+.pagination {
+  &__list {
+    @include list-reset;
+    display: flex;
+    column-gap: 20px;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+}

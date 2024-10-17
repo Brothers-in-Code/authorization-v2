@@ -1,0 +1,30 @@
+
+<aside
+  class="page-layout__context page-layout__section context"
+  id="group-context"
+>
+  <button class="btn context__btn-toggle" id="group-context-btn-toggle">
+    <img
+      src="/img/bootstrap-icons/chevron-double-left.svg"
+      alt="кнопка открытия и закрытия контекстного меню"
+    />
+  </button>
+  <div class="overlay"></div>
+  <form
+    class="form form--vertical"
+    method="post"
+    accept-charset="utf-8"
+    url=`./?offset=${offset}&limit=${limit}`
+  >
+    <fieldset>
+      <legend>Добавить группу</legend>
+      <label>
+        <div>id или короткое имя сообщества</div>
+        <input class="form-control" type="text" name="addGroupByIdOrDomain" />
+      </label>
+    </fieldset>
+    <button class="btn btn-primary form__submit" type="submit">Добавить</button>
+  </form>
+</aside>
+
+<script src="/js/group-context.js"></script>
