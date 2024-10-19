@@ -127,6 +127,10 @@
   gap: 10px;
 }
 
+.text-aria {
+  min-height: 100px !important;
+}
+
 .nav__list {
   margin: 0;
   padding: 0;

@@ -74,6 +74,7 @@
                   </th>
                 </tr>
               </thead>
+              
               <tbody>
                 <% data.userGroupList.groups.forEach((group) => { %>
                 <tr>
@@ -115,6 +116,6 @@
         <%- include('../components/group-context.ejs', {total: data.userGroupList.total, limit: data.userGroupList.limit}) %>
       </div>
     </div>
-    <script src="/js/script.js"></script>
+    <script src="/js/save-is-scan.js"></script>
   </body>
 </html>

@@ -1,0 +1,45 @@
+<div
+  class="modal fade"
+  id="commentModal"
+  tabindex="-1"
+  aria-labelledby="commentModalLabel"
+  aria-hidden="true"
+  data-ws-likes-min="<%= bodyParams.likesMin %>"
+  data-ws-views-min="<%= bodyParams.viewsMin %>"
+  data-ws-beg-date="<%= bodyParams.begDate %>"
+  data-ws-end-date="<%= bodyParams.endDate %>"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">комментарий</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <textarea
+          class="form-control text-aria"
+          name="comment"
+          id="textCommentModal"
+        ></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Закрыть
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="btnSaveCommentModal"
+          data-bs-dismiss="modal"
+        >
+          Сохранить комментарий
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

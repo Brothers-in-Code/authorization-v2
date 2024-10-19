@@ -162,7 +162,7 @@ export class WorkSpaceController {
 
   @Post('work-space/:id/posts')
   @Render('pages/posts')
-  async receiveFilterPosts(
+  async receivePosts(
     @Param('id') id: string,
     @Body()
     body: {
@@ -170,8 +170,10 @@ export class WorkSpaceController {
       viewsMin: string;
       begDate: string;
       endDate: string;
+      comments: { id: number; text: string }[];
     },
   ) {
+    this.logger.debug(JSON.stringify(body));
     const likesMin = body.likesMin ? Number(body.likesMin) : undefined;
     const viewsMin = body.viewsMin ? Number(body.viewsMin) : undefined;
     const begDate = body.begDate ? new Date(body.begDate).getTime() : undefined;
