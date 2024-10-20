@@ -1,0 +1,85 @@
+<!-- TODO сделать фокус на text-aria -->
+<div
+  class="modal fade"
+  id="reportCommentModal"
+  tabindex="-1"
+  aria-labelledby="saveReportModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">Отчет</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="form form--save-report-post-modal">
+          <select
+            class="form-select form-select--report"
+            name="report"
+            id="selectReport"
+          >
+            <option value="undefined" selected>Выбрать отчет</option>
+            <% reportList.forEach((item) => { %>
+            <option value="<%= item.id %>"><%= item %></option>
+            <% }) %>
+          </select>
+          <span>ИЛИ</span>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="isNewReport"
+              id="isNewReportPostModal"
+            />
+
+            <label class="form-check-label" for="isNewReportPostModal">
+              <div>Создать новый отчет</div>
+            </label>
+          </div>
+
+          <fieldset class="form__fieldset close">
+            <legend>Новый отчет</legend>
+            <label class="form-check-label">
+              <div>Название отчета</div>
+              <input
+                type="text"
+                class="form-control"
+                name="reportName"
+                id="reportNamePostModal"
+              />
+            </label>
+
+            <label class="form-check-label">
+              <div>Комментарий к отчету</div>
+              <textarea
+                class="form-control"
+                name="reportDescription"
+                id="reportDescriptionPostModal"
+              ></textarea>
+            </label>
+          </fieldset>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Закрыть
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          id="btnSaveCommentModal"
+          data-bs-dismiss="modal"
+        >
+          Сохранить отчет
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

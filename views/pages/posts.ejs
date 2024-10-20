@@ -14,6 +14,8 @@
         {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, bodyParams })
        %>
 
+      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
+
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/header.ejs') %>
@@ -31,10 +33,10 @@
             <table class="table">
               <thead>
                 <tr>
-                  <td colspan="4" class="table__pagination-cell"></td>
+                  <td colspan="5" class="table__pagination-cell"></td>
                 </tr>
                 <tr>
-                  <td colspan="4" class="td--form">
+                  <td colspan="5" class="td--form">
                     <form
                       class="form"
                       method="post"
@@ -101,13 +103,19 @@
                       alt="Просмотры"
                     />
                   </th>
+                  <th align="center">
+                    Добавить <br />
+                    в отчет
+                  </th>
                   <th>
                     <!-- btn-disabled -->
                     <button
                       class="btn btn-outline-success"
-                      id="btnSaveComments"
+                      id="btnSaveReport"
+                      data-bs-toggle="modal"
+                      data-bs-target="#reportCommentModal"
                     >
-                      Сохранить
+                      Сохранить отчет
                     </button>
                   </th>
                 </tr>
@@ -128,6 +136,14 @@
                   </td>
                   <td>
                     <%= item.post.views?.count || 0 %>
+                  </td>
+                  <td align="center">
+                    <input
+                      class="form-check-input checkbox-add-to-report"
+                      type="checkbox"
+                      name="addToReport"
+                      data-ws-post-id="<%= item.id %>"
+                    />
                   </td>
                   <td>
                     <button
@@ -156,7 +172,7 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/modal.js?v<%= new Date().getTime() %>"></script>
+    <script src="/js/post-page.js?v<%= new Date().getTime() %>"></script>
     <script src="/js/fetch-data.js"></script>
   </body>
 </html>

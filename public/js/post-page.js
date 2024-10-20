@@ -3,7 +3,7 @@
   const commentModal = document.getElementById('commentModal');
   const textCommentModal = document.getElementById('textCommentModal');
   const btnSaveCommentModal = document.getElementById('btnSaveCommentModal');
-  const btnSaveComments = document.getElementById('btnSaveComments');
+  const btnSaveReport = document.getElementById('btnSaveReport');
 
   const commentMap = new Map();
 
@@ -25,16 +25,16 @@
   }
 
   // TODO добавить обработку then и сообщение о сохранении
-  if (btnSaveComments) {
-    btnSaveComments.addEventListener('click', () => {
+  if (btnSaveReport) {
+    btnSaveReport.addEventListener('click', () => {
       const comments = formatCommentsData(commentMap);
-      fetchWSData({
-        likesMin: commentModal.dataset.wsLikesMin,
-        viewsMin: commentModal.dataset.wsViewsMin,
-        begDate: commentModal.dataset.wsBegDate,
-        endDate: commentModal.dataset.wsEndDate,
-        comments,
-      });
+      //   fetchWSData({
+      //     likesMin: commentModal.dataset.wsLikesMin,
+      //     viewsMin: commentModal.dataset.wsViewsMin,
+      //     begDate: commentModal.dataset.wsBegDate,
+      //     endDate: commentModal.dataset.wsEndDate,
+      //     comments,
+      //   });
     });
   }
 

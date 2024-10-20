@@ -6,13 +6,49 @@
   &__submit {
     margin-left: auto;
   }
+
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  legend {
+    font-size: 1.2rem;
+  }
 }
 
 .form--vertical {
   flex-direction: column;
   gap: 10px;
 
+  .fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   legend {
     font-size: 1.2rem;
+  }
+}
+
+.form--save-report-post-modal {
+  flex-wrap: wrap;
+  align-items: flex-start;
+  .form-select--report {
+    max-width: 50%;
+  }
+  .form-check-label {
+    flex-basis: 100%;
+    margin-bottom: 0.4rem;
+  }
+  legend {
+    margin-bottom: 0.6rem;
+  }
+
+  .close {
+    height: 0;
   }
 }
