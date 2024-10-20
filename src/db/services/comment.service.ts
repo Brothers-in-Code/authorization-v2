@@ -43,7 +43,9 @@ export class CommentService {
     });
 
     if (commentList.length === 0) {
-      throw new DatabaseServiceError(`Comment ${key}: ${value} not found`);
+      throw new DatabaseServiceError(
+        `func: CommentService.findByKey. Comment ${key}: ${value} not found`,
+      );
     } else {
       return commentList[0];
     }
