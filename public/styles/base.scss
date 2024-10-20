@@ -22,6 +22,10 @@
   gap: 10px;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
 .text-aria {
   min-height: 100px !important;
 }

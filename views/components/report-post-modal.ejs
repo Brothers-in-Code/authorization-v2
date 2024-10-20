@@ -5,6 +5,10 @@
   tabindex="-1"
   aria-labelledby="saveReportModalLabel"
   aria-hidden="true"
+  data-ws-likes-min="<%= bodyParams.likesMin %>"
+  data-ws-views-min="<%= bodyParams.viewsMin %>"
+  data-ws-beg-date="<%= bodyParams.begDate %>"
+  data-ws-end-date="<%= bodyParams.endDate %>"
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -43,7 +47,7 @@
             </label>
           </div>
 
-          <fieldset class="form__fieldset close">
+          <fieldset class="form__fieldset close" id="newReportPostModal">
             <legend>Новый отчет</legend>
             <label class="form-check-label">
               <div>Название отчета</div>

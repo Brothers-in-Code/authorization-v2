@@ -1,6 +1,8 @@
 (() => {
   const btnCommentList = document.querySelectorAll('.btn-comment');
   const commentModal = document.getElementById('commentModal');
+  const reportCommentModal = document.getElementById('reportCommentModal');
+
   const textCommentModal = document.getElementById('textCommentModal');
   const btnSaveCommentModal = document.getElementById('btnSaveCommentModal');
   const btnSaveReport = document.getElementById('btnSaveReport');
@@ -44,6 +46,24 @@
         post_id: Number(id),
         text,
       };
+    });
+  }
+})();
+
+(() => {
+  const checkboxNewReportPostModal = document.getElementById(
+    'isNewReportPostModal',
+  );
+  const fieldSetNewReportPostModal =
+    document.getElementById('newReportPostModal');
+
+  if (checkboxNewReportPostModal) {
+    isNewReportPostModal.addEventListener('click', () => {
+      if (checkboxNewReportPostModal.checked) {
+        fieldSetNewReportPostModal.classList.remove('close');
+      } else {
+        fieldSetNewReportPostModal.classList.add('close');
+      }
     });
   }
 })();

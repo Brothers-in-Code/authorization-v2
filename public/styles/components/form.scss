@@ -37,6 +37,7 @@
 .form--save-report-post-modal {
   flex-wrap: wrap;
   align-items: flex-start;
+
   .form-select--report {
     max-width: 50%;
   }
@@ -49,6 +50,6 @@
   }
 
   .close {
-    height: 0;
+    height: 0px;
   }
 }

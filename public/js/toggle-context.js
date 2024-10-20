@@ -1,8 +1,6 @@
 (() => {
-  const btnToggleGroupContext = document.querySelector(
-    '#group-context-btn-toggle',
-  );
-  const context = document.querySelector('#group-context');
+  const btnToggleGroupContext = document.querySelector('#context-btn-toggle');
+  const context = document.querySelector('#context');
 
   btnToggleGroupContext.addEventListener('click', () => {
     if (context) {

@@ -10,11 +10,12 @@
         begDate: data.begDate,
         endDate: data.endDate
        } %>
+      <!-- TODO проверить, нужны ли total, offset, limit    -->
       <%- include('../components/comment-post-modal.ejs',
         {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, bodyParams })
        %>
 
-      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
+      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList, bodyParams}) %>
 
       <div class="page-layout">
         <!-- prettier-ignore -->
@@ -107,19 +108,8 @@
                     Добавить <br />
                     в отчет
                   </th>
-                  <th>
-                    <!-- btn-disabled -->
-                    <button
-                      class="btn btn-outline-success"
-                      id="btnSaveReport"
-                      data-bs-toggle="modal"
-                      data-bs-target="#reportCommentModal"
-                    >
-                      Сохранить отчет
-                    </button>
-                  </th>
+                  <th>Комментарий</th>
                 </tr>
-                <tr></tr>
               </thead>
 
               <tbody>
@@ -164,6 +154,7 @@
             </table>
           </div>
         </main>
+        <%- include('../components/post-context.ejs') %>
       </div>
       <!!-- root -->
     </div>
