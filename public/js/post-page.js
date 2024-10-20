@@ -50,6 +50,7 @@
   }
 })();
 
+// NOTE  toggle new report form
 (() => {
   const checkboxNewReportPostModal = document.getElementById(
     'isNewReportPostModal',
@@ -57,12 +58,17 @@
   const fieldSetNewReportPostModal =
     document.getElementById('newReportPostModal');
 
+  const selectReport = document.getElementById('selectReport');
+
   if (checkboxNewReportPostModal) {
     isNewReportPostModal.addEventListener('click', () => {
       if (checkboxNewReportPostModal.checked) {
         fieldSetNewReportPostModal.classList.remove('close');
+        selectReport.value = 'undefined';
+        selectReport.setAttribute('disabled', true);
       } else {
         fieldSetNewReportPostModal.classList.add('close');
+        selectReport.removeAttribute('disabled', true);
       }
     });
   }
