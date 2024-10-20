@@ -5,7 +5,6 @@ import { DeleteResult, Like, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
 import { GroupService } from './group.service';
-import { group } from 'console';
 
 @Injectable()
 export class UserGroupService {
@@ -142,7 +141,7 @@ export class UserGroupService {
     return groups;
   }
 
-  //   TODO логер и ответ
+  //   TODO логер и ответ; сделать через один запрос
   async updateIsScanStatus(
     userId: number,
     dataList: { groupVkId: string; isScan: boolean }[],

@@ -1,3 +1,4 @@
+// FIX убрать обработку then
 function fetchWSData(params) {
   const url = document.location.href;
   return fetch(url, {
