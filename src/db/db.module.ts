@@ -13,10 +13,25 @@ import { UserGroupService } from './services/user-group.service';
 import { UserGroup } from './entities/user_group.entity';
 import { UserSubscriptionService } from './services/user-subscription.service';
 import { UserSubscription } from './entities/user_subscription.entity';
+import { CommentService } from './services/comment.service';
+import { Comment } from './entities/comment.entity';
+import { ReportComment } from './entities/report_comment.entity';
+import { UserReport } from './entities/user_report.entity';
+import { Report } from './entities/report.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post, User, Group, UserGroup, UserSubscription]),
+    TypeOrmModule.forFeature([
+      Post,
+      User,
+      Group,
+      UserGroup,
+      UserSubscription,
+      Comment,
+      Report,
+      ReportComment,
+      UserReport,
+    ]),
   ],
 
   providers: [
@@ -25,6 +40,7 @@ import { UserSubscription } from './entities/user_subscription.entity';
     GroupService,
     UserGroupService,
     UserSubscriptionService,
+    CommentService,
   ],
   exports: [
     PostService,
@@ -32,6 +48,7 @@ import { UserSubscription } from './entities/user_subscription.entity';
     GroupService,
     UserGroupService,
     UserSubscriptionService,
+    CommentService,
   ],
 })
 export class DBModule {}

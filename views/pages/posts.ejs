@@ -132,7 +132,7 @@
                   <td>
                     <button
                       class="btn btn-comment"
-                      data-ws-comment-id="<%= item.post.id %>"
+                      data-ws-post-id="<%= item.id %>"
                     >
                       <img
                         src="/img/bootstrap-icons/card-text.svg"
@@ -156,7 +156,7 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/modal.js"></script>
+    <script src="/js/modal.js?v<%= new Date().getTime() %>"></script>
     <script src="/js/fetch-data.js"></script>
   </body>
 </html>

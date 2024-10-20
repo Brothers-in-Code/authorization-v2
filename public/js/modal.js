@@ -10,25 +10,24 @@
   if (btnCommentList) {
     btnCommentList.forEach((btn) => {
       btn.addEventListener('click', () => {
-        textCommentModal.value = commentMap.get(btn.dataset.wsCommentId) || '';
-        textCommentModal.dataset.wsCommentId = btn.dataset.wsCommentId;
+        textCommentModal.value = commentMap.get(btn.dataset.wsPostId) || '';
+        textCommentModal.dataset.wsPostId = btn.dataset.wsPostId;
       });
     });
   }
-
   if (btnSaveCommentModal) {
     btnSaveCommentModal.addEventListener('click', () => {
       const comment = textCommentModal.value;
-      const commentId = textCommentModal.dataset.wsCommentId;
+      const postId = textCommentModal.dataset.wsPostId;
       textCommentModal.value = '';
-      commentMap.set(commentId, comment);
+      commentMap.set(postId, comment);
     });
   }
 
+  // TODO добавить обработку then и сообщение о сохранении
   if (btnSaveComments) {
     btnSaveComments.addEventListener('click', () => {
       const comments = formatCommentsData(commentMap);
-      console.log(commentModal.dataset.wsLikesMin);
       fetchWSData({
         likesMin: commentModal.dataset.wsLikesMin,
         viewsMin: commentModal.dataset.wsViewsMin,
@@ -42,7 +41,7 @@
   function formatCommentsData(map) {
     return Array.from(map.entries()).map(([id, text]) => {
       return {
-        id: Number(id),
+        post_id: Number(id),
         text,
       };
     });

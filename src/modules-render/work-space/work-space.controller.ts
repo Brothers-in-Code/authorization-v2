@@ -170,10 +170,22 @@ export class WorkSpaceController {
       viewsMin: string;
       begDate: string;
       endDate: string;
-      comments: { id: number; text: string }[];
+      comments: { post_id: number; text: string }[];
     },
   ) {
     this.logger.debug(JSON.stringify(body));
+    // NOTE сохранение комментов
+    try {
+      const savedComments = await this.workSpaceService.saveComment({
+        user_id: Number(id),
+        post_id: body.comments[0].post_id,
+        text: body.comments[0].text,
+      });
+      this.logger.debug(JSON.stringify(savedComments));
+    } catch (e) {
+      this.logger.error(e);
+    }
+
     const likesMin = body.likesMin ? Number(body.likesMin) : undefined;
     const viewsMin = body.viewsMin ? Number(body.viewsMin) : undefined;
     const begDate = body.begDate ? new Date(body.begDate).getTime() : undefined;

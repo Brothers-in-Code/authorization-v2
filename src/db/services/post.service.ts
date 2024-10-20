@@ -69,6 +69,7 @@ export class PostService {
       .then((postList) =>
         postList.map((post) => {
           return {
+            id: post.id,
             group: {
               id: post.group.vkid,
               name: post.group.name,
