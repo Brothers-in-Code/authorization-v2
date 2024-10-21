@@ -11,11 +11,10 @@
         endDate: data.endDate
        } %>
       <!-- TODO проверить, нужны ли total, offset, limit    -->
-      <%- include('../components/comment-post-modal.ejs',
-        {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, bodyParams })
+      <%- include('../components/comment-post-modal.ejs')
        %>
 
-      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList, bodyParams}) %>
+      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
 
       <div class="page-layout">
         <!-- prettier-ignore -->
@@ -23,7 +22,14 @@
         <!-- prettier-ignore -->
         <%- include('../components/aside.ejs') %>
 
-        <main class="page-layout__main page-layout__section main">
+        <main
+          class="page-layout__main page-layout__section main"
+          id="main"
+          data-ws-likes-min="<%= bodyParams.likesMin %>"
+          data-ws-views-min="<%= bodyParams.viewsMin %>"
+          data-ws-beg-date="<%= bodyParams.begDate %>"
+          data-ws-end-date="<%= bodyParams.endDate %>"
+        >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->

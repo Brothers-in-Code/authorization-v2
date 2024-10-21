@@ -1,13 +1,38 @@
+// TODO добавить блокировку кнопки "отправить отчет" если не выбран отчет
 (() => {
-  const btnCommentList = document.querySelectorAll('.btn-comment');
-  const commentModal = document.getElementById('commentModal');
-  const reportCommentModal = document.getElementById('reportCommentModal');
-
-  const textCommentModal = document.getElementById('textCommentModal');
-  const btnSaveCommentModal = document.getElementById('btnSaveCommentModal');
-  const btnSaveReport = document.getElementById('btnSaveReport');
-
+  const report = { report: {}, postList: [] };
   const commentMap = new Map();
+  let reportDetails = {};
+
+  const main = document.getElementById('main');
+
+  const btnCommentList = document.querySelectorAll('.btn-comment');
+  const checkboxAddPostToReportList = document.querySelectorAll(
+    '.checkbox-add-to-report',
+  );
+
+  const reportFormModal = document.getElementById('reportFormModal');
+  const textCommentModal = document.getElementById('textCommentModal');
+
+  const btnSaveCommentModal = document.getElementById('btnSaveCommentModal');
+  const btnSendReport = document.getElementById('btnSendReport');
+
+  //   NOTE handle report form
+  if (reportFormModal) {
+    reportFormModal.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const report = {};
+
+      for (el of e.target) {
+        const { name } = el;
+        if (name) {
+          const { type, value, checked } = el;
+          report[name] = isCheckBoxOrRadio(type) ? checked : value;
+        }
+      }
+      reportDetails = report;
+    });
+  }
 
   if (btnCommentList) {
     btnCommentList.forEach((btn) => {
@@ -17,36 +42,74 @@
       });
     });
   }
+
+  //   NOTE handle checkbox add to report
+  if (checkboxAddPostToReportList) {
+    checkboxAddPostToReportList.forEach((checkbox) => {
+      checkbox.addEventListener('click', () => {
+        const postId = checkbox.dataset.wsPostId;
+
+        if (checkbox.checked) {
+          commentMap.set(postId, '');
+        } else {
+          commentMap.delete(postId);
+        }
+      });
+    });
+  }
+
+  //   NOTE handle comment form
   if (btnSaveCommentModal) {
     btnSaveCommentModal.addEventListener('click', () => {
       const comment = textCommentModal.value;
       const postId = textCommentModal.dataset.wsPostId;
       textCommentModal.value = '';
       commentMap.set(postId, comment);
+      const checkbox = findRelativeCheckbox(postId);
+
+      if (checkbox) {
+        checkbox.setAttribute('checked', 'true');
+      }
     });
   }
 
+  //   NOTE handle send report
   // TODO добавить обработку then и сообщение о сохранении
-  if (btnSaveReport) {
-    btnSaveReport.addEventListener('click', () => {
-      const comments = formatCommentsData(commentMap);
+  if (btnSendReport) {
+    btnSendReport.addEventListener('click', () => {
+      report.postList = formatCommentsData(commentMap);
+      report.report = reportDetails;
+
       //   fetchWSData({
-      //     likesMin: commentModal.dataset.wsLikesMin,
-      //     viewsMin: commentModal.dataset.wsViewsMin,
-      //     begDate: commentModal.dataset.wsBegDate,
-      //     endDate: commentModal.dataset.wsEndDate,
-      //     comments,
+      //     likesMin: main.dataset.wsLikesMin,
+      //     viewsMin: main.dataset.wsViewsMin,
+      //     begDate: main.dataset.wsBegDate,
+      //     endDate: main.dataset.wsEndDate,
+      //     report
       //   });
+
+      console.log(report);
     });
+  }
+
+  function findRelativeCheckbox(postId) {
+    const checkbox = document.querySelector(
+      `.checkbox-add-to-report[data-ws-post-id="${postId}"]`,
+    );
+    return checkbox;
   }
 
   function formatCommentsData(map) {
-    return Array.from(map.entries()).map(([id, text]) => {
+    return Array.from(map.entries()).map(([id, comment]) => {
       return {
         post_id: Number(id),
-        text,
+        comment,
       };
     });
+  }
+
+  function isCheckBoxOrRadio(type) {
+    return ['checkbox', 'radio'].includes(type);
   }
 })();
 

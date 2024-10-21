@@ -1,14 +1,10 @@
 <!-- TODO сделать фокус на text-aria -->
 <div
   class="modal fade"
-  id="reportCommentModal"
+  id="reportPostModal"
   tabindex="-1"
   aria-labelledby="saveReportModalLabel"
   aria-hidden="true"
-  data-ws-likes-min="<%= bodyParams.likesMin %>"
-  data-ws-views-min="<%= bodyParams.viewsMin %>"
-  data-ws-beg-date="<%= bodyParams.begDate %>"
-  data-ws-end-date="<%= bodyParams.endDate %>"
 >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -22,10 +18,10 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form class="form form--save-report-post-modal">
+        <form class="form form--save-report-post-modal" id="reportFormModal">
           <select
             class="form-select form-select--report"
-            name="report"
+            name="reportId"
             id="selectReport"
           >
             <option value="undefined" selected>Выбрать отчет</option>
@@ -33,7 +29,9 @@
             <option value="<%= item.id %>"><%= item %></option>
             <% }) %>
           </select>
+
           <span>ИЛИ</span>
+
           <div class="form-check">
             <input
               class="form-check-input"
@@ -68,21 +66,24 @@
               ></textarea>
             </label>
           </fieldset>
+          <div class="form__footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Закрыть
+            </button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              id="btnSaveReportChoiceModal"
+              data-bs-dismiss="modal"
+            >
+              Сохранить отчет
+            </button>
+          </div>
         </form>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-          Закрыть
-        </button>
-        <button
-          type="button"
-          class="btn btn-success"
-          id="btnSaveCommentModal"
-          data-bs-dismiss="modal"
-        >
-          Сохранить отчет
-        </button>
       </div>
     </div>
   </div>
