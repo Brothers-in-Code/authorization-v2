@@ -80,13 +80,13 @@
       report.postList = formatCommentsData(commentMap);
       report.report = reportDetails;
 
-      //   fetchWSData({
-      //     likesMin: main.dataset.wsLikesMin,
-      //     viewsMin: main.dataset.wsViewsMin,
-      //     begDate: main.dataset.wsBegDate,
-      //     endDate: main.dataset.wsEndDate,
-      //     report
-      //   });
+      fetchWSData({
+        likesMin: main.dataset.wsLikesMin,
+        viewsMin: main.dataset.wsViewsMin,
+        begDate: main.dataset.wsBegDate,
+        endDate: main.dataset.wsEndDate,
+        report,
+      });
 
       console.log(report);
     });

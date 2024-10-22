@@ -15,6 +15,14 @@ export class CommentService {
 
   private readonly logger = new Logger(CommentService.name);
 
+  //   TODO сделать проверку на наличие в report полученных постов
+  async createCommentList(
+    reportId: number,
+    CommentList: Comment[],
+  ): Promise<Comment[]> {
+    return this.commentRepository.save(CommentList);
+  }
+
   async createOrUpdate(user: User, post: Post, text: string): Promise<Comment> {
     let newComment: Comment;
     const existingComment = await this.commentRepository.findOne({

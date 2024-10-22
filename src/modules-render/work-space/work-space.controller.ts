@@ -154,20 +154,43 @@ export class WorkSpaceController {
       begDate: string;
       endDate: string;
       comments?: { post_id: number; text: string }[];
+      report?: {
+        report: {
+          reportId: string;
+          isNewReport: boolean;
+          reportName: string;
+          reportDescription: string;
+        };
+        postList: { post_id: number; comment: string }[];
+      };
     },
   ) {
-    this.logger.debug(JSON.stringify(body));
-    // NOTE сохранение комментов
-    if (body.comments !== undefined) {
-      try {
-        const savedComments = await this.workSpaceService.saveComment({
-          user_id: Number(id),
-          post_id: body.comments[0].post_id,
-          text: body.comments[0].text,
-        });
+    this.logger.debug(JSON.stringify(body.report));
+
+    if (body.report !== undefined) {
+      const { report, postList } = body.report;
+      let reportId: number;
+
+      if (body.report.report.isNewReport) {
+        const newReport = await this.workSpaceService.saveReport(
+          report.reportName,
+          report.reportDescription,
+        );
+        reportId = newReport.id;
+        this.logger.debug(JSON.stringify(newReport));
+      } else {
+        reportId = Number(report.reportId);
+      }
+
+      if (postList !== undefined && postList.length > 0) {
+        const savedComments = await this.workSpaceService.saveComment(
+          Number(id),
+          {
+            reportId,
+            postList,
+          },
+        );
         this.logger.debug(JSON.stringify(savedComments));
-      } catch (e) {
-        this.logger.error(e);
       }
     }
 
