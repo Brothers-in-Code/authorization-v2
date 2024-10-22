@@ -132,32 +132,14 @@ export class WorkSpaceController {
     @Query('begDate') begDate: string,
     @Query('endDate') endDate: string,
   ) {
-    const likesMinLocal = likesMin ? Number(likesMin) : undefined;
-    const viewsMinLocal = viewsMin ? Number(viewsMin) : undefined;
-    const begDateLocal = begDate ? new Date(begDate).getTime() : undefined;
-    const endDateLocal = endDate ? new Date(endDate).getTime() : undefined;
-
-    const postList = await this.workSpaceService.getPostList({
-      user_id: Number(id),
-      offset: Number(offset),
-      limit: Number(limit),
-      likesMin: likesMinLocal,
-      viewsMin: viewsMinLocal,
-      begDate: begDateLocal,
-      endDate: endDateLocal,
-    });
-
-    const dataToRender = {
-      pageTitle: 'Посты',
-      userId: id,
-      currentPage: 'posts',
-      reportList: ['Отчеты', 'Все отчеты'],
-      postList,
+    const dataToRender = await this.workSpaceService.collectDataToRender(id, {
+      offset,
+      limit,
       likesMin,
       viewsMin,
       begDate,
       endDate,
-    };
+    });
     return { data: dataToRender };
   }
 
@@ -171,48 +153,30 @@ export class WorkSpaceController {
       viewsMin: string;
       begDate: string;
       endDate: string;
-      comments: { post_id: number; text: string }[];
+      comments?: { post_id: number; text: string }[];
     },
   ) {
     this.logger.debug(JSON.stringify(body));
     // NOTE сохранение комментов
-    try {
-      const savedComments = await this.workSpaceService.saveComment({
-        user_id: Number(id),
-        post_id: body.comments[0].post_id,
-        text: body.comments[0].text,
-      });
-      this.logger.debug(JSON.stringify(savedComments));
-    } catch (e) {
-      this.logger.error(e);
+    if (body.comments !== undefined) {
+      try {
+        const savedComments = await this.workSpaceService.saveComment({
+          user_id: Number(id),
+          post_id: body.comments[0].post_id,
+          text: body.comments[0].text,
+        });
+        this.logger.debug(JSON.stringify(savedComments));
+      } catch (e) {
+        this.logger.error(e);
+      }
     }
 
-    const likesMin = body.likesMin ? Number(body.likesMin) : undefined;
-    const viewsMin = body.viewsMin ? Number(body.viewsMin) : undefined;
-    const begDate = body.begDate ? new Date(body.begDate).getTime() : undefined;
-    const endDate = body.endDate ? new Date(body.endDate).getTime() : undefined;
-
-    const postList = await this.workSpaceService.getPostList({
-      user_id: Number(id),
+    const dataToRender = await this.workSpaceService.collectDataToRender(id, {
+      ...body,
       offset: 0,
       limit: 20,
-      likesMin,
-      viewsMin,
-      begDate,
-      endDate,
     });
 
-    const dataToRender = {
-      pageTitle: 'Посты',
-      userId: id,
-      currentPage: 'posts',
-      reportList: ['Отчеты', 'Все отчеты'],
-      postList,
-      likesMin,
-      viewsMin,
-      begDate: body.begDate,
-      endDate: body.endDate,
-    };
     return { data: dataToRender };
   }
 

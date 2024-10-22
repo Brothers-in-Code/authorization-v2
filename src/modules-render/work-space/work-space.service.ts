@@ -146,4 +146,43 @@ export class WorkSpaceService {
 
     return comment;
   }
+
+  async collectDataToRender(
+    userId,
+    data: {
+      offset: string | number;
+      limit: string | number;
+      likesMin: string;
+      viewsMin: string;
+      begDate: string;
+      endDate: string;
+    },
+  ) {
+    const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
+    const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
+    const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
+    const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+
+    const postList = await this.getPostList({
+      user_id: Number(userId),
+      offset: Number(data.offset),
+      limit: Number(data.limit),
+      likesMin,
+      viewsMin,
+      begDate,
+      endDate,
+    });
+
+    return {
+      pageTitle: 'Посты',
+      userId: userId,
+      currentPage: 'posts',
+      reportList: ['Отчеты', 'Все отчеты'],
+      postList,
+      likesMin,
+      viewsMin,
+      begDate: data.begDate,
+      endDate: data.endDate,
+    };
+  }
 }
