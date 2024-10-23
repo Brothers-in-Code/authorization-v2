@@ -1,0 +1,24 @@
+<aside class="page-layout__context page-layout__section context" id="context">
+  <button class="btn context__btn-toggle" id="context-btn-toggle">
+    <img
+      src="/img/bootstrap-icons/chevron-double-left.svg"
+      alt="кнопка открытия и закрытия контекстного меню"
+    />
+  </button>
+  <div class="overlay"></div>
+  <h2>Отчеты</h2>
+  <div class="flex flex-column">
+    <button
+      class="btn btn-outline-success w-100"
+      data-bs-toggle="modal"
+      data-bs-target="#reportPostModal"
+    >
+      Выбрать отчет
+    </button>
+
+    <button class="btn btn-outline-primary w-100" id="btnSendReport">
+      Отправить отчет
+    </button>
+  </div>
+</aside>
+<script src="/js/toggle-context.js"></script>

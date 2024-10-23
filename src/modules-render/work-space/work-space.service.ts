@@ -1,7 +1,11 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { of } from 'rxjs';
 import { CommentService } from 'src/db/services/comment.service';
 import { PostService } from 'src/db/services/post.service';
+import { ReportCommentService } from 'src/db/services/report-comment.service';
+import { ReportService } from 'src/db/services/report.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
+import { UserReportService } from 'src/db/services/user-report.service';
 import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
@@ -14,6 +18,9 @@ export class WorkSpaceService {
     private readonly postService: PostService,
     private readonly vkDataService: VkDataService,
     private readonly commentService: CommentService,
+    private readonly reportService: ReportService,
+    private readonly reportCommentService: ReportCommentService,
+    private readonly userReportService: UserReportService,
   ) {}
 
   private readonly logger = new Logger(WorkSpaceService.name);
@@ -125,25 +132,98 @@ export class WorkSpaceService {
     return newUserGroupList;
   }
 
-  async saveComment(data: { user_id: number; post_id: number; text: string }) {
-    const user = await this.userService.findOneById(data.user_id);
+  async saveReport(reportName: string, reportDescription: string) {
+    return await this.reportService.create(reportName, reportDescription);
+  }
+
+  async saveComment(
+    user_id: number,
+    data: {
+      reportId: number;
+      postList: { post_id: number; comment: string }[];
+    },
+  ) {
+    const user = await this.userService.findOneById(user_id);
     if (!user) {
       throw new NotFoundException(
-        `func: saveComment. Пользователь ${data.user_id} не найден`,
+        `func: saveComment. Пользователь ${user_id} не найден`,
       );
     }
-    const post = await this.postService.findOne(data.post_id);
-    if (!post) {
-      throw new NotFoundException(
-        `func: saveComment. Пост ${data.post_id} не найден`,
-      );
-    }
-    const comment = await this.commentService.createOrUpdate(
-      user,
-      post,
-      data.text,
-    );
 
-    return comment;
+    const commentList = [];
+    for (const item of data.postList) {
+      const post = await this.postService.findOne(item.post_id);
+      if (!post) {
+        // TODO узнать у Павла нужна ли эта проверка и, если да, то как ее обрабатывать
+        throw new NotFoundException(
+          `func: saveComment. Пост ${item.post_id} не найден`,
+        );
+      }
+      const newComment = await this.commentService.createCommentObj();
+      newComment.user = user;
+      newComment.post = post;
+      newComment.text = item.comment;
+      commentList.push(newComment);
+    }
+
+    return await this.commentService.createCommentList(
+      data.reportId,
+      commentList,
+    );
+  }
+
+  addReportToUser(userId: number, reportId: number) {
+    return this.userReportService.create({ userId, reportId });
+  }
+
+  async addCommentToReport(reportId: number, commentIdList: number[]) {
+    return this.reportCommentService.createList(reportId, commentIdList);
+  }
+
+  async collectDataToRender(
+    userId,
+    data: {
+      offset: string | number;
+      limit: string | number;
+      likesMin: string;
+      viewsMin: string;
+      begDate: string;
+      endDate: string;
+    },
+  ) {
+    const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
+    const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
+    const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
+    const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+
+    const postList = await this.getPostList({
+      user_id: Number(userId),
+      offset: Number(data.offset),
+      limit: Number(data.limit),
+      likesMin,
+      viewsMin,
+      begDate,
+      endDate,
+    });
+
+    const reportList = await this.userReportService
+      .getUserReportList(userId)
+      .then((data) => data.reportList.map((report) => report))
+      .catch((err) => {
+        this.logger.error(err);
+        return [];
+      });
+
+    return {
+      pageTitle: 'Посты',
+      userId: userId,
+      currentPage: 'posts',
+      reportList,
+      postList,
+      likesMin,
+      viewsMin,
+      begDate: data.begDate,
+      endDate: data.endDate,
+    };
   }
 }

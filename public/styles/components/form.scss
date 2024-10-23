@@ -6,13 +6,53 @@
   &__submit {
     margin-left: auto;
   }
+
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  legend {
+    font-size: 1.2rem;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+  }
 }
 
 .form--vertical {
   flex-direction: column;
   gap: 10px;
 
+  .fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.form--save-report-post-modal {
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  .form-select--report {
+    max-width: 50%;
+  }
+  .form-check-label {
+    flex-basis: 100%;
+    margin-bottom: 0.4rem;
+  }
   legend {
-    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .close {
+    height: 0px;
   }
 }

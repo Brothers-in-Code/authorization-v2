@@ -5,10 +5,6 @@
   tabindex="-1"
   aria-labelledby="commentModalLabel"
   aria-hidden="true"
-  data-ws-likes-min="<%= bodyParams.likesMin %>"
-  data-ws-views-min="<%= bodyParams.viewsMin %>"
-  data-ws-beg-date="<%= bodyParams.begDate %>"
-  data-ws-end-date="<%= bodyParams.endDate %>"
 >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -23,7 +19,7 @@
       </div>
       <div class="modal-body">
         <textarea
-          class="form-control text-aria"
+          class="form-control text-aria text-aria--comment"
           name="comment"
           id="textCommentModal"
         ></textarea>
@@ -38,7 +34,7 @@
           id="btnSaveCommentModal"
           data-bs-dismiss="modal"
         >
-          Добавить комментарий
+          Сохранить комментарий
         </button>
       </div>
     </div>

@@ -10,9 +10,11 @@
         begDate: data.begDate,
         endDate: data.endDate
        } %>
-      <%- include('../components/comment-post-modal.ejs',
-        {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, bodyParams })
+      <!-- TODO проверить, нужны ли total, offset, limit    -->
+      <%- include('../components/comment-post-modal.ejs')
        %>
+
+      <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
 
       <div class="page-layout">
         <!-- prettier-ignore -->
@@ -20,7 +22,14 @@
         <!-- prettier-ignore -->
         <%- include('../components/aside.ejs') %>
 
-        <main class="page-layout__main page-layout__section main">
+        <main
+          class="page-layout__main page-layout__section main"
+          id="main"
+          data-ws-likes-min="<%= bodyParams.likesMin %>"
+          data-ws-views-min="<%= bodyParams.viewsMin %>"
+          data-ws-beg-date="<%= bodyParams.begDate %>"
+          data-ws-end-date="<%= bodyParams.endDate %>"
+        >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->
@@ -31,10 +40,10 @@
             <table class="table">
               <thead>
                 <tr>
-                  <td colspan="4" class="table__pagination-cell"></td>
+                  <td colspan="5" class="table__pagination-cell"></td>
                 </tr>
                 <tr>
-                  <td colspan="4" class="td--form">
+                  <td colspan="5" class="td--form">
                     <form
                       class="form"
                       method="post"
@@ -101,17 +110,12 @@
                       alt="Просмотры"
                     />
                   </th>
-                  <th>
-                    <!-- btn-disabled -->
-                    <button
-                      class="btn btn-outline-success"
-                      id="btnSaveComments"
-                    >
-                      Сохранить
-                    </button>
+                  <th align="center">
+                    Добавить <br />
+                    в отчет
                   </th>
+                  <th>Комментарий</th>
                 </tr>
-                <tr></tr>
               </thead>
 
               <tbody>
@@ -128,6 +132,14 @@
                   </td>
                   <td>
                     <%= item.post.views?.count || 0 %>
+                  </td>
+                  <td align="center">
+                    <input
+                      class="form-check-input checkbox-add-to-report"
+                      type="checkbox"
+                      name="addToReport"
+                      data-ws-post-id="<%= item.id %>"
+                    />
                   </td>
                   <td>
                     <button
@@ -148,6 +160,7 @@
             </table>
           </div>
         </main>
+        <%- include('../components/post-context.ejs') %>
       </div>
       <!!-- root -->
     </div>
@@ -156,7 +169,7 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/modal.js?v<%= new Date().getTime() %>"></script>
+    <script src="/js/post-page.js?v<%= new Date().getTime() %>"></script>
     <script src="/js/fetch-data.js"></script>
   </body>
 </html>
