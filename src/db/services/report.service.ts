@@ -21,4 +21,12 @@ export class ReportService {
   createReportObj() {
     return new Report();
   }
+
+  findOne(id: number): Promise<Report> {
+    return this.reportRepository.findOneBy({ id });
+  }
+
+  findByKey<T>(key: string, value: T): Promise<Report[]> {
+    return this.reportRepository.find({ where: { [key]: value } });
+  }
 }

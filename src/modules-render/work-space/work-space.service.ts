@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { of } from 'rxjs';
 import { CommentService } from 'src/db/services/comment.service';
 import { PostService } from 'src/db/services/post.service';
+import { ReportCommentService } from 'src/db/services/report-comment.service';
 import { ReportService } from 'src/db/services/report.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
@@ -17,6 +18,7 @@ export class WorkSpaceService {
     private readonly vkDataService: VkDataService,
     private readonly commentService: CommentService,
     private readonly reportService: ReportService,
+    private readonly reportCommentService: ReportCommentService,
   ) {}
 
   private readonly logger = new Logger(WorkSpaceService.name);
@@ -150,6 +152,7 @@ export class WorkSpaceService {
     for (const item of data.postList) {
       const post = await this.postService.findOne(item.post_id);
       if (!post) {
+        // TODO узнать у Павла нужна ли эта проверка и, если да, то как ее обрабатывать
         throw new NotFoundException(
           `func: saveComment. Пост ${item.post_id} не найден`,
         );
@@ -165,6 +168,10 @@ export class WorkSpaceService {
       data.reportId,
       commentList,
     );
+  }
+
+  async addCommentToReport(reportId: number, commentIdList: number[]) {
+    return this.reportCommentService.createList(reportId, commentIdList);
   }
 
   async collectDataToRender(

@@ -165,8 +165,6 @@ export class WorkSpaceController {
       };
     },
   ) {
-    this.logger.debug(JSON.stringify(body.report));
-
     if (body.report !== undefined) {
       const { report, postList } = body.report;
       let reportId: number;
@@ -177,6 +175,7 @@ export class WorkSpaceController {
           report.reportDescription,
         );
         reportId = newReport.id;
+        this.logger.debug('======== newReport ========');
         this.logger.debug(JSON.stringify(newReport));
       } else {
         reportId = Number(report.reportId);
@@ -190,7 +189,14 @@ export class WorkSpaceController {
             postList,
           },
         );
+        this.logger.debug('======== savedComments ========');
         this.logger.debug(JSON.stringify(savedComments));
+        const reportComment = this.workSpaceService.addCommentToReport(
+          reportId,
+          savedComments.map((comment) => comment.id),
+        );
+        this.logger.debug('======== reportComment ========');
+        this.logger.debug(JSON.stringify(reportComment));
       }
     }
 
