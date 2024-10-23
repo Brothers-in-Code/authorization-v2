@@ -1,5 +1,4 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { of } from 'rxjs';
 import { CommentService } from 'src/db/services/comment.service';
 import { PostService } from 'src/db/services/post.service';
 import { ReportCommentService } from 'src/db/services/report-comment.service';
@@ -9,6 +8,7 @@ import { UserReportService } from 'src/db/services/user-report.service';
 import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
+import { InsertResult } from 'typeorm';
 
 @Injectable()
 export class WorkSpaceService {
@@ -137,39 +137,32 @@ export class WorkSpaceService {
   }
 
   async saveComment(
-    user_id: number,
+    userId: number,
     data: {
       reportId: number;
       postList: { post_id: number; comment: string }[];
     },
-  ) {
-    const user = await this.userService.findOneById(user_id);
-    if (!user) {
-      throw new NotFoundException(
-        `func: saveComment. Пользователь ${user_id} не найден`,
+  ): Promise<InsertResult> {
+    let currentPostList: { post_id: number; comment: string }[] = [];
+
+    const existingCommentsOfReport =
+      await this.reportCommentService.checkCommentsOfReport(
+        data.reportId,
+        data.postList.map((item) => item.post_id),
       );
+
+    if (existingCommentsOfReport.length > 0) {
+      currentPostList = data.postList.filter(
+        (item) => !existingCommentsOfReport.includes(item.post_id),
+      );
+    } else {
+      currentPostList = data.postList;
     }
 
-    const commentList = [];
-    for (const item of data.postList) {
-      const post = await this.postService.findOne(item.post_id);
-      if (!post) {
-        // TODO узнать у Павла нужна ли эта проверка и, если да, то как ее обрабатывать
-        throw new NotFoundException(
-          `func: saveComment. Пост ${item.post_id} не найден`,
-        );
-      }
-      const newComment = await this.commentService.createCommentObj();
-      newComment.user = user;
-      newComment.post = post;
-      newComment.text = item.comment;
-      commentList.push(newComment);
-    }
-
-    return await this.commentService.createCommentList(
-      data.reportId,
-      commentList,
-    );
+    return await this.commentService.createCommentList({
+      userId,
+      postList: currentPostList,
+    });
   }
 
   addReportToUser(userId: number, reportId: number) {

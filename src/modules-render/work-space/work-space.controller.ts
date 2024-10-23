@@ -190,7 +190,7 @@ export class WorkSpaceController {
         );
         await this.workSpaceService.addCommentToReport(
           reportId,
-          savedComments.map((comment) => comment.id),
+          savedComments.generatedMaps.map((comment) => comment.id),
         );
       }
     }
