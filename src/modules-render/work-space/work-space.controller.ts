@@ -175,8 +175,7 @@ export class WorkSpaceController {
           report.reportDescription,
         );
         reportId = newReport.id;
-        this.logger.debug('======== newReport ========');
-        this.logger.debug(JSON.stringify(newReport));
+        await this.workSpaceService.addReportToUser(Number(id), newReport.id);
       } else {
         reportId = Number(report.reportId);
       }
@@ -189,14 +188,10 @@ export class WorkSpaceController {
             postList,
           },
         );
-        this.logger.debug('======== savedComments ========');
-        this.logger.debug(JSON.stringify(savedComments));
-        const reportComment = this.workSpaceService.addCommentToReport(
+        await this.workSpaceService.addCommentToReport(
           reportId,
           savedComments.map((comment) => comment.id),
         );
-        this.logger.debug('======== reportComment ========');
-        this.logger.debug(JSON.stringify(reportComment));
       }
     }
 

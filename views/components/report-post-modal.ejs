@@ -26,7 +26,7 @@
           >
             <option value="undefined" selected>Выбрать отчет</option>
             <% reportList.forEach((item) => { %>
-            <option value="<%= item.id %>"><%= item %></option>
+            <option value="<%= item.id %>"><%= item.name %></option>
             <% }) %>
           </select>
 
@@ -80,7 +80,7 @@
               id="btnSaveReportChoiceModal"
               data-bs-dismiss="modal"
             >
-              Сохранить отчет
+              Отметить
             </button>
           </div>
         </form>

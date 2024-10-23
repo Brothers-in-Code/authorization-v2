@@ -5,6 +5,7 @@ import { PostService } from 'src/db/services/post.service';
 import { ReportCommentService } from 'src/db/services/report-comment.service';
 import { ReportService } from 'src/db/services/report.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
+import { UserReportService } from 'src/db/services/user-report.service';
 import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
@@ -19,6 +20,7 @@ export class WorkSpaceService {
     private readonly commentService: CommentService,
     private readonly reportService: ReportService,
     private readonly reportCommentService: ReportCommentService,
+    private readonly userReportService: UserReportService,
   ) {}
 
   private readonly logger = new Logger(WorkSpaceService.name);
@@ -170,6 +172,10 @@ export class WorkSpaceService {
     );
   }
 
+  addReportToUser(userId: number, reportId: number) {
+    return this.userReportService.create({ userId, reportId });
+  }
+
   async addCommentToReport(reportId: number, commentIdList: number[]) {
     return this.reportCommentService.createList(reportId, commentIdList);
   }
@@ -200,11 +206,19 @@ export class WorkSpaceService {
       endDate,
     });
 
+    const reportList = await this.userReportService
+      .getUserReportList(userId)
+      .then((data) => data.reportList.map((report) => report))
+      .catch((err) => {
+        this.logger.error(err);
+        return [];
+      });
+
     return {
       pageTitle: 'Посты',
       userId: userId,
       currentPage: 'posts',
-      reportList: ['Отчеты', 'Все отчеты'],
+      reportList,
       postList,
       likesMin,
       viewsMin,

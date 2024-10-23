@@ -18,6 +18,7 @@ export class ReportService {
     newReport.description = reportDescription;
     return this.reportRepository.save(newReport);
   }
+
   createReportObj() {
     return new Report();
   }
