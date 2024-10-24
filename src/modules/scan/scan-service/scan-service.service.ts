@@ -224,6 +224,7 @@ export class ScanService {
     return limitDate;
   }
 
+  //   TODO добавить условие, чтобы сканировать только отмеченные группы
   async executeQuery(): Promise<ExecuteQueryOutputType[]> {
     const query = `
         WITH cte AS (

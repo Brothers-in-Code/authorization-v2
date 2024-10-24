@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Redirect,
   Render,
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
@@ -22,24 +23,14 @@ export class WorkSpaceController {
   private readonly logger = new Logger(WorkSpaceController.name);
 
   @Get('work-space/:id')
-  @Render('pages/groups')
+  @Redirect('')
   async renderWorkSpace(
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
-    const userGroupList = await this.workSpaceService.getGroupList({
-      user_id: Number(id),
-      offset: Number(offset),
-      limit: Number(limit),
-    });
-    const dataToRender = {
-      pageTitle: 'Группы ВК',
-      userId: id,
-      currentPage: 'groups',
-      userGroupList,
-    };
-    return { data: dataToRender };
+    const url = `groups?offset=${offset}&limit=${limit}`;
+    return { url };
   }
 
   @Get('work-space/:id/groups')
@@ -49,28 +40,23 @@ export class WorkSpaceController {
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
     @Query('isScan') isScan: string,
+    @Query('filterGroupByIdOrName') filterGroupByIdOrName: string,
   ) {
-    const isScanLocal = isNaN(Number(isScan)) ? undefined : Number(isScan);
-
-    const userGroupList = await this.workSpaceService.getGroupList({
-      user_id: Number(id),
-      offset: Number(offset),
-      limit: Number(limit),
-      is_scan: isScanLocal,
-    });
-    const dataToRender = {
-      pageTitle: 'Группы ВК',
-      userId: id,
-      currentPage: 'groups',
-      currentIsScan: isScan,
-      userGroupList,
-    };
+    const dataToRender = await this.workSpaceService.collectGroupDataToRender(
+      id,
+      {
+        offset,
+        limit,
+        isScan: isScan,
+        filterGroupByIdOrName: filterGroupByIdOrName,
+      },
+    );
     return { data: dataToRender };
   }
 
   @Post('work-space/:id/groups')
   @Render('pages/groups')
-  async receiveDataGroups(
+  async receiveGroups(
     @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
@@ -83,10 +69,6 @@ export class WorkSpaceController {
       filterGroupByIdOrName?: string;
     },
   ) {
-    const isScanLocal = isNaN(Number(body.isScan))
-      ? undefined
-      : Number(body.isScan);
-
     if (body.scanGroupStatus !== undefined) {
       await this.userGroupService.updateIsScanStatus(
         Number(id),
@@ -100,22 +82,15 @@ export class WorkSpaceController {
       });
     }
 
-    const userGroupList = await this.workSpaceService.getGroupList({
-      user_id: Number(id),
-      offset: Number(offset),
-      limit: Number(limit),
-      is_scan: isScanLocal,
-      filterGroupByIdOrName: body.filterGroupByIdOrName,
-    });
-
-    const dataToRender = {
-      pageTitle: 'Группы ВК',
-      userId: id,
-      currentPage: 'groups',
-      currentIsScan: body.isScan,
-      filterGroupByIdOrName: body.filterGroupByIdOrName,
-      userGroupList,
-    };
+    const dataToRender = await this.workSpaceService.collectGroupDataToRender(
+      id,
+      {
+        offset,
+        limit,
+        isScan: body.isScan,
+        filterGroupByIdOrName: body.filterGroupByIdOrName,
+      },
+    );
 
     return { data: dataToRender };
   }
@@ -132,14 +107,17 @@ export class WorkSpaceController {
     @Query('begDate') begDate: string,
     @Query('endDate') endDate: string,
   ) {
-    const dataToRender = await this.workSpaceService.collectDataToRender(id, {
-      offset,
-      limit,
-      likesMin,
-      viewsMin,
-      begDate,
-      endDate,
-    });
+    const dataToRender = await this.workSpaceService.collectPostDataToRender(
+      id,
+      {
+        offset,
+        limit,
+        likesMin,
+        viewsMin,
+        begDate,
+        endDate,
+      },
+    );
     return { data: dataToRender };
   }
 
@@ -195,11 +173,14 @@ export class WorkSpaceController {
       }
     }
 
-    const dataToRender = await this.workSpaceService.collectDataToRender(id, {
-      ...body,
-      offset: 0,
-      limit: 20,
-    });
+    const dataToRender = await this.workSpaceService.collectPostDataToRender(
+      id,
+      {
+        ...body,
+        offset: 0,
+        limit: 20,
+      },
+    );
 
     return { data: dataToRender };
   }
