@@ -189,9 +189,10 @@ export class WorkSpaceController {
   @Render('pages/reports')
   renderReports(@Param('id') id: string) {
     const dataToRender = {
-      page_title: 'Отчеты',
-      user_id: id,
+      pageTitle: 'Отчеты',
+      userId: id,
       currentPage: 'reports',
+      userReportList: [],
     };
 
     return { data: dataToRender };

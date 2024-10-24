@@ -10,7 +10,18 @@
         <%- include('../components/aside.ejs') %>
 
         <main class="page-layout__main page-layout__section main">
-          <div>Reports</div>
+          <h2><%= data.pageTitle %></h2>
+          <div class="page-layout__wrapper">
+            <table class="table table--groups">
+              <thead>
+                <tr>
+                  <td colspan="4" class="table__pagination-cell">
+                    <!-- prettier-ignore -->
+                  </td>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </main>
       </div>
     </div>
