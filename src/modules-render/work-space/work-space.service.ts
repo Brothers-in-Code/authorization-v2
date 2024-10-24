@@ -70,6 +70,7 @@ export class WorkSpaceService {
     @param endDate?: number;  в виде timestamp
  */
 
+  // TODO отдавать только посты групп, отмеченных к сканированию
   async getPostList(data: {
     user_id: number;
     offset: number;
@@ -108,6 +109,7 @@ export class WorkSpaceService {
       //   this.logger.debug('string');
     }
 
+    // TODO проверить наличие error в response
     const response = await this.vkDataService.getGroupInfo(user.access_token, [
       data.groupIdOrDomain,
     ]);
@@ -173,7 +175,7 @@ export class WorkSpaceService {
     return this.reportCommentService.createList(reportId, commentIdList);
   }
 
-  async collectDataToRender(
+  async collectPostDataToRender(
     userId,
     data: {
       offset: string | number;
@@ -189,6 +191,7 @@ export class WorkSpaceService {
     const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
     const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
 
+    // TODO отдавать только посты групп, отмеченных к сканированию
     const postList = await this.getPostList({
       user_id: Number(userId),
       offset: Number(data.offset),
@@ -217,6 +220,35 @@ export class WorkSpaceService {
       viewsMin,
       begDate: data.begDate,
       endDate: data.endDate,
+    };
+  }
+
+  async collectGroupDataToRender(
+    userId: string,
+    data: {
+      offset: string | number;
+      limit: string | number;
+      isScan: string;
+      filterGroupByIdOrName: string;
+    },
+  ) {
+    const isScan = isNaN(Number(data.isScan)) ? undefined : Number(data.isScan);
+
+    const userGroupList = await this.getGroupList({
+      user_id: Number(userId),
+      offset: Number(data.offset),
+      limit: Number(data.limit),
+      is_scan: isScan,
+      filterGroupByIdOrName: data.filterGroupByIdOrName,
+    });
+
+    return {
+      pageTitle: 'Группы ВК',
+      userId: userId,
+      currentPage: 'groups',
+      currentIsScan: data.isScan,
+      filterGroupByIdOrName: data.filterGroupByIdOrName,
+      userGroupList,
     };
   }
 }
