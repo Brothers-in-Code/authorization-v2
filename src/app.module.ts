@@ -12,6 +12,7 @@ import { FrontModule } from './modules/front/front.module';
 import { ScanService } from './modules/scan/scan-service/scan-service.service';
 import { ScanModule } from 'src/modules/scan/scan.module';
 import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
+import { HomeModule } from './modules-render/home/home.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
       },
     }),
     WorkSpaceModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScanService],

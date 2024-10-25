@@ -29,3 +29,47 @@
 .text-aria {
   min-height: 100px !important;
 }
+
+// для home page
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.link--entrance {
+  display: inline-block;
+  width: 100px;
+  height: auto;
+}
+
+.link {
+  &__text {
+    text-align: center;
+  }
+
+  &:hover {
+    #svg-btn-on {
+      fill: var(--bs-link-hover-color);
+    }
+    .link__text {
+      color: var(--bs-link-hover-color);
+    }
+  }
+
+  &:active {
+    #svg-btn-on {
+      fill: var(--bs-indigo);
+    }
+    .link__text {
+      color: var(--bs-indigo);
+    }
+  }
+}
+
+#svg-btn-on {
+  fill: var(--bs-primary);
+  transition: fill 0.2s ease-out;
+}

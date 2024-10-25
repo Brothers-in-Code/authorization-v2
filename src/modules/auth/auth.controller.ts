@@ -42,7 +42,7 @@ const cookieOptions = {
   samesite: 'strict',
 };
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(
     private configService: ConfigService,

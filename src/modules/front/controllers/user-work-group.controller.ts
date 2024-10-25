@@ -11,7 +11,7 @@ import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 
-@Controller('user-work-group')
+@Controller('api/user-work-group')
 export class UserWorkGroupController {
   constructor(
     private readonly groupService: GroupService,
