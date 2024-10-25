@@ -120,6 +120,10 @@
   color: var(--bs-gray-900);
 }
 
+.hide {
+  display: none;
+}
+
 .flex {
   display: flex;
   justify-content: space-between;
@@ -168,6 +172,11 @@
 #svg-btn-on {
   fill: var(--bs-primary);
   transition: fill 0.2s ease-out;
+}
+
+.btn--vk {
+  background-color: #0077ff;
+  color: #fff;
 }
 
 .nav__list {

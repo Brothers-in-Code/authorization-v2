@@ -21,6 +21,8 @@ import { HomeModule } from './modules-render/home/home.module';
     VkDataModule,
     FrontModule,
     ScanModule,
+    WorkSpaceModule,
+    HomeModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -45,8 +47,6 @@ import { HomeModule } from './modules-render/home/home.module';
         };
       },
     }),
-    WorkSpaceModule,
-    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScanService],

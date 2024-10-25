@@ -4,7 +4,6 @@ import {
   Get,
   Logger,
   Param,
-  Patch,
   Post,
   Query,
   Redirect,
