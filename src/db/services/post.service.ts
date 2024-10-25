@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
-import { In, LessThan, MoreThan, Repository } from 'typeorm';
+import { In, LessThan, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
 
 type PostListOutputType = {
@@ -38,18 +38,18 @@ export class PostService {
     endDate?: number;
   }): Promise<PostListOutputType> {
     const idList = data.groupList.map((group) => group.id);
-
+    // TODO изменить MoreThan на LessThanOrEqual
     const whereConditions = {
       group: { id: In(idList) },
     };
     if (data.likesMin) {
-      whereConditions['likes'] = MoreThan(data.likesMin);
+      whereConditions['likes'] = MoreThanOrEqual(data.likesMin);
     }
     if (data.viewsMin) {
-      whereConditions['views'] = MoreThan(data.viewsMin);
+      whereConditions['views'] = MoreThanOrEqual(data.viewsMin);
     }
     if (data.begDate) {
-      whereConditions['timestamp_post'] = MoreThan(data.begDate);
+      whereConditions['timestamp_post'] = MoreThanOrEqual(data.begDate);
     }
     if (data.endDate) {
       whereConditions['timestamp_post'] = LessThan(data.endDate);

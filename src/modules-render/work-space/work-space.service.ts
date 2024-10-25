@@ -251,4 +251,25 @@ export class WorkSpaceService {
       userGroupList,
     };
   }
+
+  async collectReportDataToRender(
+    userId: string,
+    data: {
+      offset: string | number;
+      limit: string | number;
+    },
+  ) {
+    const reportList = await this.userReportService.getUserReportExtendedList({
+      userId: Number(userId),
+      offset: Number(data.offset),
+      limit: Number(data.limit),
+    });
+
+    return {
+      pageTitle: 'Отчёты',
+      userId: userId,
+      currentPage: 'reports',
+      reportList,
+    };
+  }
 }

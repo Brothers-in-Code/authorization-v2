@@ -23,6 +23,11 @@
     border-style: unset;
     background-color: var(--bs-white);
   }
+
+  .td--fit-content {
+    width: 1%;
+    white-space: nowrap;
+  }
 }
 
 .table--groups {
@@ -35,5 +40,11 @@
   }
   .id {
     color: var(--bs-gray-600);
+  }
+}
+
+.table--reports {
+  td {
+    vertical-align: top;
   }
 }
