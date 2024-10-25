@@ -12,18 +12,43 @@
         <main class="page-layout__main page-layout__section main">
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
-            <table class="table table--groups">
+            <table class="table table--reports">
               <thead>
                 <tr>
                   <td colspan="4" class="table__pagination-cell">
                     <!-- prettier-ignore -->
+                    <% let params = '' %>
+                    <%- include('../components/pagination.ejs', 
+                        {total: data.reportList.total, offset: data.reportList.offset, limit: data.reportList.limit, params} ) 
+                    %>
                   </td>
                 </tr>
               </thead>
+
+              <tbody>
+                <% data.reportList.reports.forEach((item) => { %>
+                <% console.log(item) %>
+                <tr>
+                  <td class="td--fit-content">
+                    <% let date = new Date(item.created_at) %> <%=
+                    date.getDate().toString().padStart(2, '0') %>.<%=
+                    date.getMonth().toString().padStart(2, '0') %>.<%=
+                    date.getFullYear() %>
+                  </td>
+                  <td>
+                    <div>
+                      <strong><%= item.name %></strong>
+                    </div>
+                    <div class="text-secondary"><%= item.description %></div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
             </table>
           </div>
         </main>
       </div>
     </div>
+    <script src="/js/utils/data-format.js"></script>
   </body>
 </html>

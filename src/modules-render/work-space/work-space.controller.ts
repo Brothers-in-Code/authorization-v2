@@ -29,7 +29,7 @@ export class WorkSpaceController {
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
-    const url = `groups?offset=${offset}&limit=${limit}`;
+    const url = `${id}/groups?offset=${offset}&limit=${limit}`;
     return { url };
   }
 
@@ -187,13 +187,18 @@ export class WorkSpaceController {
 
   @Get('work-space/:id/reports')
   @Render('pages/reports')
-  renderReports(@Param('id') id: string) {
-    const dataToRender = {
-      pageTitle: 'Отчеты',
-      userId: id,
-      currentPage: 'reports',
-      userReportList: [],
-    };
+  async renderReports(
+    @Param('id') id: string,
+    @Query('offset') offset = 0,
+    @Query('limit') limit = 20,
+  ) {
+    const dataToRender = await this.workSpaceService.collectReportDataToRender(
+      id,
+      {
+        offset,
+        limit,
+      },
+    );
 
     return { data: dataToRender };
   }

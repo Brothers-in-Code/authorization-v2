@@ -176,6 +176,10 @@
   border-style: unset;
   background-color: var(--bs-white);
 }
+.table .td--fit-content {
+  width: 1%;
+  white-space: nowrap;
+}
 
 .table--groups th {
   text-align: center;
@@ -185,6 +189,10 @@
 }
 .table--groups .id {
   color: var(--bs-gray-600);
+}
+
+.table--reports td {
+  vertical-align: top;
 }
 
 .pagination__list {
