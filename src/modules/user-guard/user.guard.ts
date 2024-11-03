@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -13,6 +14,8 @@ export class UserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.user_token;
+    const payload = await this.jwtService.verifyAsync(token);
+    Logger.log(payload);
     if (!token) {
       throw new UnauthorizedException('There is no user_token in cookies');
     }

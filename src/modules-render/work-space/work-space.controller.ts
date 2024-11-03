@@ -3,15 +3,18 @@ import {
   Controller,
   Get,
   Logger,
-  Param,
   Post,
   Query,
   Redirect,
   Render,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
+import { UserGuard } from 'src/modules/user-guard/user.guard';
 
+@UseGuards(UserGuard)
 @Controller()
 export class WorkSpaceController {
   constructor(
@@ -21,28 +24,28 @@ export class WorkSpaceController {
 
   private readonly logger = new Logger(WorkSpaceController.name);
 
-  @Get('work-space/:id')
+  @Get('work-space/')
   @Redirect('')
   async renderWorkSpace(
-    @Param('id') id: string,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
-    const url = `${id}/groups?offset=${offset}&limit=${limit}`;
+    const url = `groups?offset=${offset}&limit=${limit}`;
     return { url };
   }
 
-  @Get('work-space/:id/groups')
+  @Get('work-space/groups')
   @Render('pages/groups')
   async renderGroups(
-    @Param('id') id: string,
+    @Request() req,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
     @Query('isScan') isScan: string,
     @Query('filterGroupByIdOrName') filterGroupByIdOrName: string,
   ) {
+    const userId = req.user.id;
     const dataToRender = await this.workSpaceService.collectGroupDataToRender(
-      id,
+      userId,
       {
         offset,
         limit,
@@ -53,10 +56,10 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
-  @Post('work-space/:id/groups')
+  @Post('work-space/groups')
   @Render('pages/groups')
   async receiveGroups(
-    @Param('id') id: string,
+    @Request() req,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
     @Body()
@@ -68,21 +71,22 @@ export class WorkSpaceController {
       filterGroupByIdOrName?: string;
     },
   ) {
+    const userId = req.user.id;
     if (body.scanGroupStatus !== undefined) {
       await this.userGroupService.updateIsScanStatus(
-        Number(id),
+        Number(userId),
         body.scanGroupStatus,
       );
     }
 
     if (body.addGroupByIdOrDomain !== undefined) {
-      await this.workSpaceService.addGroupToUser(Number(id), {
+      await this.workSpaceService.addGroupToUser(Number(userId), {
         groupIdOrDomain: body.addGroupByIdOrDomain,
       });
     }
 
     const dataToRender = await this.workSpaceService.collectGroupDataToRender(
-      id,
+      userId,
       {
         offset,
         limit,
@@ -95,10 +99,10 @@ export class WorkSpaceController {
   }
 
   //   NOTE продумать как получать из getGroupList все записи
-  @Get('work-space/:id/posts')
+  @Get('work-space/posts')
   @Render('pages/posts')
   async renderPosts(
-    @Param('id') id: string,
+    @Request() req,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
     @Query('likesMin') likesMin: string,
@@ -106,8 +110,9 @@ export class WorkSpaceController {
     @Query('begDate') begDate: string,
     @Query('endDate') endDate: string,
   ) {
+    const userId = req.user.id;
     const dataToRender = await this.workSpaceService.collectPostDataToRender(
-      id,
+      userId,
       {
         offset,
         limit,
@@ -120,10 +125,10 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
-  @Post('work-space/:id/posts')
+  @Post('work-space/posts')
   @Render('pages/posts')
   async receivePosts(
-    @Param('id') id: string,
+    @Request() req,
     @Body()
     body: {
       likesMin: string;
@@ -142,6 +147,7 @@ export class WorkSpaceController {
       };
     },
   ) {
+    const userId = req.user.id;
     if (body.report !== undefined) {
       const { report, postList } = body.report;
       let reportId: number;
@@ -152,14 +158,17 @@ export class WorkSpaceController {
           report.reportDescription,
         );
         reportId = newReport.id;
-        await this.workSpaceService.addReportToUser(Number(id), newReport.id);
+        await this.workSpaceService.addReportToUser(
+          Number(userId),
+          newReport.id,
+        );
       } else {
         reportId = Number(report.reportId);
       }
 
       if (postList !== undefined && postList.length > 0) {
         const savedComments = await this.workSpaceService.saveComment(
-          Number(id),
+          Number(userId),
           {
             reportId,
             postList,
@@ -173,7 +182,7 @@ export class WorkSpaceController {
     }
 
     const dataToRender = await this.workSpaceService.collectPostDataToRender(
-      id,
+      userId,
       {
         ...body,
         offset: 0,
@@ -187,12 +196,13 @@ export class WorkSpaceController {
   @Get('work-space/:id/reports')
   @Render('pages/reports')
   async renderReports(
-    @Param('id') id: string,
+    @Request() req,
     @Query('offset') offset = 0,
     @Query('limit') limit = 20,
   ) {
+    const userId = req.user.id;
     const dataToRender = await this.workSpaceService.collectReportDataToRender(
-      id,
+      userId,
       {
         offset,
         limit,

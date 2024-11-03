@@ -37,7 +37,7 @@ type AuthBaseOutputType = {
 };
 
 const cookieOptions = {
-  httpOnly: true,
+  httpOnly: false,
   secure: true,
   samesite: 'strict',
 };
@@ -132,12 +132,15 @@ export class AuthController {
         expires_date,
       );
 
+      //   FIX проверить как передается здесь user_token и как он принимается в guard
+
       //   TODO протестировать возможность использовать метод createJWTToken
       const userToken = await this.authService.createJWTToken(
         user.id,
         userInfo.user.first_name,
       );
       res.cookie('user_token', userToken, cookieOptions);
+      this.logger.log(`user_token = ${userToken}`);
 
       const userSubscription =
         await this.userSubscriptionService.findPermission(user.id);
