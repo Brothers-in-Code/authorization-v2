@@ -17,7 +17,7 @@ TODO сделать обработчик ошибок
 ошибки запроса к стене группы: https://dev.vk.com/ru/method/wall.get#%D0%9A%D0%BE%D0%B4%D1%8B%20%D0%BE%D1%88%D0%B8%D0%B1%D0%BE%D0%BA
 */
 
-@Controller('vkdata')
+@Controller('api/vkdata')
 export class VkDataController {
   constructor(
     private readonly vkDataService: VkDataService,

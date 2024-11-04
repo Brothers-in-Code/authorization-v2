@@ -8,7 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(cookieParser());
-  app.setGlobalPrefix('api');
+  //   TODO удалить
+  //   app.setGlobalPrefix('api');
 
   app.setViewEngine('ejs');
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

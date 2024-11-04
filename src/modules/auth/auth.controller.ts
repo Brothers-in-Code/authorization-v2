@@ -37,12 +37,12 @@ type AuthBaseOutputType = {
 };
 
 const cookieOptions = {
-  httpOnly: true,
+  httpOnly: false,
   secure: true,
   samesite: 'strict',
 };
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(
     private configService: ConfigService,
@@ -132,7 +132,6 @@ export class AuthController {
         expires_date,
       );
 
-      //   TODO протестировать возможность использовать метод createJWTToken
       const userToken = await this.authService.createJWTToken(
         user.id,
         userInfo.user.first_name,
@@ -152,7 +151,9 @@ export class AuthController {
 
       return { message: 'Token successfully received', status: 'ok' };
     } catch (e) {
-      this.logger.error(`Failed to get access token. ${e.message}`);
+      this.logger.error(
+        `func: handleGetToken, Failed to get access token. ${e.message}`,
+      );
       throw new InternalServerErrorException(e.message);
     }
   }
@@ -196,7 +197,9 @@ export class AuthController {
 
       return { message: 'Token successfully received', status: 'ok' };
     } catch (e) {
-      this.logger.error(`Failed to get access token. ${e.message}`);
+      this.logger.error(
+        `func:handleRefreshToken,Failed to get access token. ${e.message}`,
+      );
       throw new InternalServerErrorException(e.message);
     }
   }

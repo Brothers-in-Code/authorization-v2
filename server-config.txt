@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name stay-in-touch.ru;
+#       root /home/gen/Backstage/StayInTouch/touch-authorization-v2/public/;    
+
+
+    ssl_certificate /home/gen/CertificationCenter/stay-in-touch.ru+5.pem;
+    ssl_certificate_key /home/gen/CertificationCenter/stay-in-touch.ru+5-key.pem;
+
+# api/
+    location / {
+                proxy_pass http://localhost:3000;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Real-IP $remote_addr;
+    }
+
+
+#       location =/ {
+#               index index.html;
+#       }
+
+
+#       location / {
+#               try_files $uri $uri.html =404;
+#       }
+
+}

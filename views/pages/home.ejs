@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../components/head.ejs', {title: data.pageTitle}) %>
+  <body>
+    <div id="root">
+      <div class="page-layout">
+        <!-- prettier-ignore -->
+        <%- include('../components/header.ejs') %>
+        <!-- prettier-ignore -->
+        <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
+        <main class="page-layout__main page-layout__section main">
+          <div class="wrapper">
+            <button class="btn btn--vk" id="login">Войти с VK ID</button>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script defer src="./js/auth/login.js"></script>
+    <script defer src="./js/auth/send-params-to-get-token.js"></script>
+  </body>
+</html>

@@ -12,6 +12,8 @@ import { FrontModule } from './modules/front/front.module';
 import { ScanService } from './modules/scan/scan-service/scan-service.service';
 import { ScanModule } from 'src/modules/scan/scan.module';
 import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
+import { HomeModule } from './modules-render/home/home.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,10 +22,20 @@ import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
     VkDataModule,
     FrontModule,
     ScanModule,
+    WorkSpaceModule,
+    HomeModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
       load: [configuration],
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('APP_JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -44,7 +56,6 @@ import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
         };
       },
     }),
-    WorkSpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScanService],
