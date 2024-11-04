@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { DBModule } from 'src/db/db.module';
 import { WorkSpaceService } from './work-space.service';
 import { WorkSpaceController } from './work-space.controller';
-import { DBModule } from 'src/db/db.module';
 import { VkDataModule } from 'src/modules/vk-data/vkdata.module';
-import { JwtModule } from '@nestjs/jwt';
+import { UserGuard } from 'src/modules/user-guard/user.guard';
 
 @Module({
   imports: [DBModule, VkDataModule, JwtModule],
-  providers: [WorkSpaceService],
   controllers: [WorkSpaceController],
+  providers: [WorkSpaceService, UserGuard],
 })
 export class WorkSpaceModule {}

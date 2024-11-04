@@ -1,9 +1,10 @@
+// user.guard.ts
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  Logger,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -14,21 +15,20 @@ export class UserGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.user_token;
-    const payload = await this.jwtService.verifyAsync(token);
-    Logger.log(payload);
+
     if (!token) {
       throw new UnauthorizedException('There is no user_token in cookies');
     }
-    try {
-      const payload = await this.jwtService.verifyAsync(token);
 
+    try {
+      const payload = await this.jwtService.verifyAsync(token); // теперь использует конфигурированный секретный ключ
       request['user'] = {
         id: payload.sub,
         name: payload.user_name,
         email: payload.email,
       };
     } catch (error) {
-      throw new UnauthorizedException('Wrong user_token');
+      throw new UnauthorizedException(`Wrong user_token: ${error}`);
     }
 
     return true;

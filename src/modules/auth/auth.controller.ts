@@ -132,15 +132,11 @@ export class AuthController {
         expires_date,
       );
 
-      //   FIX проверить как передается здесь user_token и как он принимается в guard
-
-      //   TODO протестировать возможность использовать метод createJWTToken
       const userToken = await this.authService.createJWTToken(
         user.id,
         userInfo.user.first_name,
       );
       res.cookie('user_token', userToken, cookieOptions);
-      this.logger.log(`user_token = ${userToken}`);
 
       const userSubscription =
         await this.userSubscriptionService.findPermission(user.id);
@@ -155,7 +151,9 @@ export class AuthController {
 
       return { message: 'Token successfully received', status: 'ok' };
     } catch (e) {
-      this.logger.error(`Failed to get access token. ${e.message}`);
+      this.logger.error(
+        `func: handleGetToken, Failed to get access token. ${e.message}`,
+      );
       throw new InternalServerErrorException(e.message);
     }
   }
@@ -199,7 +197,9 @@ export class AuthController {
 
       return { message: 'Token successfully received', status: 'ok' };
     } catch (e) {
-      this.logger.error(`Failed to get access token. ${e.message}`);
+      this.logger.error(
+        `func:handleRefreshToken,Failed to get access token. ${e.message}`,
+      );
       throw new InternalServerErrorException(e.message);
     }
   }
