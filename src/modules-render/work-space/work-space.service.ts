@@ -233,13 +233,14 @@ export class WorkSpaceService {
     },
   ) {
     const isScan = isNaN(Number(data.isScan)) ? undefined : Number(data.isScan);
+    const filterGroupByIdOrName = data.filterGroupByIdOrName || '';
 
     const userGroupList = await this.getGroupList({
       user_id: Number(userId),
       offset: Number(data.offset),
       limit: Number(data.limit),
       is_scan: isScan,
-      filterGroupByIdOrName: data.filterGroupByIdOrName,
+      filterGroupByIdOrName,
     });
 
     return {
@@ -247,7 +248,7 @@ export class WorkSpaceService {
       userId: userId,
       currentPage: 'groups',
       currentIsScan: data.isScan,
-      filterGroupByIdOrName: data.filterGroupByIdOrName,
+      filterGroupByIdOrName,
       userGroupList,
     };
   }

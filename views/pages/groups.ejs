@@ -4,12 +4,8 @@
   <body>
     <div id="root">
       <div class="page-layout">
-      <section class="nav-section page-layout__nav-section">
         <!-- prettier-ignore -->
-        <%- include('../components/header.ejs') %>
-        <!-- prettier-ignore -->
-        <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
-      </section>                
+        <%- include('../components/nav-section.ejs') %>
 
         <main class="page-layout__main page-layout__section main">
           <div class="page-layout__wrapper">
@@ -25,7 +21,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="4" class="td--form ">
+                  <td colspan="4" class="td--form">
                     <div class="flex">
                     <form class="form"
                         method="post"
