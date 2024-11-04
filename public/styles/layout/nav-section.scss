@@ -1,0 +1,10 @@
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 200px;
+
+  .page-layout__section:last-child {
+    flex-grow: 2;
+  }
+}

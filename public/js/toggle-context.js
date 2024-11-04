@@ -4,7 +4,7 @@
 
   btnToggleGroupContext.addEventListener('click', () => {
     if (context) {
-      context.classList.toggle('context--close');
+      context.classList.toggle('slide-section--close');
     }
   });
 })();

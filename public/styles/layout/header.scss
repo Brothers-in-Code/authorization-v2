@@ -1,9 +1,18 @@
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 20px;
+
+  padding-top: 32px;
 
   &__user-icon {
     width: 25px;
+  }
+
+  &__btn-toggle {
+    top: 0;
+    right: 0;
   }
 }

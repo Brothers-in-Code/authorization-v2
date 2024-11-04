@@ -1,0 +1,12 @@
+<section
+  class="nav-section page-layout__nav-section nav-section slide-section slide-section--nav"
+  id="nav-section"
+>
+  <div class="slide-section__overlay"></div>
+  <!-- prettier-ignore -->
+  <%- include('../components/header.ejs') %>
+  <!-- prettier-ignore -->
+  <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
+</section>
+
+<script src="/js/toggle-nav-section.js"></script>

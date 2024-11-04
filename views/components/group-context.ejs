@@ -1,15 +1,16 @@
 
 <aside
-  class="page-layout__context page-layout__section context"
+  class="page-layout__context page-layout__section context slide-section"
   id="context"
 >
-  <button class="btn context__btn-toggle" id="context-btn-toggle">
+  <button class="btn btn--toggle context__btn-toggle" id="context-btn-toggle">
     <img
-      src="/img/bootstrap-icons/chevron-double-left.svg"
+      class="slide-section__btn-img"
+      src="/img/bootstrap-icons/chevron-double-right.svg"
       alt="кнопка открытия и закрытия контекстного меню"
     />
   </button>
-  <div class="overlay"></div>
+  <div class="slide-section__overlay"></div>
   <form
     class="form form--vertical"
     method="post"
@@ -27,4 +28,4 @@
   </form>
 </aside>
 
-<script src="/js/toggle-context.js"></script>
+<script defer src="/js/toggle-context.js"></script>
