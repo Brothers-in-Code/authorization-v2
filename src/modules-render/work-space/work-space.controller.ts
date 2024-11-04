@@ -193,7 +193,7 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
-  @Get('work-space/:id/reports')
+  @Get('work-space/reports')
   @Render('pages/reports')
   async renderReports(
     @Request() req,
