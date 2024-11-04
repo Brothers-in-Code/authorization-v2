@@ -2,12 +2,15 @@
 @import './libs/tabulator/tabulator.min.css';
 .page-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: "header main context" "aside main context";
+  grid-template-areas: "nav-section main context" "nav-section main context";
   gap: 10px;
   height: 100vh;
   padding-block: 10px;
+}
+.page-layout__nav-section {
+  grid-area: nav-section;
 }
 .page-layout__header {
   grid-area: header;
@@ -40,12 +43,19 @@
 }
 
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  column-gap: 20px;
+  padding-top: 32px;
 }
 .header__user-icon {
   width: 25px;
+}
+.header__btn-toggle {
+  top: 0;
+  right: 0;
 }
 
 .main {
@@ -53,31 +63,21 @@
 }
 
 .context {
-  position: relative;
-  width: auto;
   max-width: 300px;
-  overflow: hidden;
-  padding-top: 32px;
-  transition: max-width 0.2s ease-out;
 }
 .context__btn-toggle {
-  position: absolute;
   top: 0;
   left: 0;
-  width: 32px;
-  padding: 5px 0;
-  z-index: 20;
 }
 
-.context--close {
-  max-width: 32px;
-  z-index: 10;
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 200px;
 }
-.context--close .overlay {
-  position: absolute;
-  inset: 0;
-  background-color: var(--bs-white);
-  backdrop-filter: blur(10px);
+.nav-section .page-layout__section:last-child {
+  flex-grow: 2;
 }
 
 .btn-reset {
@@ -310,6 +310,46 @@
   filter: grayscale(50%);
   opacity: 0.5;
   cursor: not-allowed !important;
+}
+
+.slide-section {
+  position: relative;
+  width: auto;
+  padding-top: 32px;
+  transition: max-width 0.2s ease-out;
+}
+.slide-section__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--bs-white);
+  backdrop-filter: blur(10px);
+}
+.slide-section--nav {
+  padding-top: 0;
+}
+
+.slide-section--close {
+  max-width: 32px;
+  overflow: hidden;
+}
+.slide-section--close .slide-section__overlay {
+  inset: 0;
+  z-index: 10;
+}
+.slide-section--close .slide-section__btn-img {
+  transform: rotate(180deg);
+}
+
+.slide-section--nav.slide-section--close .btn--toggle {
+  left: -50%;
+}
+
+.btn--toggle {
+  position: absolute;
+  width: 32px;
+  padding: 5px 0;
+  z-index: 20;
 }
 
 /*# sourceMappingURL=styles.css.map */

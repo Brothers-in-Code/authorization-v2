@@ -4,10 +4,12 @@
   <body>
     <div id="root">
       <div class="page-layout">
+      <section class="nav-section page-layout__nav-section">
         <!-- prettier-ignore -->
         <%- include('../components/header.ejs') %>
         <!-- prettier-ignore -->
         <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
+      </section>                
 
         <main class="page-layout__main page-layout__section main">
           <div class="page-layout__wrapper">

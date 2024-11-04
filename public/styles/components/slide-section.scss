@@ -1,0 +1,47 @@
+.slide-section {
+  position: relative;
+  width: auto;
+  padding-top: 32px;
+  //   overflow: hidden;
+
+  transition: max-width 0.2s ease-out;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--bs-white);
+    backdrop-filter: blur(10px);
+  }
+
+  &--nav {
+    padding-top: 0;
+  }
+}
+
+.slide-section--close {
+  max-width: 32px;
+  overflow: hidden;
+
+  .slide-section__overlay {
+    inset: 0;
+    z-index: 10;
+  }
+
+  .slide-section__btn-img {
+    transform: rotate(180deg);
+  }
+}
+
+.slide-section--nav.slide-section--close {
+  .btn--toggle {
+    left: -50%;
+  }
+}
+
+.btn--toggle {
+  position: absolute;
+  width: 32px;
+  padding: 5px 0;
+  z-index: 20;
+}

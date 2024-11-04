@@ -1,11 +1,15 @@
-<aside class="page-layout__context page-layout__section context" id="context">
-  <button class="btn context__btn-toggle" id="context-btn-toggle">
+<aside
+  class="page-layout__context page-layout__section context slide-section"
+  id="context"
+>
+  <button class="btn btn--toggle context__btn-toggle" id="context-btn-toggle">
     <img
+      class="slide-section__btn-img"
       src="/img/bootstrap-icons/chevron-double-left.svg"
       alt="кнопка открытия и закрытия контекстного меню"
     />
   </button>
-  <div class="overlay"></div>
+  <div class="slide-section__overlay"></div>
   <h2>Отчеты</h2>
   <div class="flex flex-column">
     <button
@@ -21,4 +25,4 @@
     </button>
   </div>
 </aside>
-<script src="/js/toggle-context.js"></script>
+<script defer src="/js/toggle-context.js"></script>

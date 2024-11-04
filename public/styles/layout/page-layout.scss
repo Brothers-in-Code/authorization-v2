@@ -1,15 +1,19 @@
 .page-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
   grid-template-areas:
-    'header main context'
-    'aside main context';
+    'nav-section main context'
+    'nav-section main context';
 
   gap: 10px;
   height: 100vh;
   padding-block: 10px;
+
+  &__nav-section {
+    grid-area: nav-section;
+  }
 
   &__header {
     grid-area: header;
