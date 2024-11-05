@@ -1,0 +1,55 @@
+.view-modal {
+  position: absolute;
+  top: 10px;
+  width: 50%;
+  min-width: 260px;
+  max-width: 500px;
+  max-height: calc(100vh - 20px);
+  overflow: hidden;
+
+  background-color: #fff;
+  resize: both;
+
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px 4px var(--bs-gray-400);
+  background-color: var(--bs-white);
+
+  z-index: 100;
+
+  &__title {
+    font-size: 14px;
+  }
+
+  &__body {
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+
+  &__text {
+    white-space: pre-wrap;
+    font-size: 12px;
+  }
+
+  &__img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+.view-modal--hide {
+  transform: translateY(-200%);
+}
