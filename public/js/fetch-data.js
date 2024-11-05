@@ -7,9 +7,5 @@ function fetchWSData(params) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(params),
-  }).then((res) => {
-    if (res.ok) {
-      document.location.reload();
-    }
   });
 }

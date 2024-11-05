@@ -2,6 +2,27 @@
 <html lang="en">
   <%- include('../components/head.ejs', {title: data.page_title}) %>
   <body>
+    <svg width="0" height="0" class="hide">
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        id="sort-down"
+      >
+        <path
+          d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+        ></path>
+      </symbol>
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        id="sort-up"
+      >
+        <path
+          d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
+        ></path>
+      </symbol>
+    </svg>
+
     <div id="root">
       <!-- prettier-ignore -->
       <% let bodyParams = {
@@ -19,7 +40,6 @@
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>
-
         <main
           class="page-layout__main page-layout__section main"
           id="main"
@@ -27,21 +47,24 @@
           data-ws-views-min="<%= bodyParams.viewsMin %>"
           data-ws-beg-date="<%= bodyParams.begDate %>"
           data-ws-end-date="<%= bodyParams.endDate %>"
+          data-ws-sort-by-likes="<%= data.sortByLikes %>"
+          data-ws-sort-by-views="<%= data.sortByViews %>"
+          data-ws-sort-by-comments="<%= data.sortByComments %>"
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->
-            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}` %>
+            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}&sortByLikes=${data.sortByLikes}&sortByViews=${data.sortByViews}&sortByComments=${data.sortByComments}` %>
             <%- include('../components/pagination.ejs', 
                 {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, params } ) 
             %>
             <table class="table">
               <thead>
                 <tr>
-                  <td colspan="5" class="table__pagination-cell"></td>
+                  <td colspan="6" class="table__pagination-cell"></td>
                 </tr>
                 <tr>
-                  <td colspan="5" class="td--form">
+                  <td colspan="6" class="td--form">
                     <form
                       class="form"
                       method="post"
@@ -97,22 +120,89 @@
                 <tr>
                   <th>Пост</th>
                   <th>
-                    <img
-                      src="/img/bootstrap-icons/heart-fill.svg"
-                      alt="Нравится"
-                    />
+                    <div
+                      class="table__flex"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Количество лайков"
+                    >
+                      <img
+                        src="/img/bootstrap-icons/heart-fill.svg"
+                        alt="Нравится"
+                      />
+                      <% activeClass = data.sortByLikes !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByLikes === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="likes-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
                   </th>
+
                   <th>
-                    <img
-                      src="/img/bootstrap-icons/eye-fill.svg"
-                      alt="Просмотры"
-                    />
+                    <div
+                      class="table__flex"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Количество просмотров"
+                    >
+                      <img
+                        src="/img/bootstrap-icons/eye-fill.svg"
+                        alt="Просмотры"
+                      />
+                      <% activeClass = data.sortByViews !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByViews === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="views-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
+                  </th>
+
+                  <th>
+                    <div
+                      class="table__flex"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Количество комментариев"
+                    >
+                      <img
+                        src="/img/bootstrap-icons/chat-right-text-fill.svg"
+                        alt="Количество комментариев"
+                      />
+                      <% activeClass = data.sortByComments !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByComments === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="comments-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
                   </th>
                   <th align="center">
-                    Добавить <br />
-                    в отчет
+                    <img
+                      src="/img/bootstrap-icons/check-square-fill.svg"
+                      alt="Добавить пост в отчет"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Добавить пост в отчет"
+                    />
                   </th>
-                  <th>Комментарий</th>
+                  <th class="text-align-center">
+                    <img
+                      src="/img/bootstrap-icons/pencil-fill.svg"
+                      alt="Комментарии"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Добавить комментарий"
+                    />
+                  </th>
                 </tr>
               </thead>
 
@@ -131,18 +221,23 @@
                   <td>
                     <%= item.post.views?.count || 0 %>
                   </td>
+                  <td><%= item.post.comments?.count || 0 %></td>
                   <td align="center">
                     <input
                       class="form-check-input checkbox-add-to-report"
                       type="checkbox"
                       name="addToReport"
                       data-ws-post-id="<%= item.id %>"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Добавить пост в отчет"
                     />
                   </td>
                   <td>
                     <button
                       class="btn btn-comment"
                       data-ws-post-id="<%= item.id %>"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Добавить комментарий"
                     >
                       <img
                         src="/img/bootstrap-icons/card-text.svg"
@@ -162,6 +257,11 @@
       </div>
       <!!-- root -->
     </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"

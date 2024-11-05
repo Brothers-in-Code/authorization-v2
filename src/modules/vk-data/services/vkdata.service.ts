@@ -180,12 +180,14 @@ export class VkDataService {
     return response.data;
   }
 
+  //   TODO сохранять новые и обновлять существующие посты
   async savePostList(
     group: Group,
     postParamsList: {
       post_vkid: number;
       likes: number;
       views: number;
+      comments: number;
       timestamp_post: number;
       json: string;
     }[],
