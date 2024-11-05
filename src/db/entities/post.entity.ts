@@ -19,6 +19,9 @@ export class Post extends AbstractEntity {
   @Column()
   views: number;
 
+  @Column()
+  comments: number;
+
   @Column({ type: 'bigint' })
   timestamp_post: number;
 

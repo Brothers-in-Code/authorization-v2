@@ -179,6 +179,16 @@
   color: #fff;
 }
 
+.form-check-input {
+  cursor: pointer;
+}
+
+.sprite-icon {
+  width: 25px;
+  height: 25px;
+  fill: currentColor;
+}
+
 .nav__list {
   margin: 0;
   padding: 0;
@@ -208,6 +218,21 @@
 .table__pagination-cell {
   border-style: unset;
 }
+.table__flex {
+  display: flex;
+}
+.table__btn-sort {
+  padding-inline: 0.75rem;
+}
+.table__btn-sort:hover .sprite-icon {
+  fill: var(--bs-blue);
+}
+.table__btn-sort:active .sprite-icon {
+  fill: var(--bs-indigo);
+}
+.table__btn-sort--active .sprite-icon {
+  fill: var(--bs-purple);
+}
 .table th {
   vertical-align: top;
   background-color: var(--bs-gray-200);
@@ -223,6 +248,9 @@
 .table .td--fit-content {
   width: 1%;
   white-space: nowrap;
+}
+.table .text-align-center {
+  text-align: center;
 }
 
 .table--groups th {

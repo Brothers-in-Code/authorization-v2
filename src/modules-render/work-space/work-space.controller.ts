@@ -109,6 +109,9 @@ export class WorkSpaceController {
     @Query('viewsMin') viewsMin: string,
     @Query('begDate') begDate: string,
     @Query('endDate') endDate: string,
+    @Query('sortByLikes') sortByLikes: '0' | '1' | '2' | undefined,
+    @Query('sortByViews') sortByViews: '0' | '1' | '2' | undefined,
+    @Query('sortByComments') sortByComments: '0' | '1' | '2' | undefined,
   ) {
     const userId = req.user.id;
     const dataToRender = await this.workSpaceService.collectPostDataToRender(
@@ -120,6 +123,9 @@ export class WorkSpaceController {
         viewsMin,
         begDate,
         endDate,
+        sortByLikes,
+        sortByViews,
+        sortByComments,
       },
     );
     return { data: dataToRender };
@@ -135,6 +141,9 @@ export class WorkSpaceController {
       viewsMin: string;
       begDate: string;
       endDate: string;
+      sortByLikes: '0' | '1' | '2';
+      sortByViews: '0' | '1' | '2' | undefined;
+      sortByComments: '0' | '1' | '2' | undefined;
       comments?: { post_id: number; text: string }[];
       report?: {
         report: {
@@ -189,7 +198,7 @@ export class WorkSpaceController {
         limit: 20,
       },
     );
-
+    this.logger.debug(JSON.stringify(`debug ${dataToRender.sortByLikes}`));
     return { data: dataToRender };
   }
 

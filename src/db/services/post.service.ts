@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
-import { In, LessThan, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  FindOptionsOrder,
+  In,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import { Group } from '../entities/group.entity';
 
 type PostListOutputType = {
@@ -36,9 +42,11 @@ export class PostService {
     viewsMin?: number;
     begDate?: number;
     endDate?: number;
+    sortByLikes: number;
+    sortByViews: number;
+    sortByComments: number;
   }): Promise<PostListOutputType> {
     const idList = data.groupList.map((group) => group.id);
-    // TODO изменить MoreThan на LessThanOrEqual
     const whereConditions = {
       group: { id: In(idList) },
     };
@@ -52,11 +60,17 @@ export class PostService {
       whereConditions['timestamp_post'] = MoreThanOrEqual(data.begDate);
     }
     if (data.endDate) {
-      whereConditions['timestamp_post'] = LessThan(data.endDate);
+      whereConditions['timestamp_post'] = LessThanOrEqual(data.endDate);
     }
     const total = await this.postRepository.count({
       where: whereConditions,
     });
+
+    const order: FindOptionsOrder<Post> = {};
+
+    if (data.sortByLikes !== 0) {
+      order.likes = data['sortByLikes'] === 1 ? 'DESC' : 'ASC';
+    }
 
     const posts = await this.postRepository
       .find({
@@ -64,7 +78,7 @@ export class PostService {
         relations: { group: true },
         skip: data.offset,
         take: data.limit,
-        order: { likes: 'DESC' },
+        order: order,
       })
       .then((postList) =>
         postList.map((post) => {

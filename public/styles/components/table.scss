@@ -9,6 +9,32 @@
     border-style: unset;
   }
 
+  &__flex {
+    display: flex;
+  }
+
+  &__btn-sort {
+    padding-inline: 0.75rem;
+
+    &:hover {
+      .sprite-icon {
+        fill: var(--bs-blue);
+      }
+    }
+
+    &:active {
+      .sprite-icon {
+        fill: var(--bs-indigo);
+      }
+    }
+
+    &--active {
+      .sprite-icon {
+        fill: var(--bs-purple);
+      }
+    }
+  }
+
   th {
     vertical-align: top;
     background-color: var(--bs-gray-200);
@@ -27,6 +53,10 @@
   .td--fit-content {
     width: 1%;
     white-space: nowrap;
+  }
+
+  .text-align-center {
+    text-align: center;
   }
 }
 

@@ -79,6 +79,9 @@ export class WorkSpaceService {
     viewsMin?: number;
     begDate?: number;
     endDate?: number;
+    sortByLikes: number;
+    sortByViews: number;
+    sortByComments: number;
   }) {
     const { user_id, offset, limit } = data;
     const groupList = await this.userGroupService.findAllByUser(user_id);
@@ -90,6 +93,9 @@ export class WorkSpaceService {
       viewsMin: data.viewsMin ?? undefined,
       begDate: data.begDate ?? undefined,
       endDate: data.endDate ?? undefined,
+      sortByLikes: data.sortByLikes,
+      sortByViews: data.sortByViews,
+      sortByComments: data.sortByComments,
     });
     return response;
   }
@@ -184,12 +190,21 @@ export class WorkSpaceService {
       viewsMin: string;
       begDate: string;
       endDate: string;
+      sortByLikes: '0' | '1' | '2' | undefined;
+      sortByViews: '0' | '1' | '2' | undefined;
+      sortByComments: '0' | '1' | '2' | undefined;
     },
   ) {
     const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
     const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
     const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
     const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+    const sortByLikes =
+      data.sortByLikes !== undefined ? Number(data.sortByLikes) : 1;
+    const sortByViews =
+      data.sortByViews !== undefined ? Number(data.sortByViews) : 1;
+    const sortByComments =
+      data.sortByComments !== undefined ? Number(data.sortByComments) : 1;
 
     // TODO отдавать только посты групп, отмеченных к сканированию
     const postList = await this.getPostList({
@@ -200,6 +215,9 @@ export class WorkSpaceService {
       viewsMin,
       begDate,
       endDate,
+      sortByLikes,
+      sortByViews,
+      sortByComments,
     });
 
     const reportList = await this.userReportService
@@ -220,6 +238,7 @@ export class WorkSpaceService {
       viewsMin,
       begDate: data.begDate,
       endDate: data.endDate,
+      sortByLikes,
     };
   }
 
