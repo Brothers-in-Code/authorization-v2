@@ -46,6 +46,7 @@ export class PostService {
     sortByViews: number;
     sortByComments: number;
   }): Promise<PostListOutputType> {
+    // NOTE сбор условий фильтрации
     const idList = data.groupList.map((group) => group.id);
     const whereConditions = {
       group: { id: In(idList) },
@@ -66,10 +67,19 @@ export class PostService {
       where: whereConditions,
     });
 
+    // NOTE сбор условий сортировки
     const order: FindOptionsOrder<Post> = {};
 
     if (data.sortByLikes !== 0) {
-      order.likes = data['sortByLikes'] === 1 ? 'DESC' : 'ASC';
+      order.likes = data.sortByLikes === 1 ? 'DESC' : 'ASC';
+    }
+
+    if (data.sortByViews !== 0) {
+      order.views = data.sortByViews === 1 ? 'DESC' : 'ASC';
+    }
+
+    if (data.sortByComments !== 0) {
+      order.comments = data.sortByComments === 1 ? 'DESC' : 'ASC';
     }
 
     const posts = await this.postRepository

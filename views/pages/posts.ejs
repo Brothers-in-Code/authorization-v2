@@ -48,11 +48,13 @@
           data-ws-beg-date="<%= bodyParams.begDate %>"
           data-ws-end-date="<%= bodyParams.endDate %>"
           data-ws-sort-by-likes="<%= data.sortByLikes %>"
+          data-ws-sort-by-views="<%= data.sortByViews %>"
+          data-ws-sort-by-comments="<%= data.sortByComments %>"
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
             <!-- prettier-ignore -->
-            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}` %>
+            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}&sortByLikes=${data.sortByLikes}&sortByViews=${data.sortByViews}&sortByComments=${data.sortByComments}` %>
             <%- include('../components/pagination.ejs', 
                 {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, params } ) 
             %>
@@ -117,39 +119,73 @@
                 </tr>
                 <tr>
                   <th>Пост</th>
-                  <th class="table__flex">
-                    <img
-                      src="/img/bootstrap-icons/heart-fill.svg"
-                      alt="Нравится"
+                  <th>
+                    <div
+                      class="table__flex"
                       data-bs-toggle="tooltip"
                       data-bs-title="Количество лайков"
-                    />
-                    <% activeClass = data.sortByLikes !== 0 ? 'table__btn-sort--active' : ''  %>
-                    <% imgId = data.sortByLikes === 2 ? '#sort-down' : '#sort-up' %>
-                    <button
-                      class="btn-reset table__btn-sort <%= activeClass %>"
-                      id="likes-btn-sort"
                     >
-                      <svg class="sprite-icon">
-                        <use xlink:href="<%= imgId %>"></use>
-                      </svg>
-                    </button>
+                      <img
+                        src="/img/bootstrap-icons/heart-fill.svg"
+                        alt="Нравится"
+                      />
+                      <% activeClass = data.sortByLikes !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByLikes === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="likes-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
                   </th>
+
                   <th>
-                    <img
-                      src="/img/bootstrap-icons/eye-fill.svg"
-                      alt="Просмотры"
+                    <div
+                      class="table__flex"
                       data-bs-toggle="tooltip"
                       data-bs-title="Количество просмотров"
-                    />
+                    >
+                      <img
+                        src="/img/bootstrap-icons/eye-fill.svg"
+                        alt="Просмотры"
+                      />
+                      <% activeClass = data.sortByViews !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByViews === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="views-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
                   </th>
+
                   <th>
-                    <img
-                      src="/img/bootstrap-icons/chat-right-text-fill.svg"
-                      alt="Количество комментариев"
+                    <div
+                      class="table__flex"
                       data-bs-toggle="tooltip"
                       data-bs-title="Количество комментариев"
-                    />
+                    >
+                      <img
+                        src="/img/bootstrap-icons/chat-right-text-fill.svg"
+                        alt="Количество комментариев"
+                      />
+                      <% activeClass = data.sortByComments !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% imgId = data.sortByComments === 2 ? '#sort-down' : '#sort-up' %>
+                      <button
+                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        id="comments-btn-sort"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="<%= imgId %>"></use>
+                        </svg>
+                      </button>
+                    </div>
                   </th>
                   <th align="center">
                     <img

@@ -138,20 +138,38 @@
     }
   })();
 
-  //   NOTE сортировка по лайкам
+  //   NOTE сортировка
   (() => {
+    //   NOTE по лайкам
     const btnSortLikes = document.getElementById('likes-btn-sort');
-
     if (btnSortLikes) {
       btnSortLikes.addEventListener('click', () => {
         const dataset = getDataset();
-        const sortByLikes = changeSortIndex(dataset.sortByLikes);
-        dataset.sortByLikes = sortByLikes;
-        const url = window.location.pathname;
-        const params = new URLSearchParams(dataset);
-        console.log(url);
+        const sortParam = changeSortIndex(dataset.sortByLikes);
+        dataset.sortByLikes = sortParam;
+        setLocationHref(dataset);
+      });
+    }
 
-        window.location.href = `${url}?${params}`;
+    // NOTE по просмотрам
+    const btnSortViews = document.getElementById('views-btn-sort');
+    if (btnSortViews) {
+      btnSortViews.addEventListener('click', () => {
+        const dataset = getDataset();
+        const sortParam = changeSortIndex(dataset.sortByViews);
+        dataset.sortByViews = sortParam;
+        setLocationHref(dataset);
+      });
+    }
+
+    // NOTE по комментариям
+    const btnSortComments = document.getElementById('comments-btn-sort');
+    if (btnSortComments) {
+      btnSortComments.addEventListener('click', () => {
+        const dataset = getDataset();
+        const sortParam = changeSortIndex(dataset.sortByComments);
+        dataset.sortByComments = sortParam;
+        setLocationHref(dataset);
       });
     }
   })();
@@ -168,6 +186,12 @@
     return String(localIndex);
   }
 
+  function setLocationHref(dataset) {
+    const url = window.location.pathname;
+    const params = new URLSearchParams(dataset);
+    window.location.href = `${url}?${params}`;
+  }
+
   function getDataset() {
     return {
       likesMin: main.dataset.wsLikesMin,
@@ -175,6 +199,8 @@
       begDate: main.dataset.wsBegDate,
       endDate: main.dataset.wsEndDate,
       sortByLikes: main.dataset.wsSortByLikes,
+      sortByViews: main.dataset.wsSortByViews,
+      sortByComments: main.dataset.wsSortByComments,
     };
   }
 

@@ -202,9 +202,9 @@ export class WorkSpaceService {
     const sortByLikes =
       data.sortByLikes !== undefined ? Number(data.sortByLikes) : 1;
     const sortByViews =
-      data.sortByViews !== undefined ? Number(data.sortByViews) : 1;
+      data.sortByViews !== undefined ? Number(data.sortByViews) : 0;
     const sortByComments =
-      data.sortByComments !== undefined ? Number(data.sortByComments) : 1;
+      data.sortByComments !== undefined ? Number(data.sortByComments) : 0;
 
     // TODO отдавать только посты групп, отмеченных к сканированию
     const postList = await this.getPostList({
@@ -239,6 +239,8 @@ export class WorkSpaceService {
       begDate: data.begDate,
       endDate: data.endDate,
       sortByLikes,
+      sortByViews,
+      sortByComments,
     };
   }
 
