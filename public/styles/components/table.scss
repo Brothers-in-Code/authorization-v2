@@ -13,7 +13,7 @@
     display: flex;
   }
 
-  &__btn-sort {
+  &__btn-icon {
     padding-inline: 0.75rem;
 
     &:hover {
@@ -31,6 +31,30 @@
     &--active {
       .sprite-icon {
         fill: var(--bs-purple);
+      }
+    }
+  }
+
+  &__btn-icon--local {
+    .sprite-icon {
+      fill: var(--bs-green);
+    }
+
+    &:hover {
+      .sprite-icon {
+        fill: var(--green-light);
+      }
+    }
+
+    &:active {
+      .sprite-icon {
+        fill: var(--green-dark);
+      }
+    }
+
+    &--active {
+      .sprite-icon {
+        fill: var(--green-dark);
       }
     }
   }
@@ -57,6 +81,21 @@
 
   .text-align-center {
     text-align: center;
+  }
+
+  .ceil-body {
+    position: relative;
+
+    &__btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      .sprite-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
 }
 

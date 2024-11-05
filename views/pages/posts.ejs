@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('../components/head.ejs', {title: data.page_title}) %>
+  <%- include('../components/head.ejs', {title: data.pageTitle}) %>
   <body>
     <svg width="0" height="0" class="hide">
       <symbol
@@ -21,6 +21,36 @@
           d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"
         ></path>
       </symbol>
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        id="zoom-in"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"
+        ></path>
+        <path
+          d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"
+        ></path>
+        <path
+          fill-rule="evenodd"
+          d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"
+        ></path>
+      </symbol>
+
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        id="x-circle"
+      >
+        <path
+          d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+        ></path>
+        <path
+          d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+        ></path>
+      </symbol>
     </svg>
 
     <div id="root">
@@ -36,7 +66,7 @@
        %>
 
       <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
-
+      <%- include('../components/post-view-modal.ejs') %>
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>
@@ -130,10 +160,10 @@
                         src="/img/bootstrap-icons/heart-fill.svg"
                         alt="Нравится"
                       />
-                      <% activeClass = data.sortByLikes !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% activeClass = data.sortByLikes !== 0 ? 'table__btn-icon--active' : ''  %>
                       <% imgId = data.sortByLikes === 2 ? '#sort-down' : '#sort-up' %>
                       <button
-                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        class="btn-reset table__btn-icon <%= activeClass %>"
                         id="likes-btn-sort"
                       >
                         <svg class="sprite-icon">
@@ -153,10 +183,10 @@
                         src="/img/bootstrap-icons/eye-fill.svg"
                         alt="Просмотры"
                       />
-                      <% activeClass = data.sortByViews !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% activeClass = data.sortByViews !== 0 ? 'table__btn-icon--active' : ''  %>
                       <% imgId = data.sortByViews === 2 ? '#sort-down' : '#sort-up' %>
                       <button
-                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        class="btn-reset table__btn-icon <%= activeClass %>"
                         id="views-btn-sort"
                       >
                         <svg class="sprite-icon">
@@ -176,10 +206,10 @@
                         src="/img/bootstrap-icons/chat-right-text-fill.svg"
                         alt="Количество комментариев"
                       />
-                      <% activeClass = data.sortByComments !== 0 ? 'table__btn-sort--active' : ''  %>
+                      <% activeClass = data.sortByComments !== 0 ? 'table__btn-icon--active' : ''  %>
                       <% imgId = data.sortByComments === 2 ? '#sort-down' : '#sort-up' %>
                       <button
-                        class="btn-reset table__btn-sort <%= activeClass %>"
+                        class="btn-reset table__btn-icon <%= activeClass %>"
                         id="comments-btn-sort"
                       >
                         <svg class="sprite-icon">
@@ -211,11 +241,33 @@
                 <% data.postList.posts.forEach((item) => { %>
                 <tr>
                   <td>
-                    <div>
-                      <strong><%= item.group.name %></strong>
+                    <div class="ceil-body">
+                      <% let imgPath %>
+                      <!-- prettier-ignore -->
+                      <% if (item?.post.attachments?.length > 0) {%>
+                      <% imgPath = item.post.attachments[0].photo?.orig_photo.url || '' %>
+                      <% } else { %>
+                      <% imgPath = '' %>
+                      <% } %>
+                      <button
+                        class="btn-reset table__btn-icon table__btn-icon--local ceil-body__btn btn-post-view"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Подробнее"
+                        data-ws-img-path="<%= imgPath %>"
+                        data-ws-group-name="<%= item.group.name %>"
+                        data-ws-text="<%= item.post.text %>"
+                      >
+                        <svg class="sprite-icon">
+                          <use xlink:href="#zoom-in"></use>
+                        </svg>
+                      </button>
+                      <div>
+                        <strong><%= item.group.name %></strong>
+                      </div>
+                      <div><%= item.post.text.slice(0, 200) %>...</div>
                     </div>
-                    <div><%= item.post.text.slice(0, 200) %>...</div>
                   </td>
+
                   <td>
                     <%= item.post.likes?.count || 0 %>
                   </td>
@@ -270,5 +322,6 @@
     ></script>
     <script src="/js/post-page.js?v<%= new Date().getTime() %>"></script>
     <script src="/js/fetch-data.js"></script>
+    <script src="/js/post-view.js"></script>
   </body>
 </html>

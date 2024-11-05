@@ -99,6 +99,7 @@ export class WorkSpaceController {
   }
 
   //   NOTE продумать как получать из getGroupList все записи
+  //   FIX likesMin, viewsMin - сделать по умолчанию 0 или null  (ошибка: The specified value "NaN" cannot be parsed, or is out of range.)
   @Get('work-space/posts')
   @Render('pages/posts')
   async renderPosts(

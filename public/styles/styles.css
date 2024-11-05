@@ -94,6 +94,8 @@
   --screen-width: 100vm;
   --screen-width: 100vmin;
   --screen-real-width: 100vw;
+  --green-dark: #085834;
+  --green-light: #4cc38d;
 }
 
 @media (min-width: 991px) {
@@ -225,17 +227,29 @@
 .table__flex {
   display: flex;
 }
-.table__btn-sort {
+.table__btn-icon {
   padding-inline: 0.75rem;
 }
-.table__btn-sort:hover .sprite-icon {
+.table__btn-icon:hover .sprite-icon {
   fill: var(--bs-blue);
 }
-.table__btn-sort:active .sprite-icon {
+.table__btn-icon:active .sprite-icon {
   fill: var(--bs-indigo);
 }
-.table__btn-sort--active .sprite-icon {
+.table__btn-icon--active .sprite-icon {
   fill: var(--bs-purple);
+}
+.table__btn-icon--local .sprite-icon {
+  fill: var(--bs-green);
+}
+.table__btn-icon--local:hover .sprite-icon {
+  fill: var(--green-light);
+}
+.table__btn-icon--local:active .sprite-icon {
+  fill: var(--green-dark);
+}
+.table__btn-icon--local--active .sprite-icon {
+  fill: var(--green-dark);
 }
 .table th {
   vertical-align: top;
@@ -255,6 +269,18 @@
 }
 .table .text-align-center {
   text-align: center;
+}
+.table .ceil-body {
+  position: relative;
+}
+.table .ceil-body__btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.table .ceil-body__btn .sprite-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .table--groups th {
@@ -386,6 +412,54 @@
   width: 32px;
   padding: 5px 0;
   z-index: 20;
+}
+
+.view-modal {
+  position: absolute;
+  top: 10px;
+  width: 50%;
+  min-width: 260px;
+  max-width: 500px;
+  max-height: calc(100vh - 20px);
+  overflow: hidden;
+  background-color: #fff;
+  resize: both;
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px 4px var(--bs-gray-400);
+  background-color: var(--bs-white);
+  z-index: 100;
+}
+.view-modal__title {
+  font-size: 14px;
+}
+.view-modal__body {
+  width: 100%;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.view-modal__body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.view-modal__text {
+  white-space: pre-wrap;
+  font-size: 12px;
+}
+.view-modal__img {
+  max-width: 100%;
+  height: auto;
+}
+.view-modal__btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.view-modal--hide {
+  transform: translateY(-200%);
 }
 
 /*# sourceMappingURL=styles.css.map */
