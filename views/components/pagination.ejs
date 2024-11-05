@@ -6,20 +6,55 @@
 * limit: number
 */ 
 -->
+
 <div class="pagination">
   <ul class="pagination__list" id="pagination-list">
-    <!-- prettier-ignore -->
-    <% for (let i = 0; i < Math.ceil(total / limit); i++)
-    {%>
+    <!-- Кнопка "назад", если это не первая страница -->
+    <% disabledClassBackward = offset === 0 ? 'link--disabled' : '' %>
+
     <li class="pagination__item">
-      <% let link = `offset=${i * limit}&limit=${limit}${params}` %>
-      <a
-        class="link <%= offset === i * limit ? 'link--active' : '' %>"
-        href="?<%= link %>"
-        ><%= i+1 %></a
+      <!-- prettier-ignore -->
+      <a class="link <%= disabledClassBackward %>"
+        href="?offset=<%= Math.max(0, offset - 3 * limit) %>&limit=<%= limit %><%= params %>"
       >
+        Назад
+      </a>
     </li>
-    <% }%>
+
+    <!-- prettier-ignore -->
+    <% for (let i = 0; i < Math.ceil(total / limit); i++) { %>
+    <!-- prettier-ignore -->
+    <% if (i < 3 || i >= Math.ceil(total / limit) - 3 || (i >= Math.floor(offset / limit) - 1 && i <= Math.floor(offset / limit) + 1)) { %>
+
+    <li class="pagination__item">
+      <% let link = `offset=${i * limit}&limit=${limit}${params}`; %>
+      <a
+        class="link <%= offset === i * limit ? 'link--disabled' : '' %>"
+        href="?<%= link %>"
+      >
+        <%= i + 1 %>
+      </a>
+    </li>
+    <!-- prettier-ignore -->
+    <% } else if ((i === 3 && Math.floor(offset / limit) > 3) || (i === Math.ceil(total / limit) - 4 && Math.floor(offset / limit) < Math.ceil(total / limit) - 4)) { %>
+
+    <!-- Отображение троеточия -->
+    <li class="pagination__item">...</li>
+    <% } %>
+    <% } %>
+
+    <!-- Кнопка "вперёд", если это не последняя страница -->
+    <!-- prettier-ignore -->
+    <% disabledClassForward = offset >= ((Math.ceil(total / limit) - 1) * limit) ? 'link--disabled' : '' %>
+    <li class="pagination__item">
+      <!-- prettier-ignore -->
+      <a
+        class="link <%= disabledClassForward %>"
+            href="?offset=<%= Math.min((Math.ceil(total / limit) - 1) * limit, offset + 3 * limit) %>&limit=<%= limit %><%= params %>"
+        >
+            Вперёд
+        </a>
+    </li>
   </ul>
 </div>
 

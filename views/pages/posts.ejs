@@ -53,15 +53,16 @@
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
-            <!-- prettier-ignore -->
-            <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}&sortByLikes=${data.sortByLikes}&sortByViews=${data.sortByViews}&sortByComments=${data.sortByComments}` %>
-            <%- include('../components/pagination.ejs', 
-                {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, params } ) 
-            %>
             <table class="table">
               <thead>
                 <tr>
-                  <td colspan="6" class="table__pagination-cell"></td>
+                  <td colspan="6" class="table__pagination-cell">
+                    <!-- prettier-ignore -->
+                    <% let params = `&likesMin=${data.likesMin}&viewsMin=${data.viewsMin}&begDate=${data.begDate}&endDate=${data.endDate}&sortByLikes=${data.sortByLikes}&sortByViews=${data.sortByViews}&sortByComments=${data.sortByComments}` %>
+                    <%- include('../components/pagination.ejs', 
+                        {total: data.postList.total, offset: data.postList.offset, limit: data.postList.limit, params } ) 
+                    %>
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="6" class="td--form">
@@ -72,7 +73,7 @@
                       url="./?offset=0&limit=20"
                     >
                       <label>
-                        <div>Мин. кол-во лайков</div>
+                        <div class="label-text">Мин. кол-во лайков</div>
                         <input
                           class="form-control"
                           type="number"
@@ -82,7 +83,7 @@
                       </label>
 
                       <label>
-                        <div>Мин. кол-во просмотров</div>
+                        <div class="label-text">Мин. кол-во просмотров</div>
                         <input
                           class="form-control"
                           type="number"
@@ -92,7 +93,7 @@
                       </label>
 
                       <label>
-                        <div>Дата от</div>
+                        <div class="label-text">Дата от</div>
                         <input
                           class="form-control"
                           type="date"
@@ -101,7 +102,7 @@
                       </label>
 
                       <label>
-                        <div>Дата до</div>
+                        <div class="label-text">Дата до</div>
                         <input
                           class="form-control"
                           type="date"

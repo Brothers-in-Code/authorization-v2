@@ -119,6 +119,10 @@
 .link--active {
   color: var(--bs-gray-900);
 }
+.link--disabled {
+  pointer-events: none;
+  color: #000;
+}
 
 .hide {
   display: none;
@@ -332,6 +336,10 @@
 }
 .form--save-report-post-modal .close {
   height: 0px;
+}
+
+.label-text {
+  font-size: 0.9rem;
 }
 
 .btn-disabled {
