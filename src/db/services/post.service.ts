@@ -7,6 +7,7 @@ import {
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
+  UpdateResult,
 } from 'typeorm';
 import { Group } from '../entities/group.entity';
 
@@ -15,6 +16,15 @@ type PostListOutputType = {
   offset: number;
   limit: number;
   posts: { group: { id: number; name: string }; post: string }[];
+};
+
+type PostParamsType = {
+  post_vkid: number;
+  likes: number;
+  views: number;
+  comments: number;
+  timestamp_post: number;
+  json: string;
 };
 
 @Injectable()
@@ -131,8 +141,72 @@ export class PostService {
     return new Post();
   }
 
-  createPostList(postList: Post[]): Promise<Post[]> {
+  async createOrUpdatePostList(group: Group, postParamsList: PostParamsType[]) {
+    const postList = [];
+
+    const existPostList = await this.postRepository.find({
+      where: {
+        post_vkid: In(postParamsList.map((post) => post.post_vkid)),
+        group: { vkid: group.vkid },
+      },
+      relations: ['group'],
+    });
+
+    const existPostVkIdList = existPostList.map((post) => post.post_vkid);
+    const updatedExistPostList = this.updateExistPostList(
+      group,
+      postParamsList,
+      existPostList,
+    );
+    postList.push(...updatedExistPostList);
+
+    const newPostParamsList = postParamsList.filter(
+      (post) => !existPostVkIdList.includes(post.post_vkid),
+    );
+
+    if (newPostParamsList.length > 0) {
+      const newPostList = this.createNewPostList(group, newPostParamsList);
+      postList.push(...newPostList);
+    }
+
     return this.postRepository.save(postList);
+  }
+
+  private updateExistPostList(
+    group: Group,
+    postParamsList: PostParamsType[],
+    existPostList: Post[],
+  ) {
+    return postParamsList.map((post) => {
+      const existPost = existPostList.find(
+        (postExist) =>
+          postExist.post_vkid === post.post_vkid &&
+          postExist.group.vkid === group.vkid,
+      );
+      if (existPost) {
+        existPost.group = group;
+        existPost.likes = post.likes;
+        existPost.views = post.views;
+        existPost.comments = post.comments;
+        existPost.timestamp_post = post.timestamp_post;
+        existPost.json = post.json;
+      }
+      return existPost;
+    });
+  }
+
+  private createNewPostList(group: Group, postParamsList: PostParamsType[]) {
+    return postParamsList.map((post) => {
+      const newPost = this.createNewPost();
+      newPost.group = group;
+      newPost.post_vkid = post.post_vkid;
+      newPost.likes = post.likes;
+      newPost.views = post.views;
+      newPost.comments = post.comments;
+      newPost.timestamp_post = post.timestamp_post;
+      newPost.json = post.json;
+      return newPost;
+    });
   }
 
   deletePost(post: Post): Promise<Post> {

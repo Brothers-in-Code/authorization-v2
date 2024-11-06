@@ -180,7 +180,6 @@ export class VkDataService {
     return response.data;
   }
 
-  //   TODO сохранять новые и обновлять существующие посты
   async savePostList(
     group: Group,
     postParamsList: {
@@ -192,11 +191,10 @@ export class VkDataService {
       json: string;
     }[],
   ) {
-    const posts = postParamsList.map((postParams) => {
-      const newPost = this.postService.createNewPost();
-      return { ...newPost, ...postParams, group: group };
-    });
-    const postList = await this.postService.createPostList(posts);
+    const postList = await this.postService.createOrUpdatePostList(
+      group,
+      postParamsList,
+    );
     if (!postList) {
       throw new DatabaseServiceError(
         'func: savePostList. Ошибка сохранения постов',
