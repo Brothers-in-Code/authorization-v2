@@ -22,7 +22,7 @@ describe('VkDataService', () => {
     };
     postServiceMock = {
       createNewPost: jest.fn(),
-      createPostList: jest.fn(),
+      createOrUpdatePostList: jest.fn(),
     };
     groupServiceMock = {
       createNewGroup: jest.fn(),
