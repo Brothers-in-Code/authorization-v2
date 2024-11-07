@@ -108,7 +108,6 @@ export class ScanService {
             };
           });
 
-          //   FIX посты не обновляются
           await this.vkDataService.savePostList(group, postParamsList);
           this.logger.log(`посты группы groupVKId = ${groupVKId} сохранены`);
 
