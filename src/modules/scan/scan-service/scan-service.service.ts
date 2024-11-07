@@ -111,7 +111,7 @@ export class ScanService {
           await this.vkDataService.savePostList(group, postParamsList);
           this.logger.log(`посты группы groupVKId = ${groupVKId} сохранены`);
 
-          await this.groupService.updateGroupScanDate(groupVKId, limitDate);
+          await this.groupService.updateGroupScanDate(groupVKId, new Date());
           this.logger.log(`дата сканирования группы ${groupVKId} обновлена`);
         } else {
           throw new RegularServiceError(
