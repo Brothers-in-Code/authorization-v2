@@ -41,7 +41,7 @@ export class ScanService {
       await this.dataSource.initialize();
       this.logger.log('Data Source has been initialized!');
     }
-    const limitDate = this.calcLimitDate();
+    const limitTimestamp = this.calcLimitTimestamp();
 
     const queryResultList = await this.executeQuery();
     if (queryResultList) {
@@ -66,7 +66,7 @@ export class ScanService {
         const scanGroupListResult = await this.scanGroupList(
           tokenResult.access_token,
           queryResult.groupVkIdList,
-          limitDate,
+          limitTimestamp,
         );
         this.logger.log(`Сканирование групп завершено. ${scanGroupListResult}`);
       }
@@ -83,68 +83,96 @@ export class ScanService {
   async scanGroupList(
     access_token: string,
     groupVKIdList: number[],
-    limitDate: Date,
+    limitTimestamp: number,
   ) {
+    const COUNT = 30;
     let errorsCounter = 0;
 
     for (const groupVKId of groupVKIdList) {
-      try {
-        const response = await this.vkDataService.getWallPrivetGroup({
-          access_token,
-          owner_id: groupVKId,
-          extended: 0,
-        });
-        if (response.response.items) {
-          const group = await this.groupService.findOne(groupVKId);
+      let currentOffset = 0;
+      let currentPostTimestamp = new Date().getTime();
 
-          const postParamsList = response.response.items.map((item) => {
-            return {
-              post_vkid: item.id,
-              likes: item.likes?.count || 0,
-              views: item.views?.count || 0,
-              comments: item.comments.count || 0,
-              timestamp_post: item.date,
-              json: JSON.stringify(item),
-            };
+      while (currentPostTimestamp >= limitTimestamp) {
+        try {
+          const response = await this.vkDataService.getWallPrivetGroup({
+            access_token,
+            owner_id: groupVKId,
+            extended: 0,
+            count: COUNT,
+            offset: currentOffset,
           });
+          const { offset, data } = response;
+          if (data.response.items && data.response.items.length > 0) {
+            const group = await this.groupService.findOne(groupVKId);
 
-          await this.vkDataService.savePostList(group, postParamsList);
-          this.logger.log(`посты группы groupVKId = ${groupVKId} сохранены`);
+            const postParamsList = data.response.items.map((item) => {
+              return {
+                post_vkid: item.id,
+                likes: item.likes?.count || 0,
+                views: item.views?.count || 0,
+                comments: item.comments.count || 0,
+                timestamp_post: item.date,
+                json: JSON.stringify(item),
+              };
+            });
 
-          await this.groupService.updateGroupScanDate(groupVKId, new Date());
-          this.logger.log(`дата сканирования группы ${groupVKId} обновлена`);
-        } else {
-          throw new RegularServiceError(
-            `у группы ${groupVKId} нет постов или закрыта стена`,
-          );
+            await this.vkDataService.savePostList(group, postParamsList);
+            this.logger.log(
+              `посты группы groupVKId = ${groupVKId} сохранены. offset = ${currentOffset}`,
+            );
+
+            currentOffset = offset + COUNT;
+            currentPostTimestamp =
+              postParamsList[postParamsList.length - 1].timestamp_post * 1000;
+          } else {
+            errorsCounter++;
+            this.logger.error(
+              `у группы ${groupVKId} нет постов или закрыта стена`,
+            );
+            break;
+          }
+        } catch (error) {
+          if (error instanceof VK_API_Error) {
+            errorsCounter++;
+            this.logger.error(
+              `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+            );
+            break;
+          } else if (error instanceof RegularServiceError) {
+            errorsCounter++;
+            this.logger.error(
+              `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+            );
+            break;
+          } else if (error instanceof UnauthorizedException) {
+            errorsCounter++;
+            this.logger.error(
+              `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+            );
+            break;
+          } else if (error instanceof DatabaseServiceError) {
+            errorsCounter++;
+            this.logger.error(
+              `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+            );
+            break;
+          } else {
+            errorsCounter++;
+            this.logger.error(
+              `неизвестная ошибка ПОЛУЧЕНИЯ или СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
+            );
+            break;
+          }
         }
+      }
+
+      try {
+        await this.groupService.updateGroupScanDate(groupVKId, new Date());
+        this.logger.log(`дата сканирования группы ${groupVKId} обновлена`);
       } catch (error) {
-        if (error instanceof VK_API_Error) {
-          errorsCounter++;
-          this.logger.error(
-            `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
-          );
-        } else if (error instanceof RegularServiceError) {
-          errorsCounter++;
-          this.logger.error(
-            `ошибка ПОЛУЧЕНИЯ постов группы ${groupVKId}: ${error.message}`,
-          );
-        } else if (error instanceof UnauthorizedException) {
-          errorsCounter++;
-          this.logger.error(
-            `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
-          );
-        } else if (error instanceof DatabaseServiceError) {
-          errorsCounter++;
-          this.logger.error(
-            `ошибка СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
-          );
-        } else {
-          errorsCounter++;
-          this.logger.error(
-            `неизвестная ошибка ПОЛУЧЕНИЯ или СОХРАНЕНИЯ постов группы ${groupVKId}: ${error.message}`,
-          );
-        }
+        this.logger.error(
+          `ошибка обновления даты сканирования группы ${groupVKId}`,
+        );
       }
     }
     return `группы отсканированы. Количество ошибок: ${errorsCounter}`;
@@ -216,12 +244,16 @@ export class ScanService {
       }
     }
   }
-
-  calcLimitDate(): Date {
+  //  1731013483350
+  //  1730408683350
+  //    1730260199
+  calcLimitTimestamp(): number {
     const scanDaysDepth = this.configService.get('app.scanDaysDepth');
     const limitDate = new Date();
+    limitDate.setHours(23, 59, 0, 0);
     limitDate.setDate(limitDate.getDate() - scanDaysDepth);
-    return limitDate;
+
+    return limitDate.getTime();
   }
 
   //   TODO добавить условие, чтобы сканировать только отмеченные группы

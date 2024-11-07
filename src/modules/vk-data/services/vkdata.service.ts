@@ -118,18 +118,24 @@ export class VkDataService {
   async getWallPrivetGroup({
     access_token,
     owner_id,
-    extended,
+    extended = 0,
+    count = 30, // NOTE count - количество получаемых постов за один запрос
+    offset = 0,
   }: {
     access_token: string;
     owner_id: number;
-    extended: number;
+    extended?: number;
+    count?: number;
+    offset?: number;
   }) {
     const params = {
       owner_id: -owner_id,
       client_id: this.configService.get('vk.appId'),
       v: VK_API_VERSION,
-      extended: extended,
+      extended,
       access_token,
+      count,
+      offset,
     };
     const response = await this.httpService.axiosRef.post<VKWallType>(
       `${VK_API}/wall.get`,
@@ -144,7 +150,11 @@ export class VkDataService {
       const error = response.data as unknown as VKResponseApiErrorType;
       throw new VK_API_Error(error.error.error_msg);
     }
-    return response.data;
+    return {
+      count,
+      offset,
+      data: response.data,
+    };
   }
 
   async getWallByDomain({
