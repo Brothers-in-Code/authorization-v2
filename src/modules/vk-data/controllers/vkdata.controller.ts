@@ -61,10 +61,14 @@ export class VkDataController {
       user_vkid,
       owner_id,
       extended = 0,
+      count = 30, // NOTE count - количество получаемых постов за один запрос
+      offset = 0,
     }: {
       user_vkid: number;
       owner_id: number;
       extended?: number;
+      count?: number;
+      offset?: number;
     },
   ) {
     const user = await this.userService.findOne(user_vkid);
@@ -76,12 +80,14 @@ export class VkDataController {
       //     owner_id,
       //     extended,
       //   );
-      const data = await this.vkDataService.getWallPrivetGroup({
+      const result = await this.vkDataService.getWallPrivetGroup({
         access_token: user.access_token,
         owner_id,
         extended,
+        count,
+        offset,
       });
-      return data;
+      return result;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

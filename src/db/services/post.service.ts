@@ -7,10 +7,8 @@ import {
   LessThanOrEqual,
   MoreThanOrEqual,
   Repository,
-  UpdateResult,
 } from 'typeorm';
 import { Group } from '../entities/group.entity';
-import { format } from 'path';
 
 type PostListOutputType = {
   total: number;
@@ -33,8 +31,6 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>,
   ) {}
 
   private readonly logger = new Logger(PostService.name);
@@ -156,13 +152,17 @@ export class PostService {
       if (!post) {
         post = this.createNewPost();
       }
-      return this.updatePost(group, params, post);
+      return this.updatePostProperty(group, params, post);
     });
 
     return this.postRepository.save(postList);
   }
 
-  private updatePost(group: Group, postParams: PostParamsType, post: Post) {
+  private updatePostProperty(
+    group: Group,
+    postParams: PostParamsType,
+    post: Post,
+  ) {
     post.group = group;
     post.post_vkid = postParams.post_vkid;
     post.likes = postParams.likes;
