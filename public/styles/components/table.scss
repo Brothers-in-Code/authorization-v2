@@ -88,13 +88,16 @@
 
     &__btn {
       position: absolute;
-      top: 0;
+      top: 0px;
       right: 0;
 
       .sprite-icon {
         width: 16px;
         height: 16px;
       }
+    }
+    &__btn--up {
+      top: -5px;
     }
   }
 }

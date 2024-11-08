@@ -97,3 +97,23 @@
   height: 25px;
   fill: currentColor;
 }
+
+.tech-info {
+  display: flex;
+  gap: 15px;
+
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--bs-gray-600);
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .sprite-icon {
+    width: 15px;
+    height: 15px;
+  }
+}
