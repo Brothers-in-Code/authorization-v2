@@ -195,6 +195,23 @@
   fill: currentColor;
 }
 
+.tech-info {
+  display: flex;
+  gap: 15px;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--bs-gray-600);
+}
+.tech-info__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+.tech-info .sprite-icon {
+  width: 15px;
+  height: 15px;
+}
+
 .nav__list {
   margin: 0;
   padding: 0;
@@ -275,12 +292,15 @@
 }
 .table .ceil-body__btn {
   position: absolute;
-  top: 0;
+  top: 0px;
   right: 0;
 }
 .table .ceil-body__btn .sprite-icon {
   width: 16px;
   height: 16px;
+}
+.table .ceil-body__btn--up {
+  top: -5px;
 }
 
 .table--groups th {

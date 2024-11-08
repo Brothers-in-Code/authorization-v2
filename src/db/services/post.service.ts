@@ -103,6 +103,7 @@ export class PostService {
         postList.map((post) => {
           return {
             id: post.id,
+            updated_at: post.updated_at,
             group: {
               id: post.group.vkid,
               name: post.group.name,
