@@ -336,12 +336,14 @@
                   </td>
 
                   <td>
-                    <%= item.post.likes?.count || 0 %>
+                    <%= item.post.likes?.count.toLocaleString() || 0 %>
                   </td>
                   <td>
-                    <%= item.post.views?.count || 0 %>
+                    <%= item.post.views?.count.toLocaleString() || 0 %>
                   </td>
-                  <td><%= item.post.comments?.count || 0 %></td>
+                  <td>
+                    <%= item.post.comments?.count.toLocaleString() || 0 %>
+                  </td>
                   <td align="center">
                     <input
                       class="form-check-input checkbox-add-to-report"
