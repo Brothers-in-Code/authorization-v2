@@ -199,7 +199,6 @@ export class WorkSpaceController {
         limit: 20,
       },
     );
-    this.logger.debug(JSON.stringify(`debug ${dataToRender.sortByLikes}`));
     return { data: dataToRender };
   }
 

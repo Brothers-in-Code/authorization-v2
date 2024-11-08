@@ -67,10 +67,10 @@ export class PostService {
       whereConditions['views'] = MoreThanOrEqual(data.viewsMin);
     }
     if (data.begDate) {
-      whereConditions['timestamp_post'] = MoreThanOrEqual(data.begDate);
+      whereConditions['timestamp_post'] = LessThanOrEqual(data.begDate);
     }
     if (data.endDate) {
-      whereConditions['timestamp_post'] = LessThanOrEqual(data.endDate);
+      whereConditions['timestamp_post'] = MoreThanOrEqual(data.endDate);
     }
     const total = await this.postRepository.count({
       where: whereConditions,
@@ -78,17 +78,24 @@ export class PostService {
 
     // NOTE сбор условий сортировки
     const order: FindOptionsOrder<Post> = {};
-
+    let isOrderEmpty = true;
     if (data.sortByLikes !== 0) {
       order.likes = data.sortByLikes === 1 ? 'DESC' : 'ASC';
+      isOrderEmpty = false;
     }
 
     if (data.sortByViews !== 0) {
       order.views = data.sortByViews === 1 ? 'DESC' : 'ASC';
+      isOrderEmpty = false;
     }
 
     if (data.sortByComments !== 0) {
       order.comments = data.sortByComments === 1 ? 'DESC' : 'ASC';
+      isOrderEmpty = false;
+    }
+
+    if (isOrderEmpty) {
+      order.timestamp_post = 'DESC';
     }
 
     const posts = await this.postRepository

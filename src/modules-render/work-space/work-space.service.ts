@@ -195,10 +195,15 @@ export class WorkSpaceService {
       sortByComments: '0' | '1' | '2' | undefined;
     },
   ) {
+    const MILLSEC = 1000;
     const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
     const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
-    const begDate = data.begDate ? new Date(data.begDate).getTime() : undefined;
-    const endDate = data.endDate ? new Date(data.endDate).getTime() : undefined;
+    const begDate = data.begDate
+      ? Math.ceil(Number(new Date(data.begDate).getTime()) / MILLSEC)
+      : undefined;
+    const endDate = data.endDate
+      ? Math.ceil(Number(new Date(data.endDate).getTime()) / MILLSEC)
+      : undefined;
     const sortByLikes =
       data.sortByLikes !== undefined ? Number(data.sortByLikes) : 1;
     const sortByViews =
