@@ -3,3 +3,10 @@
   opacity: 0.5;
   cursor: not-allowed !important;
 }
+
+.btn-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}

@@ -394,6 +394,13 @@
   cursor: not-allowed !important;
 }
 
+.btn-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}
+
 .slide-section {
   position: relative;
   width: auto;
