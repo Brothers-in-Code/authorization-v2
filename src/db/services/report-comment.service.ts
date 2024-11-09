@@ -1,10 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportComment } from '../entities/report_comment.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ReportService } from './report.service';
-import { Report } from '../entities/report.entity';
-import { Comment } from '../entities/comment.entity';
 
 @Injectable()
 export class ReportCommentService {
@@ -55,37 +53,5 @@ export class ReportCommentService {
       .getRawMany();
 
     return result.map((row) => row.id);
-  }
-
-  async findAllCommentsOfReport(
-    reportId: number,
-    commentIdList: number[],
-  ): Promise<{ report: Report; commentList: Comment[] }> {
-    const report = await this.reportService.findOne(reportId).then((item) => {
-      delete item.created_at;
-      delete item.deleted_at;
-      delete item.updated_at;
-      return item;
-    });
-
-    if (!report) {
-      throw new Error(`Report with ID ${reportId} not found.`);
-    }
-
-    const result = await this.reportCommentRepository.find({
-      where: { report: { id: reportId }, comment: { id: In(commentIdList) } },
-      relations: ['report', 'comment'],
-    });
-
-    const commentList = result.map((item) => {
-      delete item.comment.created_at;
-      delete item.comment.deleted_at;
-      delete item.comment.updated_at;
-      return item.comment;
-    });
-    return {
-      report,
-      commentList,
-    };
   }
 }

@@ -279,7 +279,7 @@ export class WorkSpaceService {
     };
   }
 
-  async collectReportDataToRender(
+  async collectReportListDataToRender(
     userId: string,
     data: {
       offset: string | number;
@@ -298,5 +298,11 @@ export class WorkSpaceService {
       currentPage: 'reports',
       reportList,
     };
+  }
+
+  async collectReportDataToRender(reportId: number) {
+    const report = await this.reportService.getReportData(reportId);
+    this.logger.debug(report);
+    return report;
   }
 }

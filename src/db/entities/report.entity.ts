@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../entities/abstract.entity';
 
 @Entity()

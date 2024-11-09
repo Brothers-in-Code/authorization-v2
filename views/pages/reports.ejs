@@ -67,12 +67,15 @@
                     <div class="text-secondary"><%= item.description %></div>
                   </td>
                   <td>
-                    <button class="btn btn-icon btn-outline-primary">
+                    <a
+                      class="btn btn-icon btn-outline-primary"
+                      href="/work-space/reports/<%= item.id %>"
+                    >
                       <svg class="sprite-icon">
                         <use xlink:href="#eye"></use>
                       </svg>
                       Посмотреть отчет
-                    </button>
+                    </a>
                   </td>
                   <td>
                     <button class="btn btn-icon btn-outline-primary">
