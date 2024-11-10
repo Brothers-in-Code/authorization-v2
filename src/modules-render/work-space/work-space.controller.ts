@@ -229,8 +229,8 @@ export class WorkSpaceController {
       Number(reportId),
     );
     const dataToRender = {
-      reportId,
       pageTitle: 'Отчет',
+      report,
     };
     return {
       data: dataToRender,

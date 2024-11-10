@@ -82,11 +82,13 @@
 
 .btn-reset {
   margin: 0;
-  padding: 0;
+  padding: 5px;
   border: none;
+  border-radius: 5px;
   background-color: transparent;
   outline: none;
   cursor: pointer;
+  transition: color 0.2s ease-out;
 }
 
 :root {
@@ -94,8 +96,13 @@
   --screen-width: 100vm;
   --screen-width: 100vmin;
   --screen-real-width: 100vw;
+  --color-primary: #0d6efd;
+  --color-primary-shade: #0a58ca;
+  --color-primary-light: #4992fe;
   --green-dark: #085834;
   --green-light: #4cc38d;
+  --red-dark: #8f111d;
+  --red-light: #ee6673;
 }
 
 @media (min-width: 991px) {
@@ -183,10 +190,6 @@
 .btn--vk {
   background-color: #0077ff;
   color: #fff;
-}
-
-.form-check-input {
-  cursor: pointer;
 }
 
 .sprite-icon {
@@ -356,8 +359,13 @@
   width: 100%;
 }
 
+.form:not(:last-child) {
+  margin-bottom: 20px;
+}
+
 .form--vertical {
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
 }
 .form--vertical .fieldset {
@@ -384,8 +392,32 @@
   height: 0px;
 }
 
+.form--edit-option .form__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.form--edit-option .form__body--background {
+  background-color: var(--bs-gray-200);
+}
+
 .label-text {
   font-size: 0.9rem;
+}
+
+textarea[disabled] {
+  resize: none;
+}
+
+.form-control--textarea {
+  min-width: 274px;
+}
+
+.form-check-input {
+  cursor: pointer;
 }
 
 .btn-disabled {
@@ -399,6 +431,74 @@
   justify-content: center;
   align-items: center;
   column-gap: 10px;
+}
+.btn-icon .sprite-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-icon[disabled] {
+  color: var(--bs-gray-400);
+  pointer-events: none;
+}
+
+.btn--primary {
+  color: var(--color-primary);
+}
+.btn--primary:hover {
+  color: var(--color-primary-light);
+}
+.btn--primary:active {
+  color: var(--color-primary-shade);
+}
+.btn--primary:focus-visible {
+  box-shadow: 0 0 3px 1px var(--bs-red);
+}
+
+.btn--danger {
+  color: var(--bs-red);
+}
+.btn--danger:hover {
+  color: var(--red-light);
+}
+.btn--danger:active {
+  color: var(--red-dark);
+}
+.btn--danger:focus-visible {
+  box-shadow: 0 0 3px 1px var(--bs-red);
+}
+
+.btn-flow {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+.btn-flow svg {
+  width: 20px;
+  height: 20px;
+}
+.btn-flow .sprite-icon {
+  fill: var(--bs-green);
+}
+.btn-flow:hover .sprite-icon {
+  fill: var(--green-light);
+}
+.btn-flow:active .sprite-icon {
+  fill: var(--green-dark);
+}
+.btn-flow--active .sprite-icon {
+  fill: var(--green-dark);
+}
+
+.btn-flow[disabled] {
+  pointer-events: none;
+}
+.btn-flow[disabled] .sprite-icon {
+  fill: var(--bs-gray-400);
+}
+
+.btn svg {
+  fill: currentColor;
 }
 
 .slide-section {

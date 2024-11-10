@@ -2,8 +2,34 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Report } from '../entities/report.entity';
-import { throwError } from 'rxjs';
 import { DatabaseServiceError } from 'src/errors/service-errors';
+import { PostType } from 'src/types/vk-wall-type';
+
+type GetReportDataOutputType = {
+  report: {
+    id: number;
+    name: string;
+    description: string;
+    date: Date;
+    startDatePeriod: string;
+    endDatePeriod: string;
+  };
+  commentList: {
+    commentId: number;
+    commentText: string;
+    groupName: string;
+    groupId: number;
+    post: {
+      id: number;
+      post_vkid: number;
+      likes: number;
+      views: number;
+      comments: number;
+      timestamp_post: number;
+      post: PostType;
+    };
+  }[];
+};
 
 @Injectable()
 export class ReportService {
@@ -33,12 +59,13 @@ export class ReportService {
     return this.reportRepository.find({ where: { [key]: value } });
   }
 
-  async getReportData(reportId: number) {
+  async getReportData(reportId: number): Promise<GetReportDataOutputType> {
     const queryBuilder = this.reportRepository.createQueryBuilder('r');
     const resultReport = await queryBuilder
       .select([
         'r.id as reportId',
         'r.*',
+        'c.id as commentId',
         'c.text as commentText',
         'p.*',
         'g.name as groupName',
@@ -59,8 +86,6 @@ export class ReportService {
       );
     }
 
-    this.logger.debug(resultReport);
-
     const report = {
       id: resultReport[0].reportId,
       name: resultReport[0].name,
@@ -72,6 +97,7 @@ export class ReportService {
 
     const commentList = resultReport.map((item) => {
       return {
+        commentId: item.commentId,
         commentText: item.commentText,
         groupName: item.groupName,
         groupId: item.groupVkId,
@@ -82,7 +108,7 @@ export class ReportService {
           views: item['views'],
           comments: item['comments'],
           timestamp_post: item['timestamp_post'],
-          json: item['json'],
+          post: JSON.parse(item['json']),
         },
       };
     });

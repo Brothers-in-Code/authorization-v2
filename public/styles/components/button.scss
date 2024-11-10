@@ -9,4 +9,91 @@
   justify-content: center;
   align-items: center;
   column-gap: 10px;
+
+  .sprite-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.btn-icon[disabled] {
+  color: var(--bs-gray-400);
+  pointer-events: none;
+}
+
+.btn--primary {
+  color: var(--color-primary);
+
+  &:hover {
+    color: var(--color-primary-light);
+  }
+
+  &:active {
+    color: var(--color-primary-shade);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 3px 1px var(--bs-red);
+  }
+}
+
+.btn--danger {
+  color: var(--bs-red);
+
+  &:hover {
+    color: var(--red-light);
+  }
+
+  &:active {
+    color: var(--red-dark);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 3px 1px var(--bs-red);
+  }
+}
+
+.btn-flow {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sprite-icon {
+    fill: var(--bs-green);
+  }
+
+  &:hover {
+    .sprite-icon {
+      fill: var(--green-light);
+    }
+  }
+
+  &:active {
+    .sprite-icon {
+      fill: var(--green-dark);
+    }
+  }
+
+  &--active {
+    .sprite-icon {
+      fill: var(--green-dark);
+    }
+  }
+}
+.btn-flow[disabled] {
+  pointer-events: none;
+  .sprite-icon {
+    fill: var(--bs-gray-400);
+  }
+}
+
+.btn {
+  svg {
+    fill: currentColor;
+  }
 }

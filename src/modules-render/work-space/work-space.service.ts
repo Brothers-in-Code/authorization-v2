@@ -302,7 +302,7 @@ export class WorkSpaceService {
 
   async collectReportDataToRender(reportId: number) {
     const report = await this.reportService.getReportData(reportId);
-    this.logger.debug(report);
+
     return report;
   }
 }
