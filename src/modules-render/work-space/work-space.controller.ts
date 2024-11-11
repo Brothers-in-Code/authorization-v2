@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -231,6 +232,63 @@ export class WorkSpaceController {
     const dataToRender = {
       pageTitle: 'Отчет',
       report,
+    };
+    return {
+      data: dataToRender,
+    };
+  }
+
+  @Post('work-space/reports/:reportId')
+  @Render('pages/one-report.ejs')
+  async receiveReport(
+    @Request() req,
+    @Param('reportId') reportId: string,
+    @Body()
+    body: {
+      reportName: string;
+      reportDescription: string;
+    },
+  ) {
+    const userId = req.user.id;
+    if (body) {
+      await this.workSpaceService.updateReport(Number(reportId), body);
+    }
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+      message: 'Название и описание отчета обновлены',
+    };
+    return {
+      data: dataToRender,
+    };
+  }
+
+  @Delete('work-space/reports/:reportId')
+  @Render('pages/one-report.ejs')
+  async deleteReport(
+    @Request() req,
+    @Param('reportId') reportId: string,
+    @Body() body: { commentId: string },
+  ) {
+    const userId = req.user.id;
+
+    const result = await this.workSpaceService.deleteCommentFromReport(
+      Number(reportId),
+      Number(body.commentId),
+    );
+    this.logger.debug(JSON.stringify(result));
+
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+      message: 'Комментарий удалён',
     };
     return {
       data: dataToRender,

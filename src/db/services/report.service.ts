@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Report } from '../entities/report.entity';
 import { DatabaseServiceError } from 'src/errors/service-errors';
@@ -47,6 +47,27 @@ export class ReportService {
     return this.reportRepository.save(newReport);
   }
 
+  async update(
+    reportId: number,
+    data: { reportName: string; reportDescription: string },
+  ): Promise<Report> {
+    const report = await this.reportRepository.findOneBy({ id: reportId });
+
+    if (!report) {
+      throw new NotFoundException(
+        `func: update; не найдет отчет id: ${reportId}`,
+      );
+    }
+
+    report.name = data.reportName;
+    report.description = data.reportDescription;
+    return this.reportRepository.save(report);
+  }
+
+  async delete(reportId) {
+    return await this.reportRepository.softDelete({ id: reportId });
+  }
+
   createReportObj() {
     return new Report();
   }
@@ -60,6 +81,7 @@ export class ReportService {
   }
 
   async getReportData(reportId: number): Promise<GetReportDataOutputType> {
+    // TODO найти report по-простому
     const queryBuilder = this.reportRepository.createQueryBuilder('r');
     const resultReport = await queryBuilder
       .select([

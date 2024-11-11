@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { report } from 'process';
 import { CommentService } from 'src/db/services/comment.service';
 import { PostService } from 'src/db/services/post.service';
 import { ReportCommentService } from 'src/db/services/report-comment.service';
@@ -142,6 +143,18 @@ export class WorkSpaceService {
 
   async saveReport(reportName: string, reportDescription: string) {
     return await this.reportService.create(reportName, reportDescription);
+  }
+
+  async deleteCommentFromReport(reportId: number, commentId: number) {
+    return this.reportCommentService.deleteComment(reportId, commentId);
+  }
+
+  async updateReport(
+    reportId: number,
+    data: { reportName: string; reportDescription: string },
+  ) {
+    const result = this.reportService.update(reportId, data);
+    return result;
   }
 
   async saveComment(

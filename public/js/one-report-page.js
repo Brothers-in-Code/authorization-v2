@@ -1,10 +1,11 @@
 (() => {
+  const textareaPostComment = document.querySelectorAll('.js-post-comment');
+
   const btnSaveReportData = document.getElementById('btn-save-report-data');
   const btnDeleteCommentList = document.querySelectorAll(
     '.js-btn-delete-comment',
   );
   const btnSaveCommentList = document.querySelectorAll('.js-btn-save-comment');
-  const textareaPostComment = document.querySelectorAll('.js-post-comment');
 
   if (textareaPostComment) {
     textareaPostComment.forEach((textarea) => {
@@ -25,19 +26,10 @@
 
   if (btnDeleteCommentList) {
     btnDeleteCommentList.forEach((btn) => {
+      const commentId = btn.dataset.commentId;
       btn.addEventListener('click', () => {
-        const url = btn.dataset.wsUrl;
-        const commentId = btn.dataset.wsCommentId;
-        fetch(url, {
-          method: 'delete',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ commentId }),
-        }).then((res) => {
-          if (res.ok) {
-            document.location.reload();
-          }
+        fetchWSData({ commentId }, 'delete').then(() => {
+          window.location.reload();
         });
       });
     });

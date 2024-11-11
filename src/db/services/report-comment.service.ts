@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportComment } from '../entities/report_comment.entity';
 import { Repository } from 'typeorm';
@@ -53,5 +53,20 @@ export class ReportCommentService {
       .getRawMany();
 
     return result.map((row) => row.id);
+  }
+
+  async deleteComment(reportId: number, commentId: number) {
+    const reportComment = await this.reportCommentRepository.findOneBy({
+      report: { id: reportId },
+      comment: { id: commentId },
+    });
+
+    if (!reportComment) {
+      throw new NotFoundException(
+        `Comment with reportId ${reportId} and commentId ${commentId} not found`,
+      );
+    }
+
+    return this.reportCommentRepository.softDelete(reportComment.id);
   }
 }
