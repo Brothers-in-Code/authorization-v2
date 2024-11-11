@@ -38,9 +38,7 @@
               return response.json();
             })
             .then((data) => {
-              const message = data.message;
-              const html = data.html;
-              renderMainSection(html);
+              renderMainSection(data);
             })
             .catch((e) => console.log(e));
         });
@@ -48,13 +46,25 @@
     }
   }
 
-  function renderMainSection(html) {
+  function renderMainSection(data) {
     const main = document.getElementById('js-section-main');
-    console.log(main, html);
 
     if (main) {
-      main.innerHTML = html;
+      main.innerHTML = data.html;
       mainScript();
+      callPopup(data.message);
     }
   }
+
+  function callPopup(message) {
+    const root = document.querySelector('#root');
+
+    if (root) {
+      root.dispatchEvent(
+        new CustomEvent('new-message', { detail: { message } }),
+      );
+    }
+  }
+
+  callPopup('testdddddddd');
 })();

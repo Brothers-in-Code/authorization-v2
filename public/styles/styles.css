@@ -595,6 +595,7 @@ textarea[disabled] {
   top: 10px;
   right: 10px;
   min-width: 300px;
+  transition: transform 0.2s ease-out;
 }
 .pop-up__content {
   padding: 10px;
@@ -605,6 +606,14 @@ textarea[disabled] {
 .pop-up__title {
   font-size: 18px;
   margin-bottom: 5px;
+}
+.pop-up__btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.pop-up--hide {
+  transform: translateY(-200%);
 }
 
 /*# sourceMappingURL=styles.css.map */

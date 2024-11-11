@@ -269,15 +269,20 @@ export class WorkSpaceController {
   @Delete('work-space/reports/:reportId')
   //   @Render('pages/one-report.ejs')
   async deleteReport(
-    @Request() req,
     @Param('reportId') reportId: string,
     @Body() body: { commentId: string },
   ) {
+    let message = '';
     const result = await this.workSpaceService.deleteCommentFromReport(
       Number(reportId),
       Number(body.commentId),
     );
-    // TODO по условию с affectedRows создать текст сообщения
+
+    if (result.affected === 0) {
+      message = 'Не удалось удалить пост из отчета';
+    } else {
+      message = 'Пост удален из отчета';
+    }
 
     const report = await this.workSpaceService.collectReportDataToRender(
       Number(reportId),
@@ -293,7 +298,7 @@ export class WorkSpaceController {
     });
 
     return {
-      message: 'test',
+      message,
       html: htmlMainSection,
     };
   }
