@@ -1,5 +1,4 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { report } from 'process';
 import { CommentService } from 'src/db/services/comment.service';
 import { PostService } from 'src/db/services/post.service';
 import { ReportCommentService } from 'src/db/services/report-comment.service';
@@ -10,6 +9,7 @@ import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
 import { InsertResult } from 'typeorm';
+import * as ejs from 'ejs';
 
 @Injectable()
 export class WorkSpaceService {
@@ -317,5 +317,9 @@ export class WorkSpaceService {
     const report = await this.reportService.getReportData(reportId);
 
     return report;
+  }
+
+  async renderMainOneReport(data: any) {
+    return ejs.renderFile('views/components/main-one-report.ejs', data);
   }
 }

@@ -267,19 +267,17 @@ export class WorkSpaceController {
   }
 
   @Delete('work-space/reports/:reportId')
-  @Render('pages/one-report.ejs')
+  //   @Render('pages/one-report.ejs')
   async deleteReport(
     @Request() req,
     @Param('reportId') reportId: string,
     @Body() body: { commentId: string },
   ) {
-    const userId = req.user.id;
-
     const result = await this.workSpaceService.deleteCommentFromReport(
       Number(reportId),
       Number(body.commentId),
     );
-    this.logger.debug(JSON.stringify(result));
+    // TODO по условию с affectedRows создать текст сообщения
 
     const report = await this.workSpaceService.collectReportDataToRender(
       Number(reportId),
@@ -288,10 +286,15 @@ export class WorkSpaceController {
     const dataToRender = {
       pageTitle: 'Отчет',
       report,
-      message: 'Комментарий удалён',
     };
-    return {
+
+    const htmlMainSection = await this.workSpaceService.renderMainOneReport({
       data: dataToRender,
+    });
+
+    return {
+      message: 'test',
+      html: htmlMainSection,
     };
   }
 }
