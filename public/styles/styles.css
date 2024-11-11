@@ -231,6 +231,12 @@
   fill: var(--bs-gray-400);
 }
 
+.text-secondary {
+  font-size: 0.7em;
+  text-transform: lowercase;
+  color: var(--bs-gray-600);
+}
+
 .nav__list {
   margin: 0;
   padding: 0;
