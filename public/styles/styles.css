@@ -2,9 +2,9 @@
 @import './libs/tabulator/tabulator.min.css';
 .page-layout {
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas: "nav-section main context" "nav-section main context";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "nav-section main context";
   gap: 10px;
   height: 100vh;
   padding-block: 10px;
@@ -194,26 +194,47 @@
 }
 
 .sprite-icon {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   fill: currentColor;
 }
 
 .tech-info {
   display: flex;
-  gap: 15px;
+  gap: 1rem;
   font-family: monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   color: var(--bs-gray-600);
 }
 .tech-info__item {
   display: flex;
   align-items: flex-start;
-  gap: 5px;
+  gap: 0.4rem;
 }
 .tech-info .sprite-icon {
-  width: 15px;
-  height: 15px;
+  width: 1rem;
+  height: 1rem;
+}
+
+.tech-info--split {
+  gap: 1.5rem;
+  color: currentColor;
+}
+.tech-info--split .tech-info__item {
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+.tech-info--split .sprite-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  fill: var(--bs-gray-400);
+}
+
+.text-secondary {
+  font-size: 0.7em;
+  text-transform: lowercase;
+  color: var(--bs-gray-600);
 }
 
 .nav__list {
@@ -247,6 +268,8 @@
 }
 .table__flex {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .table__btn-icon {
   padding-inline: 0.75rem;
