@@ -2,27 +2,14 @@
 @import './libs/tabulator/tabulator.min.css';
 .page-layout {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
-  grid-template-areas: "nav-section main context";
   gap: 10px;
   height: 100vh;
   padding-block: 10px;
 }
-.page-layout__nav-section {
-  grid-area: nav-section;
-}
-.page-layout__header {
-  grid-area: header;
-}
-.page-layout__aside {
-  grid-area: aside;
-}
-.page-layout__main {
-  grid-area: main;
-}
-.page-layout__context {
-  grid-area: context;
+.page-layout .page-layout__context {
+  grid-column: 3;
 }
 .page-layout__section {
   padding: 1em;

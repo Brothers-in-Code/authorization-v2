@@ -1,32 +1,36 @@
 .page-layout {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
   //   grid-auto-columns: auto;
 
-  grid-template-areas: 'nav-section main context';
+  //   grid-template-areas: 'nav-section main context';
 
   gap: 10px;
   height: 100vh;
   padding-block: 10px;
 
-  &__nav-section {
-    grid-area: nav-section;
+  .page-layout__context {
+    grid-column: 3;
   }
 
-  &__header {
-    grid-area: header;
-  }
-  &__aside {
-    grid-area: aside;
-  }
-  &__main {
-    grid-area: main;
-  }
+  //   &__nav-section {
+  //     grid-area: nav-section;
+  //   }
 
-  &__context {
-    grid-area: context;
-  }
+  //   &__header {
+  //     grid-area: header;
+  //   }
+  //   &__aside {
+  //     grid-area: aside;
+  //   }
+  //   &__main {
+  //     grid-area: main;
+  //   }
+
+  //   &__context {
+  //     grid-area: context;
+  //   }
 
   &__section {
     padding: 1em;
