@@ -1,10 +1,9 @@
 (() => {
-  mainScript();
+  init();
 
-  function mainScript() {
+  function init() {
     const textareaPostComment = document.querySelectorAll('.js-post-comment');
 
-    const btnSaveReportData = document.getElementById('btn-save-report-data');
     const btnDeleteCommentList = document.querySelectorAll(
       '.js-btn-delete-comment',
     );
@@ -29,6 +28,28 @@
       });
     }
 
+    if (btnSaveCommentList) {
+      btnSaveCommentList.forEach((btn) => {
+        const commentId = btn.dataset.commentId;
+        const textarea = document.getElementById(btn.dataset.textareaId);
+        btn.addEventListener('click', () => {
+          const text = textarea.value;
+
+          fetchWSData({ commentId, comment: text }, 'PATCH')
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              renderMainSection(data);
+            })
+            .catch((e) => {
+              callPopup('Упс. Что-то пошло не так');
+              console.log(e);
+            });
+        });
+      });
+    }
+
     if (btnDeleteCommentList) {
       btnDeleteCommentList.forEach((btn) => {
         const commentId = btn.dataset.commentId;
@@ -40,19 +61,30 @@
             .then((data) => {
               renderMainSection(data);
             })
-            .catch((e) => console.log(e));
+            .catch((e) => {
+              callPopup('Упс. Что-то пошло не так');
+              console.log(e);
+            });
         });
       });
     }
   }
 
   function renderMainSection(data) {
+    const root = document.querySelector('#root');
     const main = document.getElementById('js-section-main');
 
     if (main) {
       main.innerHTML = data.html;
-      mainScript();
+      init();
       callPopup(data.message);
+    }
+    if (root) {
+      root.dispatchEvent(
+        new CustomEvent('reload-main', {
+          bubbles: true,
+        }),
+      );
     }
   }
 
@@ -61,10 +93,8 @@
 
     if (root) {
       root.dispatchEvent(
-        new CustomEvent('new-message', { detail: { message } }),
+        new CustomEvent('new-message', { bubbles: true, detail: { message } }),
       );
     }
   }
-
-  callPopup('testdddddddd');
 })();

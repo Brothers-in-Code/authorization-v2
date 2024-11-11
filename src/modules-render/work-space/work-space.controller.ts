@@ -5,6 +5,7 @@ import {
   Get,
   Logger,
   Param,
+  Patch,
   Post,
   Query,
   Redirect,
@@ -241,7 +242,6 @@ export class WorkSpaceController {
   @Post('work-space/reports/:reportId')
   @Render('pages/one-report.ejs')
   async receiveReport(
-    @Request() req,
     @Param('reportId') reportId: string,
     @Body()
     body: {
@@ -249,7 +249,6 @@ export class WorkSpaceController {
       reportDescription: string;
     },
   ) {
-    const userId = req.user.id;
     if (body) {
       await this.workSpaceService.updateReport(Number(reportId), body);
     }
@@ -266,19 +265,61 @@ export class WorkSpaceController {
     };
   }
 
+  @Patch('work-space/reports/:reportId')
+  async updateComment(
+    @Param('reportId') reportId: string,
+    @Body() body: { commentId: string; comment: string },
+  ) {
+    let message = '';
+
+    const result = await this.workSpaceService.patchCommentText(
+      Number(body.commentId),
+      body.comment,
+    );
+
+    if (result.affected === 0) {
+      this.logger.error(
+        `Не удалось обновить комментарий. reportId: ${reportId}; commentId: ${body.commentId}`,
+      );
+      message = 'Не удалось обновить комментарий';
+    } else {
+      message = 'Комментарий обновлен';
+    }
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+    };
+
+    const htmlMainSection = await this.workSpaceService.renderMainOneReport({
+      data: dataToRender,
+    });
+
+    return {
+      message,
+      html: htmlMainSection,
+    };
+  }
+
   @Delete('work-space/reports/:reportId')
-  //   @Render('pages/one-report.ejs')
   async deleteReport(
     @Param('reportId') reportId: string,
     @Body() body: { commentId: string },
   ) {
     let message = '';
+
     const result = await this.workSpaceService.deleteCommentFromReport(
       Number(reportId),
       Number(body.commentId),
     );
 
     if (result.affected === 0) {
+      this.logger.error(
+        `Не удалось удалить пост из отчета. reportId: ${reportId}; commentId: ${body.commentId}`,
+      );
       message = 'Не удалось удалить пост из отчета';
     } else {
       message = 'Пост удален из отчета';

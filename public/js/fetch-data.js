@@ -1,6 +1,6 @@
-// FIX убрать обработку then
 function fetchWSData(params, method = 'post') {
   const url = document.location.href;
+  console.log(JSON.stringify(params));
   console.log(url);
 
   return fetch(url, {

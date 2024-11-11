@@ -1,22 +1,36 @@
 (() => {
-  const form = document.querySelector('.form--edit-option');
-  const editButton = form.querySelector('.btn-flow');
-  const submitButton = form.querySelector('button[type="submit"]');
+  init();
 
-  editButton.addEventListener('click', () => {
-    const elementForEditList = form.querySelectorAll('input, textarea, select');
+  const root = document.querySelector('#root');
 
-    elementForEditList.forEach((el) => {
-      el.removeAttribute('disabled');
+  if (root) {
+    root.addEventListener('reload-main', () => {
+      init();
     });
+  }
 
-    elementForEditList.forEach((el) => {
-      const eventName = el.tagName == 'select' ? 'change' : 'input';
-      el.addEventListener(eventName, () => {
-        submitButton.removeAttribute('disabled');
+  function init() {
+    const form = document.querySelector('.form--edit-option');
+    const editButton = form.querySelector('.btn-flow');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    editButton.addEventListener('click', () => {
+      const elementForEditList = form.querySelectorAll(
+        'input, textarea, select',
+      );
+
+      elementForEditList.forEach((el) => {
+        el.removeAttribute('disabled');
       });
-    });
 
-    editButton.setAttribute('disabled', true);
-  });
+      elementForEditList.forEach((el) => {
+        const eventName = el.tagName == 'select' ? 'change' : 'input';
+        el.addEventListener(eventName, () => {
+          submitButton.removeAttribute('disabled');
+        });
+      });
+
+      editButton.setAttribute('disabled', true);
+    });
+  }
 })();

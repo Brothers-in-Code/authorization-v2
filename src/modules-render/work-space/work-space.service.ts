@@ -186,6 +186,10 @@ export class WorkSpaceService {
     });
   }
 
+  async patchCommentText(commentId: number, comment: string) {
+    return await this.commentService.patchCommentText(commentId, comment);
+  }
+
   addReportToUser(userId: number, reportId: number) {
     return this.userReportService.create({ userId, reportId });
   }

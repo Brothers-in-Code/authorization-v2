@@ -165,7 +165,7 @@
 
                   <td>
                     <!-- prettier-ignore -->
-                    <textarea class="form-control form-control--textarea js-post-comment" data-btn-save-id="btn-save-post-comment-<%= item.commentId %>" ><%= item.commentText %></textarea>
+                    <textarea class="form-control form-control--textarea js-post-comment" id="js-post-comment-<%= item.commentId %>" data-btn-save-id="btn-save-post-comment-<%= item.commentId %>" ><%= item.commentText %></textarea>
                   </td>
                   <td>
                     <div class="flex">
@@ -183,6 +183,7 @@
                         type="button"
                         id="btn-save-post-comment-<%= item.commentId %>"
                         data-comment-id="<%= item.commentId %>"
+                        data-textarea-id="js-post-comment-<%= item.commentId %>"
                         disabled
                       >
                         <svg class="sprite-icon">
