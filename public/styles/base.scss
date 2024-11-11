@@ -90,27 +90,44 @@
 }
 
 .sprite-icon {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   fill: currentColor;
 }
 
 .tech-info {
   display: flex;
-  gap: 15px;
+  gap: 1rem;
 
   font-family: monospace;
-  font-size: 12px;
+  font-size: 0.8rem;
   color: var(--bs-gray-600);
 
   &__item {
     display: flex;
     align-items: flex-start;
-    gap: 5px;
+    gap: 0.4rem;
   }
 
   .sprite-icon {
-    width: 15px;
-    height: 15px;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.tech-info--split {
+  gap: 1.5rem;
+  color: currentColor;
+
+  .tech-info__item {
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .sprite-icon {
+    width: 0.8rem;
+    height: 0.8rem;
+    fill: var(--bs-gray-400);
   }
 }

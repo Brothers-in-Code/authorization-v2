@@ -1,11 +1,10 @@
 .page-layout {
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr;
+  //   grid-auto-columns: auto;
 
-  grid-template-areas:
-    'nav-section main context'
-    'nav-section main context';
+  grid-template-areas: 'nav-section main context';
 
   gap: 10px;
   height: 100vh;
