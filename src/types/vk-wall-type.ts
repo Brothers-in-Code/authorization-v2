@@ -6,7 +6,7 @@ type VKWallType = {
   };
 };
 
-type PostType = {
+export type PostType = {
   inner_type: string;
   donut: { is_donut: boolean };
   comments: CommentsType;

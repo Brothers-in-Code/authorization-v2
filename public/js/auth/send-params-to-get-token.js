@@ -4,7 +4,6 @@
 
   if (window.location.search.includes('code')) {
     const bodyJson = getBodyJson();
-    console.log(bodyJson);
     const response = await sendCode(bodyJson);
 
     if (response.status === 'ok') {

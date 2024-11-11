@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
+  Param,
+  Patch,
   Post,
   Query,
   Redirect,
@@ -100,6 +103,7 @@ export class WorkSpaceController {
 
   //   NOTE продумать как получать из getGroupList все записи
   //   FIX likesMin, viewsMin - сделать по умолчанию 0 или null  (ошибка: The specified value "NaN" cannot be parsed, or is out of range.)
+  //   NOTE проверить как сохраняются комментарии (должно быть update, если такой пост в отчет добавлен)
   @Get('work-space/posts')
   @Render('pages/posts')
   async renderPosts(
@@ -210,14 +214,133 @@ export class WorkSpaceController {
     @Query('limit') limit = 20,
   ) {
     const userId = req.user.id;
-    const dataToRender = await this.workSpaceService.collectReportDataToRender(
-      userId,
-      {
+    const dataToRender =
+      await this.workSpaceService.collectReportListDataToRender(userId, {
         offset,
         limit,
-      },
-    );
+      });
 
     return { data: dataToRender };
+  }
+  // TODO сделать guard для отчетов
+  @Get('work-space/reports/:reportId')
+  @Render('pages/one-report.ejs')
+  async renderReport(@Request() req, @Param('reportId') reportId: string) {
+    const userId = req.user.id;
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+    };
+    return {
+      data: dataToRender,
+    };
+  }
+
+  @Post('work-space/reports/:reportId')
+  @Render('pages/one-report.ejs')
+  async receiveReport(
+    @Param('reportId') reportId: string,
+    @Body()
+    body: {
+      reportName: string;
+      reportDescription: string;
+    },
+  ) {
+    if (body) {
+      await this.workSpaceService.updateReport(Number(reportId), body);
+    }
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+      message: 'Название и описание отчета обновлены',
+    };
+    return {
+      data: dataToRender,
+    };
+  }
+
+  @Patch('work-space/reports/:reportId')
+  async updateComment(
+    @Param('reportId') reportId: string,
+    @Body() body: { commentId: string; comment: string },
+  ) {
+    let message = '';
+
+    const result = await this.workSpaceService.patchCommentText(
+      Number(body.commentId),
+      body.comment,
+    );
+
+    if (result.affected === 0) {
+      this.logger.error(
+        `Не удалось обновить комментарий. reportId: ${reportId}; commentId: ${body.commentId}`,
+      );
+      message = 'Не удалось обновить комментарий';
+    } else {
+      message = 'Комментарий обновлен';
+    }
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+    };
+
+    const htmlMainSection = await this.workSpaceService.renderMainOneReport({
+      data: dataToRender,
+    });
+
+    return {
+      message,
+      html: htmlMainSection,
+    };
+  }
+
+  @Delete('work-space/reports/:reportId')
+  async deleteReport(
+    @Param('reportId') reportId: string,
+    @Body() body: { commentId: string },
+  ) {
+    let message = '';
+
+    const result = await this.workSpaceService.deleteCommentFromReport(
+      Number(reportId),
+      Number(body.commentId),
+    );
+
+    if (result.affected === 0) {
+      this.logger.error(
+        `Не удалось удалить пост из отчета. reportId: ${reportId}; commentId: ${body.commentId}`,
+      );
+      message = 'Не удалось удалить пост из отчета';
+    } else {
+      message = 'Пост удален из отчета';
+    }
+
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+
+    const dataToRender = {
+      pageTitle: 'Отчет',
+      report,
+    };
+
+    const htmlMainSection = await this.workSpaceService.renderMainOneReport({
+      data: dataToRender,
+    });
+
+    return {
+      message,
+      html: htmlMainSection,
+    };
   }
 }

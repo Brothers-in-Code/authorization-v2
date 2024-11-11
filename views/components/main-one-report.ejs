@@ -1,0 +1,127 @@
+<h2>
+  <%= data.pageTitle %>
+  <%= data.report.report.name %>
+</h2>
+<div>
+  дата создания:
+  <%= data.report.report.date.toLocaleDateString() %>
+</div>
+<div class="page-layout__wrapper">
+  <form
+    class="form form--vertical form--edit-option"
+    method="post"
+    accept-charset="utf-8"
+    url="./"
+  >
+    <div class="form__body form__body--background form__body--disabled">
+      <label>
+        <div class="label-text">Название отчета</div>
+        <input
+          class="form-control"
+          type="text"
+          value="<%= data.report.report.name %>"
+          name="reportName"
+          disabled
+        />
+      </label>
+      <label>
+        <div class="label-text">Комментарий к отчету</div>
+        <!-- prettier-ignore -->
+        <textarea name="reportDescription" class="form-control form-control--textarea" disabled><%= data.report.report.description %></textarea>
+      </label>
+      <button
+        class="btn btn-outline-primary"
+        type="submit"
+        disabled
+        id="btn-save-report-data"
+      >
+        Сохранить изменения
+      </button>
+
+      <button class="btn-reset btn-flow" type="button">
+        <svg class="sprite-icon">
+          <use xlink:href="#pencil-fill"></use>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Пост</th>
+        <th>
+          <img src="/img/bootstrap-icons/heart-fill.svg" alt="Нравится" />
+        </th>
+        <th>
+          <img src="/img/bootstrap-icons/eye-fill.svg" alt="Просмотры" />
+        </th>
+        <th>
+          <img
+            src="/img/bootstrap-icons/chat-right-text-fill.svg"
+            alt="Количество комментариев"
+          />
+        </th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody id="comment-list">
+      <% data.report.commentList.forEach((item, index) => { %>
+      <tr>
+        <td>
+          <div class="tech-info">
+            <div class="tech-info__item">
+              <svg class="sprite-icon">
+                <use xlink:href="#calendar2-date"></use>
+              </svg>
+              <%= new Date(item.post.post.date * 1000).toLocaleDateString() %>
+            </div>
+          </div>
+          <strong><%= item.groupName %></strong>
+          <div><%= item.post.post.text.slice(0, 200) %>...</div>
+        </td>
+        <td>
+          <%= item.post.post.likes?.count.toLocaleString() || 0 %>
+        </td>
+        <td>
+          <%= item.post.post.views?.count.toLocaleString() || 0 %>
+        </td>
+        <td>
+          <%= item.post.post.comments?.count.toLocaleString() || 0 %>
+        </td>
+
+        <td>
+          <!-- prettier-ignore -->
+          <textarea class="form-control form-control--textarea js-post-comment" data-btn-save-id="btn-save-post-comment-<%= item.commentId %>" ><%= item.commentText %></textarea>
+        </td>
+        <td>
+          <div class="flex">
+            <button
+              class="btn-reset btn-icon btn--danger js-btn-delete-comment"
+              type="button"
+              data-comment-id="<%= item.commentId %>"
+            >
+              <svg class="sprite-icon">
+                <use xlink:href="#trash-fill"></use>
+              </svg>
+            </button>
+            <button
+              class="btn-reset btn-icon btn--primary js-btn-save-comment"
+              type="button"
+              id="btn-save-post-comment-<%= item.commentId %>"
+              data-comment-id="<%= item.commentId %>"
+              disabled
+            >
+              <svg class="sprite-icon">
+                <use xlink:href="#save-fill"></use>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

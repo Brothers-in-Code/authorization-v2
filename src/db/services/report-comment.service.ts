@@ -1,10 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportComment } from '../entities/report_comment.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ReportService } from './report.service';
-import { Report } from '../entities/report.entity';
-import { Comment } from '../entities/comment.entity';
 
 @Injectable()
 export class ReportCommentService {
@@ -57,35 +55,18 @@ export class ReportCommentService {
     return result.map((row) => row.id);
   }
 
-  async findAllCommentsOfReport(
-    reportId: number,
-    commentIdList: number[],
-  ): Promise<{ report: Report; commentList: Comment[] }> {
-    const report = await this.reportService.findOne(reportId).then((item) => {
-      delete item.created_at;
-      delete item.deleted_at;
-      delete item.updated_at;
-      return item;
+  async deleteComment(reportId: number, commentId: number) {
+    const reportComment = await this.reportCommentRepository.findOneBy({
+      report: { id: reportId },
+      comment: { id: commentId },
     });
 
-    if (!report) {
-      throw new Error(`Report with ID ${reportId} not found.`);
+    if (!reportComment) {
+      throw new NotFoundException(
+        `Comment with reportId ${reportId} and commentId ${commentId} not found`,
+      );
     }
 
-    const result = await this.reportCommentRepository.find({
-      where: { report: { id: reportId }, comment: { id: In(commentIdList) } },
-      relations: ['report', 'comment'],
-    });
-
-    const commentList = result.map((item) => {
-      delete item.comment.created_at;
-      delete item.comment.deleted_at;
-      delete item.comment.updated_at;
-      return item.comment;
-    });
-    return {
-      report,
-      commentList,
-    };
+    return this.reportCommentRepository.softDelete(reportComment.id);
   }
 }

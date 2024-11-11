@@ -26,8 +26,13 @@
   }
 }
 
+.form:not(:last-child) {
+  margin-bottom: 20px;
+}
+
 .form--vertical {
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
 
   .fieldset {
@@ -57,6 +62,34 @@
   }
 }
 
+.form--edit-option {
+  .form__body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 20px;
+    border-radius: 10px;
+
+    &--background {
+      background-color: var(--bs-gray-200);
+    }
+  }
+}
+
 .label-text {
   font-size: 0.9rem;
+}
+
+textarea[disabled] {
+  resize: none;
+}
+
+.form-control--textarea {
+  min-width: 274px;
+}
+
+.form-check-input {
+  cursor: pointer;
 }

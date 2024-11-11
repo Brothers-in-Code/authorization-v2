@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from '../entities/comment.entity';
-import { InsertResult, Repository } from 'typeorm';
+import { InsertResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class CommentService {
@@ -32,5 +32,9 @@ export class CommentService {
       .execute();
 
     return insertQuery;
+  }
+
+  patchCommentText(commentId: number, comment: string): Promise<UpdateResult> {
+    return this.commentRepository.update(commentId, { text: comment });
   }
 }

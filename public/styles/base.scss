@@ -1,4 +1,5 @@
 #root {
+  position: relative;
   padding-inline: 10px;
 }
 
@@ -86,10 +87,6 @@
 .btn--vk {
   background-color: #0077ff;
   color: #fff;
-}
-
-.form-check-input {
-  cursor: pointer;
 }
 
 .sprite-icon {

@@ -9,6 +9,7 @@ import { UserService } from 'src/db/services/user.service';
 import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
 import { InsertResult } from 'typeorm';
+import * as ejs from 'ejs';
 
 @Injectable()
 export class WorkSpaceService {
@@ -144,6 +145,18 @@ export class WorkSpaceService {
     return await this.reportService.create(reportName, reportDescription);
   }
 
+  async deleteCommentFromReport(reportId: number, commentId: number) {
+    return this.reportCommentService.deleteComment(reportId, commentId);
+  }
+
+  async updateReport(
+    reportId: number,
+    data: { reportName: string; reportDescription: string },
+  ) {
+    const result = this.reportService.update(reportId, data);
+    return result;
+  }
+
   async saveComment(
     userId: number,
     data: {
@@ -171,6 +184,10 @@ export class WorkSpaceService {
       userId,
       postList: currentPostList,
     });
+  }
+
+  async patchCommentText(commentId: number, comment: string) {
+    return await this.commentService.patchCommentText(commentId, comment);
   }
 
   addReportToUser(userId: number, reportId: number) {
@@ -279,7 +296,7 @@ export class WorkSpaceService {
     };
   }
 
-  async collectReportDataToRender(
+  async collectReportListDataToRender(
     userId: string,
     data: {
       offset: string | number;
@@ -298,5 +315,15 @@ export class WorkSpaceService {
       currentPage: 'reports',
       reportList,
     };
+  }
+
+  async collectReportDataToRender(reportId: number) {
+    const report = await this.reportService.getReportData(reportId);
+
+    return report;
+  }
+
+  async renderMainOneReport(data: any) {
+    return ejs.renderFile('views/components/main-one-report.ejs', data);
   }
 }
