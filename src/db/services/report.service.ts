@@ -19,6 +19,7 @@ type GetReportDataOutputType = {
     commentText: string;
     groupName: string;
     groupId: number;
+    groupScreenName: string;
     post: {
       id: number;
       post_vkid: number;
@@ -91,6 +92,7 @@ export class ReportService {
         'p.*',
         'g.name as groupName',
         'g.vkid as groupVkId',
+        'g.screen_name as groupScreenName',
         'p.id as postId',
         'p.*',
       ])
@@ -129,6 +131,7 @@ export class ReportService {
         commentText: item.commentText,
         groupName: item.groupName,
         groupId: item.groupVkId,
+        groupScreenName: item.groupScreenName,
         post: {
           id: item.postId,
           post_vkid: item.post_vkid,

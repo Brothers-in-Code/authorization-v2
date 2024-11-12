@@ -11,11 +11,13 @@ import {
   Redirect,
   Render,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserGuard } from 'src/modules/user-guard/user.guard';
+import { Response } from 'express';
 
 @UseGuards(UserGuard)
 @Controller()
@@ -342,5 +344,23 @@ export class WorkSpaceController {
       message,
       html: htmlMainSection,
     };
+  }
+
+  @Get('work-space/reports/:reportId/export-report')
+  async exportReport(
+    @Param('reportId') reportId: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const report = await this.workSpaceService.collectReportDataToRender(
+      Number(reportId),
+    );
+    const buffer = await this.workSpaceService.createExcelReport(report);
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
+    res.send(buffer);
   }
 }
