@@ -77,12 +77,16 @@
                     </a>
                   </td>
                   <td>
-                    <button class="btn btn-icon btn-outline-primary">
+                    <a
+                      class="btn btn-icon btn-outline-primary"
+                      href="/work-space/reports/<%= item.id %>/export-report"
+                      download="report.xlsx"
+                    >
                       <svg class="sprite-icon">
                         <use xlink:href="#cloud-download"></use>
                       </svg>
                       Скачать отчет
-                    </button>
+                    </a>
                   </td>
                 </tr>
                 <% }) %>

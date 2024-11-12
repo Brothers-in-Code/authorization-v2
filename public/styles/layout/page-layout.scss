@@ -2,8 +2,11 @@
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr;
+
+  // TODO удалить
   //   grid-auto-columns: auto;
 
+  // TODO удалить
   //   grid-template-areas: 'nav-section main context';
 
   gap: 10px;
@@ -14,6 +17,7 @@
     grid-column: 3;
   }
 
+  // TODO удалить
   //   &__nav-section {
   //     grid-area: nav-section;
   //   }
@@ -31,7 +35,6 @@
   //   &__context {
   //     grid-area: context;
   //   }
-
   &__section {
     padding: 1em;
     border-radius: 10px;

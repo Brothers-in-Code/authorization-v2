@@ -10,6 +10,8 @@ import { VkDataService } from 'src/modules/vk-data/services/vkdata.service';
 import { VKGroupType } from 'src/types/vk-group-get-response-type';
 import { InsertResult } from 'typeorm';
 import * as ejs from 'ejs';
+import * as xlsx from 'xlsx';
+import { PostType } from 'src/types/vk-wall-type';
 
 @Injectable()
 export class WorkSpaceService {
@@ -321,6 +323,56 @@ export class WorkSpaceService {
     const report = await this.reportService.getReportData(reportId);
 
     return report;
+  }
+
+  async createExcelReport(report: {
+    report: {
+      id: number;
+      name: string;
+      description: string;
+      date: Date;
+      startDatePeriod: string;
+      endDatePeriod: string;
+    };
+    commentList: {
+      commentId: number;
+      commentText: string;
+      groupName: string;
+      groupId: number;
+      groupScreenName: string;
+      post: {
+        id: number;
+        post_vkid: number;
+        likes: number;
+        views: number;
+        comments: number;
+        timestamp_post: number;
+        post: PostType;
+      };
+    }[];
+  }) {
+    const VK = 'https://vk.com/';
+    const data = report.commentList.map((item) => ({
+      GroupName: report.report.name,
+      GroupLink: `${VK}${item.groupScreenName}`,
+      PostDate: new Date(item.post.timestamp_post * 1000).toISOString(),
+      PostLink: `${VK}${item.groupScreenName}??w=wall-${item.post.post_vkid}`,
+      Likes: item.post.likes,
+      Views: item.post.views,
+      Comments: item.post.comments,
+    }));
+
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      `отчет ${report.report.name}`,
+    );
+
+    const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    return buffer;
   }
 
   async renderMainOneReport(data: any) {
