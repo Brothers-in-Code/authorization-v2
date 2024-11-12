@@ -81,7 +81,6 @@ export class ReportService {
   }
 
   async getReportData(reportId: number): Promise<GetReportDataOutputType> {
-    // TODO найти report по-простому
     const queryBuilder = this.reportRepository.createQueryBuilder('r');
     const resultReport = await queryBuilder
       .select([
@@ -106,6 +105,13 @@ export class ReportService {
       throw new DatabaseServiceError(
         `func: getReportData; Нет результатов при формировании отчета № ${reportId}`,
       );
+    }
+
+    if (resultReport.length === 0) {
+      this.logger.log(
+        `func: getReportData; Данные для отчета номер ${reportId} не найдены`,
+      );
+      //   TODO вернуть report и commentList с пустыми данными
     }
 
     const report = {
