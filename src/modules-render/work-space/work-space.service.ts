@@ -356,13 +356,14 @@ export class WorkSpaceService {
       GroupName: report.report.name,
       GroupLink: `${VK}${item.groupScreenName}`,
       PostDate: new Date(item.post.timestamp_post * 1000).toISOString(),
-      PostLink: `${VK}${item.groupScreenName}??w=wall-${item.post.post_vkid}`,
+      PostLink: `${VK}${item.groupScreenName}?w=wall-${item.groupId}_${item.post.post_vkid}`,
       Likes: item.post.likes,
       Views: item.post.views,
       Comments: item.post.comments,
     }));
 
     const worksheet = xlsx.utils.json_to_sheet(data);
+
     const workbook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(
       workbook,
