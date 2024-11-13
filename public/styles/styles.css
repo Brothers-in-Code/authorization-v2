@@ -45,10 +45,6 @@
   right: 0;
 }
 
-.main {
-  overflow: hidden;
-}
-
 .context {
   max-width: 300px;
 }
@@ -624,6 +620,19 @@ textarea[disabled] {
 }
 .pop-up--hide {
   transform: translateY(-200%);
+}
+
+.main {
+  overflow: hidden;
+}
+.main__top {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.main .form {
+  margin-bottom: 0;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -5,7 +5,6 @@
 // layout
 @import './layout/page-layout.scss';
 @import './layout/header.scss';
-@import './layout/main.scss';
 @import './layout/context.scss';
 @import './layout/nav-section.scss';
 
@@ -25,6 +24,8 @@
 @import './components/slide-section.scss';
 @import './components/view-modal.scss';
 @import './components/pop-up.scss';
+
+@import './layout/main.scss';
 
 // @import './components/card';
 // @import './components//dashboard.scss';
