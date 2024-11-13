@@ -61,6 +61,38 @@
           d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"
         ></path>
       </symbol>
+
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        id="heart-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+        />
+      </symbol>
+
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        id="eye-fill"
+        viewBox="0 0 16 16"
+      >
+        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+        <path
+          d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"
+        />
+      </symbol>
+
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        id="chat-right-text-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h9.586a1 1 0 0 1 .707.293l2.853 2.853a.5.5 0 0 0 .854-.353zM3.5 3h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1m0 2.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1"
+        />
+      </symbol>
     </svg>
     <div id="root">
       <%- include('../components/pop-up.ejs') %>
@@ -73,160 +105,25 @@
           id="js-section-main"
           data-message="<%= data.message %>"
         >
-          <h2>
-            <span class="text-secondary"><%= data.pageTitle %></span>
-            <%= data.report.report.name %>
-          </h2>
-          <div>
-            дата создания:
-            <%= data.report.report.date.toLocaleDateString() %>
-          </div>
-          <div class="page-layout__wrapper">
-            <div class="main__top">
-              <form
-                class="form form--vertical form--edit-option"
-                method="post"
-                accept-charset="utf-8"
-                url="./"
-              >
-                <div
-                  class="form__body form__body--background form__body--disabled"
-                >
-                  <label>
-                    <div class="label-text">Название отчета</div>
-                    <input
-                      class="form-control"
-                      type="text"
-                      value="<%= data.report.report.name %>"
-                      name="reportName"
-                      disabled
-                    />
-                  </label>
-                  <label>
-                    <div class="label-text">Комментарий к отчету</div>
-                    <!-- prettier-ignore -->
-                    <textarea name="reportDescription" class="form-control form-control--textarea" disabled><%= data.report.report.description %></textarea>
-                  </label>
-                  <button
-                    class="btn btn-outline-primary"
-                    type="submit"
-                    disabled
-                    id="btn-save-report-data"
-                  >
-                    Сохранить изменения
-                  </button>
-
-                  <button class="btn-reset btn-flow" type="button">
-                    <svg class="sprite-icon">
-                      <use xlink:href="#pencil-fill"></use>
-                    </svg>
-                  </button>
-                </div>
-              </form>
-              <a
-                class="btn btn-icon btn-outline-primary"
-                href="/work-space/reports/<%= data.report.report.id %>/export-report"
-                download="report.xlsx"
-              >
-                <svg class="sprite-icon">
-                  <use xlink:href="#cloud-download"></use>
-                </svg>
-                Скачать отчет
-              </a>
-            </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Пост</th>
-                  <th>
-                    <img
-                      src="/img/bootstrap-icons/heart-fill.svg"
-                      alt="Нравится"
-                    />
-                  </th>
-                  <th>
-                    <img
-                      src="/img/bootstrap-icons/eye-fill.svg"
-                      alt="Просмотры"
-                    />
-                  </th>
-                  <th>
-                    <img
-                      src="/img/bootstrap-icons/chat-right-text-fill.svg"
-                      alt="Количество комментариев"
-                    />
-                  </th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-
-              <tbody id="comment-list">
-                <% data.report.commentList.forEach((item, index) => { %>
-                <tr>
-                  <td>
-                    <div class="tech-info">
-                      <div class="tech-info__item">
-                        <svg class="sprite-icon">
-                          <use xlink:href="#calendar2-date"></use>
-                        </svg>
-                        <%= new Date(item.post.post.date * 1000).toLocaleDateString() %>
-                      </div>
-                    </div>
-                    <strong><%= item.groupName %></strong>
-                    <div><%= item.post.post.text.slice(0, 200) %>...</div>
-                  </td>
-                  <td>
-                    <%= item.post.post.likes?.count.toLocaleString() || 0 %>
-                  </td>
-                  <td>
-                    <%= item.post.post.views?.count.toLocaleString() || 0 %>
-                  </td>
-                  <td>
-                    <%= item.post.post.comments?.count.toLocaleString() || 0 %>
-                  </td>
-
-                  <td>
-                    <!-- prettier-ignore -->
-                    <textarea class="form-control form-control--textarea js-post-comment" id="js-post-comment-<%= item.commentId %>" data-btn-save-id="btn-save-post-comment-<%= item.commentId %>" ><%= item.commentText %></textarea>
-                  </td>
-                  <td>
-                    <div class="flex">
-                      <button
-                        class="btn-reset btn-icon btn--danger js-btn-delete-comment"
-                        type="button"
-                        data-comment-id="<%= item.commentId %>"
-                      >
-                        <svg class="sprite-icon">
-                          <use xlink:href="#trash-fill"></use>
-                        </svg>
-                      </button>
-                      <button
-                        class="btn-reset btn-icon btn--primary js-btn-save-comment"
-                        type="button"
-                        id="btn-save-post-comment-<%= item.commentId %>"
-                        data-comment-id="<%= item.commentId %>"
-                        data-textarea-id="js-post-comment-<%= item.commentId %>"
-                        disabled
-                      >
-                        <svg class="sprite-icon">
-                          <use xlink:href="#save-fill"></use>
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
+          <%- include('../components/main-one-report.ejs') %>
         </main>
       </div>
     </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
     <script async src="/js/fetch-data.js"></script>
     <script defer src="/js/utils/pop-up.js"></script>
     <script defer src="/js/form-edit-option.js"></script>
     <script defer src="/js/one-report-page.js"></script>
     <script defer src="/js/utils/fittable-textarea.js"></script>
+    <script defer src="/js/utils/tooltip-init.js"></script>
   </body>
 </html>

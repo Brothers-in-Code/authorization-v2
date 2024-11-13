@@ -71,7 +71,6 @@
   }
 
   function renderMainSection(data) {
-    const root = document.querySelector('#root');
     const main = document.getElementById('js-section-main');
 
     if (main) {
@@ -80,7 +79,7 @@
       callPopup(data.message);
     }
     if (root) {
-      root.dispatchEvent(
+      main.dispatchEvent(
         new CustomEvent('reload-main', {
           bubbles: true,
         }),
