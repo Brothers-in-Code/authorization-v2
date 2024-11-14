@@ -5,11 +5,12 @@
     const commentMap = new Map();
     let reportDetails = {};
 
-    const main = document.getElementById('main');
+    const inputPostId = document.getElementById('postIdInputModal');
+    const addPostToReportModal = new bootstrap.Modal('#reportPostModal');
 
     const btnCommentList = document.querySelectorAll('.btn-comment');
-    const checkboxAddPostToReportList = document.querySelectorAll(
-      '.checkbox-add-to-report',
+    const btnAddPostToReportList = document.querySelectorAll(
+      '.js-btn-add-to-report',
     );
 
     const reportFormModal = document.getElementById('reportFormModal');
@@ -44,17 +45,13 @@
       });
     }
 
-    //   NOTE handle checkbox add to report
-    if (checkboxAddPostToReportList) {
-      checkboxAddPostToReportList.forEach((checkbox) => {
-        checkbox.addEventListener('click', () => {
-          const postId = checkbox.dataset.wsPostId;
-
-          if (checkbox.checked) {
-            commentMap.set(postId, '');
-          } else {
-            commentMap.delete(postId);
-          }
+    //   NOTE handle button add to report
+    if (btnAddPostToReportList) {
+      btnAddPostToReportList.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const postId = btn.dataset.wsPostId;
+          inputPostId.setAttribute('value', postId);
+          addPostToReportModal.show();
         });
       });
     }
@@ -77,20 +74,37 @@
     //   NOTE handle send report
     // TODO добавить обработку then и сообщение о сохранении
     if (btnSendReport) {
-      btnSendReport.addEventListener('click', () => {
+      const form = document.getElementById('reportFormModal');
+      form.addEventListener('submit', (event) => {
         const dataset = getDataset();
-        report.postList = formatCommentsData(commentMap);
-        report.report = reportDetails;
 
+        event.preventDefault();
+        const report = serializeForm(event.target);
         fetchWSData({
           ...dataset,
           report,
-        }).then((res) => {
-          if (res.ok) {
-            document.location.reload();
-          }
-        });
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            return data;
+          });
       });
+    }
+
+    function serializeForm(formNode) {
+      const report = { report: {}, postList: [] };
+      const { elements } = formNode;
+
+      Array.from(elements)
+        .filter((item) => !!item.name)
+        .forEach((element) => {
+          const value =
+            element.type === 'checkbox' ? element.checked : element.value;
+          report.report[element.name] = value;
+        });
+      return report;
     }
 
     function findRelativeCheckbox(postId) {
@@ -100,6 +114,7 @@
       return checkbox;
     }
 
+    //  NOTE в данный момент не используется. оставил на будущее
     function formatCommentsData(map) {
       return Array.from(map.entries()).map(([id, comment]) => {
         return {

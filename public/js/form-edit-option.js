@@ -1,13 +1,9 @@
 (() => {
   init();
 
-  const root = document.querySelector('#root');
-
-  if (root) {
-    root.addEventListener('reload-main', () => {
-      init();
-    });
-  }
+  document.addEventListener('reload-main', () => {
+    init();
+  });
 
   function init() {
     const form = document.querySelector('.form--edit-option');

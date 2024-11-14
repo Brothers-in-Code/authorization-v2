@@ -1,13 +1,12 @@
+// TODO удалять из DOM тултип при обновлении
 // NOTE инициализация tooltip
 (() => {
-  const root = document.querySelector('#root');
-
-  if (root) {
-    root.addEventListener('reload-main', () => {
-      init();
-    });
-  }
   init();
+
+  document.addEventListener('reload-main', () => {
+    init();
+  });
+
   function init() {
     const tooltipTriggerList = document.querySelectorAll(
       '[data-bs-toggle="tooltip"]',
