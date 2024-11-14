@@ -78,10 +78,10 @@ export class WorkSpaceService {
     user_id: number;
     offset: number;
     limit: number;
-    likesMin?: number;
-    viewsMin?: number;
-    begDate?: number;
-    endDate?: number;
+    likesMin: number | null;
+    viewsMin: number | null;
+    begDate: number | null;
+    endDate: number | null;
     sortByLikes: number;
     sortByViews: number;
     sortByComments: number;
@@ -92,10 +92,10 @@ export class WorkSpaceService {
       groupList,
       offset,
       limit,
-      likesMin: data.likesMin ?? undefined,
-      viewsMin: data.viewsMin ?? undefined,
-      begDate: data.begDate ?? undefined,
-      endDate: data.endDate ?? undefined,
+      likesMin: data.likesMin,
+      viewsMin: data.viewsMin,
+      begDate: data.begDate,
+      endDate: data.endDate,
       sortByLikes: data.sortByLikes,
       sortByViews: data.sortByViews,
       sortByComments: data.sortByComments,
@@ -205,30 +205,35 @@ export class WorkSpaceService {
     data: {
       offset: string | number;
       limit: string | number;
-      likesMin: string;
-      viewsMin: string;
-      begDate: string;
-      endDate: string;
-      sortByLikes: '0' | '1' | '2' | undefined;
-      sortByViews: '0' | '1' | '2' | undefined;
-      sortByComments: '0' | '1' | '2' | undefined;
+      likesMin?: string;
+      viewsMin?: string;
+      begDate?: string;
+      endDate?: string;
+      sortByLikes?: '0' | '1' | '2';
+      sortByViews?: '0' | '1' | '2';
+      sortByComments?: '0' | '1' | '2';
     },
   ) {
     const MILLSEC = 1000;
-    const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
-    const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
+
+    const likesMin = data.likesMin ? Number(data.likesMin) : null;
+    const viewsMin = data.viewsMin ? Number(data.viewsMin) : null;
     const begDate = data.begDate
       ? Math.ceil(Number(new Date(data.begDate).getTime()) / MILLSEC)
-      : undefined;
+      : null;
     const endDate = data.endDate
       ? Math.ceil(Number(new Date(data.endDate).getTime()) / MILLSEC)
-      : undefined;
-    const sortByLikes =
-      data.sortByLikes !== undefined ? Number(data.sortByLikes) : 1;
-    const sortByViews =
-      data.sortByViews !== undefined ? Number(data.sortByViews) : 0;
-    const sortByComments =
-      data.sortByComments !== undefined ? Number(data.sortByComments) : 0;
+      : null;
+
+    const sortByLikes = !isNaN(Number(data.sortByLikes))
+      ? Number(data.sortByLikes)
+      : 1;
+    const sortByViews = !isNaN(Number(data.sortByViews))
+      ? Number(data.sortByViews)
+      : 0;
+    const sortByComments = !isNaN(Number(data.sortByComments))
+      ? Number(data.sortByComments)
+      : 0;
 
     // TODO отдавать только посты групп, отмеченных к сканированию
     const postList = await this.getPostList({
@@ -260,8 +265,8 @@ export class WorkSpaceService {
       postList,
       likesMin,
       viewsMin,
-      begDate: data.begDate,
-      endDate: data.endDate,
+      begDate: !isNaN(Number(data.begDate)) ? data.begDate : null,
+      endDate: !isNaN(Number(data.endDate)) ? data.endDate : null,
       sortByLikes,
       sortByViews,
       sortByComments,

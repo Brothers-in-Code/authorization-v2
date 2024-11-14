@@ -218,7 +218,7 @@
                           class="form-control"
                           type="number"
                           name="viewsMin"
-                          value="<%= data.viewsMin %>"
+                          value="<%= data.viewsMin  %>"
                         />
                       </label>
 
@@ -228,7 +228,7 @@
                           class="form-control"
                           type="date"
                           name="begDate"
-                          value="<%= data.begDate %>"
+                          value="<%= data.begDate  %>"
                         />
                       </label>
 
@@ -343,7 +343,7 @@
                       <% let imgPath %>
                       <!-- prettier-ignore -->
                       <% if (item?.post.attachments?.length > 0) {%>
-                      <% imgPath = item.post.attachments[0].photo?.orig_photo.url || '' %>
+                      <% imgPath = item.post.attachments[0]?.photo?.orig_photo?.url || '' %>
                       <% } else { %>
                       <% imgPath = '' %>
                       <% } %>
