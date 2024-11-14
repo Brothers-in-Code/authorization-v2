@@ -1,22 +1,15 @@
 (() => {
   // TODO добавить блокировку кнопки "отправить отчет" если не выбран отчет
   (() => {
-    const report = { report: {}, postList: [] };
-    const commentMap = new Map();
-    let reportDetails = {};
-
     const inputPostId = document.getElementById('postIdInputModal');
     const addPostToReportModal = new bootstrap.Modal('#reportPostModal');
 
-    const btnCommentList = document.querySelectorAll('.btn-comment');
     const btnAddPostToReportList = document.querySelectorAll(
       '.js-btn-add-to-report',
     );
 
     const reportFormModal = document.getElementById('reportFormModal');
-    const textCommentModal = document.getElementById('textCommentModal');
 
-    const btnSaveCommentModal = document.getElementById('btnSaveCommentModal');
     const btnSendReport = document.getElementById('btnSendReport');
 
     //   NOTE handle report form
@@ -36,15 +29,6 @@
       });
     }
 
-    if (btnCommentList) {
-      btnCommentList.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          textCommentModal.value = commentMap.get(btn.dataset.wsPostId) || '';
-          textCommentModal.dataset.wsPostId = btn.dataset.wsPostId;
-        });
-      });
-    }
-
     //   NOTE handle button add to report
     if (btnAddPostToReportList) {
       btnAddPostToReportList.forEach((btn) => {
@@ -53,21 +37,6 @@
           inputPostId.setAttribute('value', postId);
           addPostToReportModal.show();
         });
-      });
-    }
-
-    //   NOTE handle comment form
-    if (btnSaveCommentModal) {
-      btnSaveCommentModal.addEventListener('click', () => {
-        const comment = textCommentModal.value;
-        const postId = textCommentModal.dataset.wsPostId;
-        textCommentModal.value = '';
-        commentMap.set(postId, comment);
-        const checkbox = findRelativeCheckbox(postId);
-
-        if (checkbox) {
-          checkbox.setAttribute('checked', 'true');
-        }
       });
     }
 
@@ -103,13 +72,6 @@
           report.report[element.name] = value;
         });
       return report;
-    }
-
-    function findRelativeCheckbox(postId) {
-      const checkbox = document.querySelector(
-        `.checkbox-add-to-report[data-ws-post-id="${postId}"]`,
-      );
-      return checkbox;
     }
 
     //  NOTE в данный момент не используется. оставил на будущее
