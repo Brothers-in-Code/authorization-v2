@@ -205,16 +205,17 @@ export class WorkSpaceService {
     data: {
       offset: string | number;
       limit: string | number;
-      likesMin: string;
-      viewsMin: string;
-      begDate: string;
-      endDate: string;
-      sortByLikes: '0' | '1' | '2' | undefined;
-      sortByViews: '0' | '1' | '2' | undefined;
-      sortByComments: '0' | '1' | '2' | undefined;
+      likesMin?: string;
+      viewsMin?: string;
+      begDate?: string;
+      endDate?: string;
+      sortByLikes?: '0' | '1' | '2';
+      sortByViews?: '0' | '1' | '2';
+      sortByComments?: '0' | '1' | '2';
     },
   ) {
     const MILLSEC = 1000;
+
     const likesMin = data.likesMin ? Number(data.likesMin) : undefined;
     const viewsMin = data.viewsMin ? Number(data.viewsMin) : undefined;
     const begDate = data.begDate

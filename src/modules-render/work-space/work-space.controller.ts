@@ -144,13 +144,13 @@ export class WorkSpaceController {
     @Request() req,
     @Body()
     body: {
-      likesMin: string;
-      viewsMin: string;
-      begDate: string;
-      endDate: string;
-      sortByLikes: '0' | '1' | '2';
-      sortByViews: '0' | '1' | '2' | undefined;
-      sortByComments: '0' | '1' | '2' | undefined;
+      likesMin?: string;
+      viewsMin?: string;
+      begDate?: string;
+      endDate?: string;
+      sortByLikes?: '0' | '1' | '2';
+      sortByViews?: '0' | '1' | '2';
+      sortByComments?: '0' | '1' | '2';
       comments?: { post_id: number; text: string }[];
       report?: {
         report: {
@@ -219,6 +219,7 @@ export class WorkSpaceController {
       },
     );
     dataToRender['message'] = message;
+
     return { data: dataToRender };
   }
 

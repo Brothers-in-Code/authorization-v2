@@ -343,7 +343,7 @@
                       <% let imgPath %>
                       <!-- prettier-ignore -->
                       <% if (item?.post.attachments?.length > 0) {%>
-                      <% imgPath = item.post.attachments[0].photo?.orig_photo.url || '' %>
+                      <% imgPath = item.post.attachments[0]?.photo?.orig_photo?.url || '' %>
                       <% } else { %>
                       <% imgPath = '' %>
                       <% } %>

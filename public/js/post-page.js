@@ -83,13 +83,11 @@
         fetchWSData({
           ...dataset,
           report,
-        })
-          .then((res) => {
-            return res.json();
-          })
-          .then((data) => {
-            return data;
-          });
+        }).then((response) => {
+          if (response.ok) {
+            document.location.reload();
+          }
+        });
       });
     }
 
