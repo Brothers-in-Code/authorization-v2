@@ -47,10 +47,10 @@ export class PostService {
     groupList: Group[];
     offset: number;
     limit: number;
-    likesMin?: number;
-    viewsMin?: number;
-    begDate?: number;
-    endDate?: number;
+    likesMin: number | null;
+    viewsMin: number | null;
+    begDate: number | null;
+    endDate: number | null;
     sortByLikes: number;
     sortByViews: number;
     sortByComments: number;
