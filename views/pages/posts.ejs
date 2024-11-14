@@ -162,8 +162,6 @@
         endDate: data.endDate
        } %>
       <!-- TODO проверить, нужны ли total, offset, limit    -->
-      <%- include('../components/comment-post-modal.ejs')
-       %>
 
       <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
       <%- include('../components/post-view-modal.ejs') %>
@@ -195,7 +193,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="6" class="td--form">
+                  <td colspan="5" class="td--form">
                     <form
                       class="form"
                       method="post"
@@ -331,7 +329,6 @@
                     </div>
                   </th>
                   <th></th>
-                  <th></th>
                 </tr>
               </thead>
 
@@ -413,28 +410,12 @@
                       Добавить в отчет
                     </button>
                   </td>
-                  <td>
-                    <button
-                      class="btn btn-comment"
-                      data-ws-post-id="<%= item.id %>"
-                      data-bs-toggle="tooltip"
-                      data-bs-title="Добавить комментарий"
-                    >
-                      <img
-                        src="/img/bootstrap-icons/card-text.svg"
-                        alt="Создать или редактировать комментарий"
-                        data-bs-toggle="modal"
-                        data-bs-target="#commentModal"
-                      />
-                    </button>
-                  </td>
                 </tr>
                 <% }) %>
               </tbody>
             </table>
           </div>
         </main>
-        <%- include('../components/post-context.ejs') %>
       </div>
       <!!-- root -->
     </div>
