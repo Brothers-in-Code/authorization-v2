@@ -4,6 +4,7 @@
   init();
 
   document.addEventListener('reload-main', () => {
+    destroyShownTooltip();
     init();
   });
 
@@ -12,8 +13,16 @@
       '[data-bs-toggle="tooltip"]',
     );
 
-    const tooltipList = [...tooltipTriggerList].map(
+    [...tooltipTriggerList].map(
       (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
     );
+  }
+
+  function destroyShownTooltip() {
+    const tooltipList = document.querySelectorAll('.tooltip.show');
+
+    tooltipList.forEach((tooltip) => {
+      tooltip.remove();
+    });
   }
 })();
