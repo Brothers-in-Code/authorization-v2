@@ -158,43 +158,56 @@ export class WorkSpaceController {
           isNewReport: boolean;
           reportName: string;
           reportDescription: string;
+          post_id: number;
+          comment: string;
         };
-        postList: { post_id: number; comment: string }[];
+        postList: { post_id: number; comment: string }[]; // NOTE not in use!!! оставил для создания в дальнейшем нормального api
       };
     },
   ) {
     const userId = req.user.id;
-    if (body.report !== undefined) {
-      const { report, postList } = body.report;
-      let reportId: number;
+    let message = '';
+    try {
+      if (body.report !== undefined) {
+        const { report } = body.report;
+        let reportId: number;
 
-      if (body.report.report.isNewReport) {
-        const newReport = await this.workSpaceService.saveReport(
-          report.reportName,
-          report.reportDescription,
-        );
-        reportId = newReport.id;
-        await this.workSpaceService.addReportToUser(
-          Number(userId),
-          newReport.id,
-        );
-      } else {
-        reportId = Number(report.reportId);
-      }
+        if (body.report.report.isNewReport) {
+          const newReport = await this.workSpaceService.saveReport(
+            report.reportName,
+            report.reportDescription,
+          );
+          reportId = newReport.id;
+          await this.workSpaceService.addReportToUser(
+            Number(userId),
+            newReport.id,
+          );
+        } else {
+          reportId = Number(report.reportId);
+        }
 
-      if (postList !== undefined && postList.length > 0) {
         const savedComments = await this.workSpaceService.saveComment(
           Number(userId),
           {
             reportId,
-            postList,
+            postList: [
+              {
+                post_id: report.post_id,
+                comment: report.comment,
+              },
+            ],
           },
         );
+
         await this.workSpaceService.addCommentToReport(
           reportId,
           savedComments.generatedMaps.map((comment) => comment.id),
         );
+        message = 'Отчет сохранен';
       }
+    } catch (error) {
+      message = 'Не удалось сохранить отчет';
+      this.logger.error(`func: receivePosts; error: ${error}`);
     }
 
     const dataToRender = await this.workSpaceService.collectPostDataToRender(
@@ -205,6 +218,7 @@ export class WorkSpaceController {
         limit: 20,
       },
     );
+    dataToRender['message'] = message;
     return { data: dataToRender };
   }
 

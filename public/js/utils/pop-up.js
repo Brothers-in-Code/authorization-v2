@@ -1,15 +1,14 @@
 (() => {
-  const root = document.querySelector('#root');
   const popup = document.getElementById('js-pop-up');
 
-  if (root && popup) {
+  if (popup) {
     const btnClose = popup.querySelector('.pop-up__btn-close');
 
     btnClose.addEventListener('click', () => {
       popup.classList.add('pop-up--hide');
     });
 
-    root.addEventListener('new-message', (event) => {
+    document.addEventListener('new-message', (event) => {
       showPopup(popup, event.detail.message);
       hidePopup(popup);
     });

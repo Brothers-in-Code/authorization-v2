@@ -78,22 +78,10 @@
       init();
       callPopup(data.message);
     }
-    if (root) {
-      main.dispatchEvent(
-        new CustomEvent('reload-main', {
-          bubbles: true,
-        }),
-      );
-    }
-  }
-
-  function callPopup(message) {
-    const root = document.querySelector('#root');
-
-    if (root) {
-      root.dispatchEvent(
-        new CustomEvent('new-message', { bubbles: true, detail: { message } }),
-      );
-    }
+    document.dispatchEvent(
+      new CustomEvent('reload-main', {
+        bubbles: true,
+      }),
+    );
   }
 })();
