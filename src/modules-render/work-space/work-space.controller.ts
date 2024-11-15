@@ -144,6 +144,8 @@ export class WorkSpaceController {
     @Request() req,
     @Body()
     body: {
+      offset?: string;
+      limit?: string;
       likesMin?: string;
       viewsMin?: string;
       begDate?: string;
@@ -152,30 +154,24 @@ export class WorkSpaceController {
       sortByViews?: '0' | '1' | '2';
       sortByComments?: '0' | '1' | '2';
       comments?: { post_id: number; text: string }[];
-      report?: {
-        report: {
-          reportId: string;
-          isNewReport: boolean;
-          reportName: string;
-          reportDescription: string;
-          post_id: number;
-          comment: string;
-        };
-        postList: { post_id: number; comment: string }[]; // NOTE not in use!!! оставил для создания в дальнейшем нормального api
-      };
+      reportId?: string;
+      isNewReport?: boolean;
+      reportName?: string;
+      reportDescription?: string;
+      postId?: number;
+      comment?: string;
     },
   ) {
     const userId = req.user.id;
     let message = '';
     try {
-      if (body.report !== undefined) {
-        const { report } = body.report;
+      if (body.reportId !== undefined || body.isNewReport) {
         let reportId: number;
 
-        if (body.report.report.isNewReport) {
+        if (body.isNewReport) {
           const newReport = await this.workSpaceService.saveReport(
-            report.reportName,
-            report.reportDescription,
+            body.reportName,
+            body.reportDescription,
           );
           reportId = newReport.id;
           await this.workSpaceService.addReportToUser(
@@ -183,7 +179,7 @@ export class WorkSpaceController {
             newReport.id,
           );
         } else {
-          reportId = Number(report.reportId);
+          reportId = Number(body.reportId);
         }
 
         const savedComments = await this.workSpaceService.saveComment(
@@ -192,8 +188,8 @@ export class WorkSpaceController {
             reportId,
             postList: [
               {
-                post_id: report.post_id,
-                comment: report.comment,
+                post_id: body.postId,
+                comment: body.comment,
               },
             ],
           },
@@ -214,12 +210,12 @@ export class WorkSpaceController {
       userId,
       {
         ...body,
-        offset: 0,
-        limit: 20,
+        offset: body.offset || 0,
+        limit: body.limit || 20,
       },
     );
     dataToRender['message'] = message;
-
+    this.logger.debug(message);
     return { data: dataToRender };
   }
 
