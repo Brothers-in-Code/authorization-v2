@@ -178,6 +178,8 @@
           data-ws-sort-by-likes="<%= data.sortByLikes %>"
           data-ws-sort-by-views="<%= data.sortByViews %>"
           data-ws-sort-by-comments="<%= data.sortByComments %>"
+          data-ws-offset="<%= data.postList.offset %>"
+          data-ws-limit="<%= data.postList.limit %>"
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
@@ -430,6 +432,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="/js/post-page.js?v<%= new Date().getTime() %>"></script>
+
     <script src="/js/fetch-data.js"></script>
     <script src="/js/post-view.js"></script>
     <script defer src="/js/utils/tooltip-init.js"></script>

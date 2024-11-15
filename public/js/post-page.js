@@ -1,91 +1,38 @@
 (() => {
   // TODO добавить блокировку кнопки "отправить отчет" если не выбран отчет
   (() => {
-    const inputPostId = document.getElementById('postIdInputModal');
     const addPostToReportModal = new bootstrap.Modal('#reportPostModal');
 
     const btnAddPostToReportList = document.querySelectorAll(
       '.js-btn-add-to-report',
     );
 
-    const reportFormModal = document.getElementById('reportFormModal');
-
-    const btnSendReport = document.getElementById('btnSendReport');
-
-    //   NOTE handle report form
-    if (reportFormModal) {
-      reportFormModal.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const report = {};
-
-        for (el of e.target) {
-          const { name } = el;
-          if (name) {
-            const { type, value, checked } = el;
-            report[name] = isCheckBoxOrRadio(type) ? checked : value;
-          }
-        }
-        reportDetails = report;
-      });
-    }
-
     //   NOTE handle button add to report
     if (btnAddPostToReportList) {
+      const main = document.querySelector('#main');
       btnAddPostToReportList.forEach((btn) => {
         btn.addEventListener('click', () => {
-          const postId = btn.dataset.wsPostId;
-          inputPostId.setAttribute('value', postId);
+          const params = getDataset();
+
+          params.postId = btn.dataset.wsPostId;
+          params.offset = main.dataset.wsOffset;
+          params.limit = main.dataset.wsLimit;
+          setParamsToReportModalForm(params);
           addPostToReportModal.show();
         });
       });
     }
 
-    //   NOTE handle send report
-    // TODO добавить обработку then и сообщение о сохранении
-    if (btnSendReport) {
+    function setParamsToReportModalForm(params) {
       const form = document.getElementById('reportFormModal');
-      form.addEventListener('submit', (event) => {
-        const dataset = getDataset();
-
-        event.preventDefault();
-        const report = serializeForm(event.target);
-        fetchWSData({
-          ...dataset,
-          report,
-        }).then((response) => {
-          if (response.ok) {
-            document.location.reload();
-          }
-        });
-      });
-    }
-
-    function serializeForm(formNode) {
-      const report = { report: {}, postList: [] };
-      const { elements } = formNode;
-
-      Array.from(elements)
-        .filter((item) => !!item.name)
-        .forEach((element) => {
-          const value =
-            element.type === 'checkbox' ? element.checked : element.value;
-          report.report[element.name] = value;
-        });
-      return report;
-    }
-
-    //  NOTE в данный момент не используется. оставил на будущее
-    function formatCommentsData(map) {
-      return Array.from(map.entries()).map(([id, comment]) => {
-        return {
-          post_id: Number(id),
-          comment,
-        };
-      });
-    }
-
-    function isCheckBoxOrRadio(type) {
-      return ['checkbox', 'radio'].includes(type);
+      for (let [key, value] of Object.entries(params)) {
+        const input = document.createElement('input');
+        input.classList.add('hide');
+        input.setAttribute('type', 'text');
+        input.setAttribute('name', key);
+        input.setAttribute('value', value);
+        form.append(input);
+      }
     }
   })();
 
@@ -168,6 +115,7 @@
   }
 
   function getDataset() {
+    const main = document.querySelector('#main');
     return {
       likesMin: main.dataset.wsLikesMin,
       viewsMin: main.dataset.wsViewsMin,

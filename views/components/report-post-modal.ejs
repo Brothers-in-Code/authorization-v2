@@ -20,7 +20,13 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form class="form form--save-report-post-modal" id="reportFormModal">
+        <form
+          id="reportFormModal"
+          class="form form--save-report-post-modal"
+          method="post"
+          accept-charset="utf-8"
+          url="./"
+        >
           <label class="form-check-label">
             <div>Комментарий к посту</div>
             <textarea
@@ -30,12 +36,6 @@
               id="textCommentModal"
             ></textarea>
           </label>
-          <input
-            type="number"
-            class="hide"
-            name="post_id"
-            id="postIdInputModal"
-          />
 
           <select
             class="form-select form-select--report"
@@ -92,12 +92,7 @@
             >
               Отменить
             </button>
-            <button
-              type="submit"
-              class="btn btn-outline-primary"
-              id="btnSendReport"
-              data-bs-dismiss="modal"
-            >
+            <button type="submit" class="btn btn-outline-primary">
               Сохранить
             </button>
           </div>
