@@ -62,6 +62,13 @@
 
   //   NOTE сортировка
   (() => {
+    const form = document.getElementById('form-sort');
+    if (form) {
+      form.addEventListener('reset', () => {
+        window.location.href = `${window.location.pathname}`;
+      });
+    }
+
     //   NOTE по лайкам
     const btnSortLikes = document.getElementById('likes-btn-sort');
     if (btnSortLikes) {

@@ -201,33 +201,37 @@
                       method="post"
                       accept-charset="utf-8"
                       url="./?offset=0&limit=20"
+                      id="form-sort"
                     >
                       <label>
                         <div class="label-text">Мин. кол-во лайков</div>
+                        <!-- prettier-ignore -->
                         <input
                           class="form-control"
                           type="number"
                           name="likesMin"
-                          value="<%= data.likesMin %>"
-                        />
+                          <% if (data.likesMin) { %>
+                        value="<%= data.likesMin%>" <% } %> />
                       </label>
 
                       <label>
                         <div class="label-text">Мин. кол-во просмотров</div>
+                        <!-- prettier-ignore -->
                         <input
                           class="form-control"
                           type="number"
                           name="viewsMin"
-                          value="<%= data.viewsMin  %>"
-                        />
+                          <% if (data.viewsMin) { %>
+                        value="<%= data.viewsMin%>" <% } %> />
                       </label>
                       <label>
                         <div class="label-text">Дата от</div>
+
                         <input
                           class="form-control"
                           type="date"
                           name="begDate"
-                          value="<%= data.begDate  %>"
+                          value="<%= data.begDate || ''  %>"
                         />
                       </label>
 
@@ -237,7 +241,7 @@
                           class="form-control"
                           type="date"
                           name="endDate"
-                          value="<%= data.endDate %>"
+                          value="<%= data.endDate || '' %>"
                         />
                       </label>
                       <button
@@ -247,11 +251,7 @@
                         Фильтровать
                       </button>
                       <!-- TODO повесить действие -->
-                      <button
-                        class="btn btn-outline-danger"
-                        data-bs-toggle="tooltip"
-                        data-bs-title="Сбросить фильтры"
-                      >
+                      <button class="btn btn-outline-danger" type="reset">
                         <svg class="sprite-icon">
                           <use xlink:href="#reset-filter"></use>
                         </svg>
