@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import {
+  Between,
   FindOptionsOrder,
   In,
   LessThanOrEqual,
@@ -66,11 +67,12 @@ export class PostService {
     if (data.viewsMin) {
       whereConditions['views'] = MoreThanOrEqual(data.viewsMin);
     }
-    if (data.begDate) {
-      whereConditions['timestamp_post'] = LessThanOrEqual(data.begDate);
-    }
-    if (data.endDate) {
-      whereConditions['timestamp_post'] = MoreThanOrEqual(data.endDate);
+    if (data.begDate && data.endDate) {
+      whereConditions['timestamp_post'] = Between(data.begDate, data.endDate);
+    } else if (data.begDate) {
+      whereConditions['timestamp_post'] = MoreThanOrEqual(data.begDate);
+    } else if (data.endDate) {
+      whereConditions['timestamp_post'] = LessThanOrEqual(data.endDate);
     }
     const total = await this.postRepository.count({
       where: whereConditions,
