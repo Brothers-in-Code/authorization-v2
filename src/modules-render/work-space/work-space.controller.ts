@@ -214,8 +214,9 @@ export class WorkSpaceController {
         limit: body.limit || 20,
       },
     );
+
     dataToRender['message'] = message;
-    this.logger.debug(message);
+
     return { data: dataToRender };
   }
 
