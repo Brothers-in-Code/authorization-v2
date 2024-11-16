@@ -601,6 +601,7 @@ textarea[disabled] {
   top: 10px;
   right: 10px;
   min-width: 300px;
+  z-index: 1000;
   transition: transform 0.2s ease-out;
 }
 .pop-up__content {

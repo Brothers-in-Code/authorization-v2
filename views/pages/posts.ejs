@@ -154,6 +154,8 @@
     </svg>
 
     <div id="root">
+      <%- include('../components/pop-up.ejs') %>
+
       <!-- prettier-ignore -->
       <% let bodyParams = {
         likesMin: data.likesMin,
@@ -168,6 +170,7 @@
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>
+
         <main
           class="page-layout__main page-layout__section main"
           id="main"
@@ -251,7 +254,12 @@
                         Фильтровать
                       </button>
                       <!-- TODO повесить действие -->
-                      <button class="btn btn-outline-danger" type="reset">
+                      <button
+                        class="btn btn-outline-danger"
+                        data-bs-toggle="tooltip"
+                        data-bs-title="Сбросить фильтры"
+                        type="reset"
+                      >
                         <svg class="sprite-icon">
                           <use xlink:href="#reset-filter"></use>
                         </svg>
@@ -430,10 +438,20 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
+    <script src="/js/utils/pop-up.js"></script>
+
+    <script src="/js/utils/call-popup.js"></script>
     <script src="/js/post-page.js?v<%= new Date().getTime() %>"></script>
 
     <script src="/js/fetch-data.js"></script>
     <script src="/js/post-view.js"></script>
     <script defer src="/js/utils/tooltip-init.js"></script>
+
+    <% if ( data.message) { %>
+    <script>
+      const message = '<%= data.message %>';
+      callPopup(message);
+    </script>
+    <% } %>
   </body>
 </html>
