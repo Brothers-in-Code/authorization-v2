@@ -75,36 +75,36 @@
               
               <tbody>
                 <% data.userGroupList.groups.forEach((group) => { %>
-                <tr>
-                  <td>
-                    <img
-                      class="logo"
-                      src="<%= group.group.photo %>"
-                      alt="иконка группы ВК"
-                    />
-                  </td>
-                  <td>
-                    <div><%= group.group.name %></div>
-                    <div class="id"><%= group.group.vkid %></div>
-                  </td>
-                  
-                  <td>
-                    <input
-                      class="form-check-input scan-group-status-checkbox"
-                      type="checkbox"
-                      name="isScan"
-                      value="<%= group.vkid %>"
-                      data-group-vk-id="<%= group.group.vkid %>"
-                      data-group-is-scan="<% group.isScan %>"
-                      <%= group.isScan ? 'checked' : '' %>
-                    />
-                  </td>
-                  <td>
-                    <!-- prettier-ignore -->
-                    <%= Intl.DateTimeFormat().format(group.last_group_scan_date)%>
-                  </td>
-                </tr>
-                <% }) %>
+                    <tr>
+                    <td>
+                        <img
+                        class="logo"
+                        src="<%= group.group.photo %>"
+                        alt="иконка группы ВК"
+                        />
+                    </td>
+                    <td>
+                        <div><%= group.group.name %></div>
+                        <div class="id"><%= group.group.vkid %></div>
+                    </td>
+                    
+                    <td>
+                        <input
+                        class="form-check-input scan-group-status-checkbox"
+                        type="checkbox"
+                        name="isScan"
+                        value="<%= group.vkid %>"
+                        data-group-vk-id="<%= group.group.vkid %>"
+                        data-group-is-scan="<% group.isScan %>"
+                        <%= group.isScan ? 'checked' : '' %>
+                        />
+                    </td>
+                    <td>
+                        <!-- prettier-ignore -->
+                        <%= Intl.DateTimeFormat().format(group.last_group_scan_date)%>
+                    </td>
+                    </tr>
+                    <% }) %>           
               </tbody>
             </table>
           </div>
@@ -113,5 +113,7 @@
       </div>
     </div>
     <script src="/js/save-is-scan.js"></script>
+    <script src="/js/utils/get-search-params.js"></script>
+    <script src="/js/group-page.js"></script>
   </body>
 </html>
