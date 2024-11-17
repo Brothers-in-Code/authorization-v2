@@ -1,15 +1,14 @@
 // Получение кода
+// TODO сделать сообщения о процессе авторизации (перед редиректом показать спинер и сообщение "перенаправляем обратно")
 (async () => {
   const searchParams = new URLSearchParams(window.location.search);
 
   if (window.location.search.includes('code')) {
     const bodyJson = getBodyJson();
     const response = await sendCode(bodyJson);
-    console.log(response);
 
     if (response.status === 'ok') {
-      hideLoginButton();
-      popupMessage(response.message);
+      window.location.href = `/${response.redirectTo}`;
     }
   }
 

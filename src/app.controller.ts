@@ -6,14 +6,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/')
-  @Redirect('/home', 302)
+  @Redirect('/work-space/groups', 302)
   redirectHome() {
     return {};
   }
-
-  //   TODO удалить если будет работать штатно
-  //   @Get()
-  //   getHello(): string {
-  //     return this.appService.getHello();
-  //   }
 }

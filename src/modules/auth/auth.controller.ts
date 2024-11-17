@@ -8,6 +8,7 @@ import {
   Res,
   Logger,
   Req,
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -33,6 +34,7 @@ type VerificationOutputType = {
 type AuthBaseOutputType = {
   message: string;
   status: string;
+  redirectTo?: string;
   error?: any;
 };
 
@@ -55,6 +57,7 @@ export class AuthController {
 
   @Get('verification')
   verification(
+    @Query('redirectTo') redirectTo = 'work-space/groups',
     @Res({ passthrough: true }) res: Response,
   ): VerificationOutputType {
     const encryptKey = this.configService.get('app.encryptKey');
@@ -66,6 +69,7 @@ export class AuthController {
 
     res.cookie('state', verificationState.state, cookieOptions);
     res.cookie('code_verifier', hashCodeVerifier, cookieOptions);
+    res.cookie('redirectTo', redirectTo, cookieOptions);
 
     return verificationState;
   }
@@ -88,6 +92,7 @@ export class AuthController {
     const encryptKey = this.configService.get('app.encryptKey');
     const cookieState = req.cookies?.state || null;
     const hashCodeVerifier = req.cookies?.code_verifier || null;
+    const redirectTo = req.cookies?.redirectTo || null;
 
     if (!cookieState || !hashCodeVerifier) {
       throw new UnauthorizedException(
@@ -149,7 +154,11 @@ export class AuthController {
         res.cookie('user_subscription', subscriptionToken, cookieOptions);
       }
 
-      return { message: 'Token successfully received', status: 'ok' };
+      return {
+        message: 'Token successfully received',
+        status: 'ok',
+        redirectTo,
+      };
     } catch (e) {
       this.logger.error(
         `func: handleGetToken, Failed to get access token. ${e.message}`,
