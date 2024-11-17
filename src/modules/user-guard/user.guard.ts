@@ -28,7 +28,7 @@ export class UserGuard implements CanActivate {
         email: payload.email,
       };
     } catch (error) {
-      throw new UnauthorizedException(`Wrong user_token: ${error}`);
+      throw new UnauthorizedException(`USER_GUARD: Wrong user_token: ${error}`);
     }
 
     return true;

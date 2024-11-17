@@ -1,19 +1,22 @@
 (() => {
-  //   const STAY_API_URL = 'https://stay-in-touch.ru/api';
+  //   TODO сделать сообщения о процессе авторизации
   const VK_URL = ' https://id.vk.com/authorize';
   const stayAPIUrl = `${new URL(window.location.href).origin}/api`;
   const loginButton = document.getElementById('login');
 
-  loginButton.addEventListener('click', login);
+  loginButton.addEventListener('click', () => {
+    const redirectTo = loginButton.dataset.smmRedirectTo;
+    login(redirectTo);
+  });
 
-  async function login() {
-    const verificationParams = await fetchVerificationParams();
+  async function login(redirectTo) {
+    const verificationParams = await fetchVerificationParams(redirectTo);
     const url = createRequestURL(verificationParams);
     window.location.href = url;
   }
 
-  function fetchVerificationParams() {
-    return fetch(`${stayAPIUrl}/auth/verification`, {
+  function fetchVerificationParams(redirectTo) {
+    return fetch(`${stayAPIUrl}/auth/verification?redirectTo=${redirectTo}`, {
       method: 'GET',
     }).then((res) => res.json());
   }

@@ -12,14 +12,17 @@ import {
   Render,
   Request,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserGuard } from 'src/modules/user-guard/user.guard';
 import { Response } from 'express';
+import { UnauthorizedExceptionFilter } from 'src/shared/filter/unauthorized-exception/unauthorized-exception.filter';
 
 @UseGuards(UserGuard)
+@UseFilters(UnauthorizedExceptionFilter)
 @Controller()
 export class WorkSpaceController {
   constructor(

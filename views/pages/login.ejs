@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../components/head.ejs', {title: data.pageTitle}) %>
+  <body>
+    <div id="root">
+      <div class="page-layout">
+        <main class="page-layout__section page-layout__login main main--login">
+          <h1>SSM Менеджер</h1>
+          <p>Пожалуйста, авторизуйтесь</p>
+          <div class="wrapper">
+            <button
+              class="btn btn--vk"
+              id="login"
+              data-smm-redirect-to="<%= data.redirectTo  %>"
+            >
+              Войти с VK ID
+            </button>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script defer src="./js/auth/login.js"></script>
+    <script defer src="./js/auth/send-params-to-get-token.js"></script>
+  </body>
+</html>
