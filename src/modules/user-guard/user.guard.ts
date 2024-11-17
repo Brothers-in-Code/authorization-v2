@@ -17,7 +17,9 @@ export class UserGuard implements CanActivate {
     const token = request.cookies?.user_token;
 
     if (!token) {
-      throw new UnauthorizedException('There is no user_token in cookies');
+      throw new UnauthorizedException(
+        'USER_GUARD: There is no user_token in cookies',
+      );
     }
 
     try {
