@@ -5,6 +5,7 @@
   if (window.location.search.includes('code')) {
     const bodyJson = getBodyJson();
     const response = await sendCode(bodyJson);
+    console.log(response);
 
     if (response.status === 'ok') {
       hideLoginButton();
