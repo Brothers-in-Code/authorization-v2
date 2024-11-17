@@ -543,6 +543,9 @@ textarea[disabled] {
 
 .btn--toggle {
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   padding: 5px 0;
   z-index: 20;

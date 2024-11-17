@@ -74,6 +74,7 @@ export class WorkSpaceController {
       scanGroupStatus?: { groupVkId: string; isScan: boolean }[];
       addGroupByIdOrDomain?: string;
       filterGroupByIdOrName?: string;
+      importUserGroups?: boolean;
     },
   ) {
     const userId = req.user.id;
@@ -88,6 +89,10 @@ export class WorkSpaceController {
       await this.workSpaceService.addGroupToUser(Number(userId), {
         groupIdOrDomain: body.addGroupByIdOrDomain,
       });
+    }
+
+    if (body.importUserGroups) {
+      await this.workSpaceService.importUserGroups(Number(userId));
     }
 
     const dataToRender = await this.workSpaceService.collectGroupDataToRender(

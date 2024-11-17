@@ -11,6 +11,23 @@
     />
   </button>
   <div class="slide-section__overlay"></div>
+
+<!-- TODO сообщения о результате действий -->
+
+  <form
+    class="form form--vertical"
+    method="post"
+    accept-charset="utf-8"
+    url=`./?offset=${offset}&limit=${limit}`
+  >
+    <fieldset class="hide" >
+      <label>
+        <input class="form-control" type="text" name="importUserGroups" value="true" />
+      </label>
+    </fieldset>
+    <button class="btn btn-primary form__submit w-100" type="submit">Импортировать группы из ВК</button>
+  </form>
+
   <form
     class="form form--vertical"
     method="post"

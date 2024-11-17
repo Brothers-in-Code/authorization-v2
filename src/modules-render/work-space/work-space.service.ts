@@ -200,6 +200,27 @@ export class WorkSpaceService {
     return this.reportCommentService.createList(reportId, commentIdList);
   }
 
+  async importUserGroups(userId: number) {
+    const user = await this.userService.findOneById(userId);
+
+    const groupList = await this.vkDataService.getUserGroupListFromVK(
+      user.user_vkid,
+      user.access_token,
+      1,
+    );
+
+    const groups = await this.vkDataService.saveGroupList(
+      groupList.response.items.map((item) => item),
+    );
+
+    const userGroups = await this.userGroupService.createUserGroupList(
+      user,
+      groups,
+    );
+
+    return userGroups;
+  }
+
   async collectPostDataToRender(
     userId,
     data: {
