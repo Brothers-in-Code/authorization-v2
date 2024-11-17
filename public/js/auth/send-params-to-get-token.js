@@ -8,7 +8,8 @@
     const response = await sendCode(bodyJson);
 
     if (response.status === 'ok') {
-      window.location.href = `/${response.redirectTo}`;
+      const origin = window.location.origin;
+      window.location.href = `${origin}${response.redirectTo}`;
     }
   }
 
