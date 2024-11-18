@@ -9,7 +9,8 @@
 
     if (response.status === 'ok') {
       const origin = window.location.origin;
-      window.location.href = `${origin}${response.redirectTo}`;
+      const href = `${origin}/${response.redirectTo}`.replace('.ru//', '.ru/');
+      window.location.href = href;
     }
   }
 

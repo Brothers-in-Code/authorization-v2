@@ -345,6 +345,7 @@ export class WorkSpaceService {
     };
   }
 
+  //   TODO отдавать desc
   async collectReportDataToRender(reportId: number) {
     const report = await this.reportService.getReportData(reportId);
 
