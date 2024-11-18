@@ -4,7 +4,7 @@
 >
   <div class="slide-section__overlay"></div>
   <!-- prettier-ignore -->
-  <%- include('../components/header.ejs') %>
+  <%- include('../components/header.ejs', {userAvatar: data.userAvatar}) %>
   <!-- prettier-ignore -->
   <%- include('../components/aside.ejs', {currentPage: data.currentPage}) %>
 </section>

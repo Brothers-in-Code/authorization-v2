@@ -185,6 +185,7 @@ export class AuthService {
         `user_info не получен. ${error.error_description}`,
       );
     }
+
     return response.data;
   }
 

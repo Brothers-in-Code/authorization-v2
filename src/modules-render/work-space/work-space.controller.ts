@@ -52,6 +52,7 @@ export class WorkSpaceController {
     @Query('filterGroupByIdOrName') filterGroupByIdOrName: string,
   ) {
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
     const dataToRender = await this.workSpaceService.collectGroupDataToRender(
       userId,
       {
@@ -61,6 +62,8 @@ export class WorkSpaceController {
         filterGroupByIdOrName: filterGroupByIdOrName,
       },
     );
+    dataToRender['userAvatar'] = userAvatar;
+
     return { data: dataToRender };
   }
 
