@@ -7,9 +7,6 @@
     />
   </button>
   <div><a href="/" class="link">SSM Менеджер</a></div>
-  <img
-    class="header__user-icon"
-    src="/img/bootstrap-icons/person.svg"
-    alt="user icon"
-  />
+  <% src = data.userAvatar ? `${data.userAvatar}` : '/img/bootstrap-icons/person.svg' %>
+  <img class="header__user-icon" src="<%= src %>" alt="user icon" />
 </header>

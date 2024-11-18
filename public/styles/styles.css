@@ -42,6 +42,7 @@
 }
 .header__user-icon {
   width: 25px;
+  border-radius: 50%;
 }
 .header__btn-toggle {
   top: 0;

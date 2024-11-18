@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
-
+  private readonly logger = new Logger(UserGuard.name);
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.user_token;
@@ -28,6 +28,7 @@ export class UserGuard implements CanActivate {
         id: payload.sub,
         name: payload.user_name,
         email: payload.email,
+        avatar: payload['1'],
       };
     } catch (error) {
       throw new UnauthorizedException(`USER_GUARD: Wrong user_token: ${error}`);

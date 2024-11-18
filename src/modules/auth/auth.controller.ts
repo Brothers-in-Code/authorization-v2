@@ -140,6 +140,7 @@ export class AuthController {
       const userToken = await this.authService.createJWTToken(
         user.id,
         userInfo.user.first_name,
+        userInfo.user.avatar,
       );
       res.cookie('user_token', userToken, cookieOptions);
 
