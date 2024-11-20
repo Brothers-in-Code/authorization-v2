@@ -31,7 +31,7 @@ jobs:
           host: ${{ secrets.DESTINATION_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           script: "rm -rf /home/genry_bolit/nest/old"
 
       - name: Copy files to serve
@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.DESTINATION_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           rm: true
           source: "ecosystem.config.js,package.json,srt/*,public/*,dist/*,node_modules/*"
           target: "/home/genry_bolit/nest/next"
@@ -51,7 +51,7 @@ jobs:
           host: ${{ secrets.DESTINATION_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           script: "cp /home/genry_bolit/nest/.env /home/genry_bolit/nest/.env"
 
       - name: Move folders
@@ -60,7 +60,7 @@ jobs:
           host: ${{ secrets.DESTINATION_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           script: "mv /home/genry_bolit/nest/current /home/genry_bolit/nest/old && mv /home/genry_bolit/nest/next /home/genry_bolit/nest/current"
 
       - name: Restart server
@@ -69,5 +69,5 @@ jobs:
           host: ${{ secrets.DESTINATION_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           script: "/home/genry_bolit/nest/restart.sh"
