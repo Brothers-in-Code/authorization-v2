@@ -49,11 +49,12 @@ import { LoginModule } from './modules/login/login.module';
           password: configService.get('db.password'),
           database: configService.get('db.database'),
           namingStrategy: new SnakeNamingStrategy(),
-          migrations: ['./dist/migrations/*.js'],
+          migrations: ['./src/db/migrations/*.js'],
           migrationsTableName: 'typeorm_migrations',
           synchronize: false,
           migrationsRun: true,
           autoLoadEntities: true,
+          logging: false,
         };
       },
     }),
