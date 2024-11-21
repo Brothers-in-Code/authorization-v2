@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: "cp /home/genry_bolit/nest/.env /home/genry_bolit/nest/.env"
+          script: "cp /home/genry_bolit/nest/.env /home/genry_bolit/nest/next/.env"
 
       - name: Move folders
         uses: appleboy/ssh-action@v1.0.3
