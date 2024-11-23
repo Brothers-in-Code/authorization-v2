@@ -43,7 +43,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           rm: true
-          source: "ecosystem.config.js,package.json,srt/*,public/*,dist/*,views/*,node_modules/*"
+          source: "ecosystem.config.js,package.json,srt/*,src/db/migrations/*,public/*,dist/*,views/*,node_modules/*"
           target: "/home/genry_bolit/nest/next"
 
       - name: Copy .env
