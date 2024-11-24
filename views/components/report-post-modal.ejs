@@ -37,31 +37,41 @@
             ></textarea>
           </label>
 
-          <select
-            class="form-select form-select--report"
+          <label class="form-check-label form-check-label--inline">
+            <div>Отчет</div>
+            <select
+            class="form-select"
             name="reportId"
             id="selectReport"
           >
-            <option value="undefined" selected>Выбрать отчет</option>
-            <% reportList.forEach((item) => { %>
-            <option value="<%= item.id %>"><%= item.name %></option>
+            <option value="undefined"></option>
+            <% reportList.forEach((item, index) => { %>
+            <option 
+                value="<%= item.id %>"
+                <%= index===0 ? 'selected' : '' %>
+                >
+              <%= item.name %> 
+            </option>
             <% }) %>
           </select>
+          </label>  
 
-          <span>ИЛИ</span>
+        <div class="flex shameless-wrapper-plus">
+            <span>ИЛИ</span>
 
-          <div class="form-check">
+            <div class="form-check">
             <input
-              class="form-check-input"
-              type="checkbox"
-              name="isNewReport"
-              id="isNewReportPostModal"
+                class="form-check-input"
+                type="checkbox"
+                name="isNewReport"
+                id="isNewReportPostModal"
             />
 
             <label class="form-check-label" for="isNewReportPostModal">
-              <div>Создать новый отчет</div>
+                <div>Создать новый отчет</div>
             </label>
-          </div>
+            </div>
+        </div>
 
           <fieldset class="form__fieldset close" id="newReportPostModal">
             <legend>Новый отчет</legend>
@@ -92,7 +102,11 @@
             >
               Отменить
             </button>
-            <button type="submit" class="btn btn-outline-primary">
+            <button
+              type="submit"
+              class="btn btn-outline-primary"
+              id="submitReportPostModal"
+            >
               Сохранить
             </button>
           </div>

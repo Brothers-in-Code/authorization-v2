@@ -1,5 +1,4 @@
 (() => {
-  // TODO добавить блокировку кнопки "отправить отчет" если не выбран отчет
   (() => {
     const addPostToReportModal = new bootstrap.Modal('#reportPostModal');
 
@@ -45,6 +44,10 @@
       document.getElementById('newReportPostModal');
 
     const selectReport = document.getElementById('selectReport');
+
+    const btnSubmitReportPostModal = document.getElementById(
+      'submitReportPostModal',
+    );
 
     if (checkboxNewReportPostModal) {
       isNewReportPostModal.addEventListener('click', () => {

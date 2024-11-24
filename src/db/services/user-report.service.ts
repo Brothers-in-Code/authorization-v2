@@ -76,6 +76,7 @@ export class UserReportService {
     const result = await this.userReportRepository.find({
       where: { user: { id: userId } },
       relations: ['report'],
+      order: { report: { updated_at: 'DESC' } },
     });
 
     const reportList = result.map((item) => {
