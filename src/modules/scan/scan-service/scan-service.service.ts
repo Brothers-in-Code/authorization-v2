@@ -40,7 +40,7 @@ export class ScanService implements OnModuleInit {
   ) {}
   private readonly logger = new Logger(ScanService.name);
 
-  onModuleInit(): any {
+  onModuleInit(): void {
     const config = this.configService.getOrThrow('cron');
     if (!config.enabled) {
       return;
