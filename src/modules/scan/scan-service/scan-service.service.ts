@@ -274,7 +274,6 @@ export class ScanService implements OnModuleInit {
     return limitDate.getTime();
   }
 
-  //   TODO добавить условие, чтобы сканировать только отмеченные группы
   async executeQuery(): Promise<ExecuteQueryOutputType[]> {
     const query = `
         WITH cte AS (
@@ -293,7 +292,7 @@ export class ScanService implements OnModuleInit {
             ug.user_id = u.id
         JOIN \`group\` g ON
             ug.group_id = g.id
-          WHERE u.deleted_at is NULL AND g.deleted_at is NULL
+          WHERE u.deleted_at is NULL AND g.deleted_at is NULL and ug.is_scan = 1
         )
         SELECT
         JSON_ARRAYAGG(

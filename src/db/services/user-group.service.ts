@@ -125,7 +125,7 @@ export class UserGroupService {
   async findAllByUser(user_id: number): Promise<Group[]> {
     const groups = await this.userGroupRepository
       .find({
-        where: { user: { id: user_id } },
+        where: { user: { id: user_id }, is_scan: 1 },
         relations: ['group'],
       })
       .then((data) =>
