@@ -20,7 +20,7 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.useStaticAssets(join(__dirname, '..', '/public'));
 
-  const port = app.get(ConfigService).getOrThrow('app.port');
+  const { port } = app.get(ConfigService).getOrThrow('app');
   await app.listen(port);
   console.log('listen', port);
 }
