@@ -1,5 +1,5 @@
 {
-  "proxy": "https://stay-in-touch.ru/api",
+  "proxy": "https://smm-toolkit.ru/",
   "port": 3010,
 
   "files": ["public/styles/*.css", "views/**/*.ejs"],

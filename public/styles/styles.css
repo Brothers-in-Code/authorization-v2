@@ -396,6 +396,11 @@
   flex-basis: 100%;
   margin-bottom: 0.4rem;
 }
+.form--save-report-post-modal .form-check-label--inline {
+  flex-basis: none;
+  width: 100%;
+  max-width: 50%;
+}
 .form--save-report-post-modal legend {
   margin-bottom: 0.6rem;
 }
@@ -429,6 +434,14 @@ textarea[disabled] {
 
 .form-check-input {
   cursor: pointer;
+}
+
+.shameless-wrapper-plus {
+  align-self: flex-end;
+  padding-block: 0.75rem;
+}
+.shameless-wrapper-plus .form-check-label {
+  margin: 0;
 }
 
 .btn-disabled {
