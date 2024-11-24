@@ -8,7 +8,7 @@ module.exports = {
       exec_mode: 'cluster',
       script: './dist/main.js',
       instances: 1,
-      env_prod: {
+      env: {
         LAUNCH_TYPE: 'pm2',
         PORT: 3000,
         SCAN_ENABLED: 'false',
@@ -20,7 +20,7 @@ module.exports = {
       exec_mode: 'cluster',
       script: './dist/main.js',
       instances: 1,
-      env_prod: {
+      env: {
         LAUNCH_TYPE: 'pm2',
         PORT: 9000,
         SCAN_ENABLED: 'true',
