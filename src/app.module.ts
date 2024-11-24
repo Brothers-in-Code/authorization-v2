@@ -9,7 +9,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
 import { VkDataModule } from './modules/vk-data/vkdata.module';
 import { FrontModule } from './modules/front/front.module';
-import { ScanService } from './modules/scan/scan-service/scan-service.service';
 import { ScanModule } from 'src/modules/scan/scan.module';
 import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
 import { HomeModule } from './modules-render/home/home.module';
@@ -61,6 +60,6 @@ import { LoginModule } from './modules/login/login.module';
     LoginModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ScanService],
+  providers: [AppService],
 })
 export class AppModule {}
