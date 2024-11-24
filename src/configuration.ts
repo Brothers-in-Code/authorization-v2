@@ -11,6 +11,10 @@ export function configuration() {
       port: parseInt(process.env.PORT, 10) || 3000,
       front: process.env.APP_REDIRECT_PATH,
     },
+    cron: {
+      enabled: process.env.SCAN_ENABLED === 'true',
+      schedule: process.env.SCAN_SCHEDULE || '0 12 * * *',
+    },
     vk: {
       appId: process.env.VK_APP_ID,
       secureKey: process.env.VK_SECURE_KEY,

@@ -1,8 +1,14 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { CronJob } from 'cron';
 
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { GroupService } from 'src/db/services/group.service';
@@ -22,7 +28,7 @@ type ExecuteQueryOutputType = {
 };
 
 @Injectable()
-export class ScanService {
+export class ScanService implements OnModuleInit {
   constructor(
     @InjectDataSource()
     private readonly dataSource: DataSource,
@@ -30,13 +36,25 @@ export class ScanService {
     private authService: AuthService,
     private vkDataService: VkDataService,
     private groupService: GroupService,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
   private readonly logger = new Logger(ScanService.name);
 
-  @Cron('0 12 * * *')
-  async run() {
-    this.logger.log('scan service start');
+  onModuleInit(): any {
+    const config = this.configService.getOrThrow('cron');
+    if (!config.enabled) {
+      return;
+    }
 
+    const job = new CronJob(config.schedule, async () => {
+      this.logger.log('Scan was run');
+      await this.run();
+    });
+
+    this.schedulerRegistry.addCronJob('scan-groups', job);
+  }
+
+  async run() {
     if (!this.dataSource.isInitialized) {
       await this.dataSource.initialize();
       this.logger.log('Data Source has been initialized!');
