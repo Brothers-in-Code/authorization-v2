@@ -35,10 +35,9 @@ export class GroupService {
     return this.groupRepository.findOneBy({ [key]: In(value) });
   }
 
-  //   TODO удалить если нет ошибок. закоментено 24.11.2024
-  //   findOne(vkid: number): Promise<Group> {
-  //     return this.groupRepository.findOneBy({ vkid });
-  //   }
+  findOne(vkid: number): Promise<Group> {
+    return this.groupRepository.findOneBy({ vkid });
+  }
 
   //   TODO удалить если нет ошибок. закоментено 24.11.2024
   //   async findGroupListByVkIdList(vkidList: number[]): Promise<Group[]> {
