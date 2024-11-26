@@ -166,25 +166,37 @@ export class WorkSpaceService {
       postList: { post_id: number; comment: string }[];
     },
   ): Promise<InsertResult> {
-    let currentPostList: { post_id: number; comment: string }[] = [];
+    const reportsCommentsList =
+      await this.reportCommentService.getReportsCommentList(data.reportId);
 
-    const existingCommentsOfReport =
-      await this.reportCommentService.checkCommentsOfReport(
-        data.reportId,
-        data.postList.map((item) => item.post_id),
-      );
+    const reportsCommentsIdList = reportsCommentsList.map((item) =>
+      Number(item.comment.post.id),
+    );
 
-    if (existingCommentsOfReport.length > 0) {
-      currentPostList = data.postList.filter(
-        (item) => !existingCommentsOfReport.includes(item.post_id),
-      );
-    } else {
-      currentPostList = data.postList;
+    const existingCommentList = data.postList
+      .filter((item) => reportsCommentsIdList.includes(Number(item.post_id)))
+      .map((item) => {
+        const currentComment = reportsCommentsList.find(
+          (comment) => comment.comment.post.id === Number(item.post_id),
+        );
+        return {
+          ...item,
+          commentId: currentComment.comment.id,
+        };
+      });
+
+    //   TODO оптимизировать и вернуть результат вместе с результатом на 197 строке
+    for (const item of existingCommentList) {
+      await this.commentService.patchCommentText(item.commentId, item.comment);
     }
+
+    const newPostList = data.postList.filter((item) => {
+      return !reportsCommentsIdList.includes(Number(item.post_id));
+    });
 
     return await this.commentService.createCommentList({
       userId,
-      postList: currentPostList,
+      postList: newPostList,
     });
   }
 

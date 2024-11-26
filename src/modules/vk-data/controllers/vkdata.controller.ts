@@ -22,7 +22,6 @@ export class VkDataController {
   constructor(
     private readonly vkDataService: VkDataService,
     private readonly userService: UserService,
-    private readonly userGroupService: UserGroupService,
   ) {}
 
   @Post('groups')
@@ -40,13 +39,6 @@ export class VkDataController {
         user.access_token,
         extended,
       );
-      // NOTE для тестирования
-      // TODO удалить после проверки работоспособности
-
-      const groupList = await this.vkDataService.saveGroupList(
-        data.response.items.map((item) => item),
-      );
-      await this.userGroupService.createUserGroupList(user, groupList);
 
       return data;
     } catch (error) {
