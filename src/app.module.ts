@@ -14,6 +14,7 @@ import { WorkSpaceModule } from './modules-render/work-space/work-space.module';
 import { HomeModule } from './modules-render/home/home.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './modules/login/login.module';
+import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { LoginModule } from './modules/login/login.module';
       },
     }),
     LoginModule,
+    ScanApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
