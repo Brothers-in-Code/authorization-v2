@@ -70,6 +70,14 @@
         - "apps/old"
         - "apps/current"
 
+    - name: Copy necessary files
+      ansible.builtin.copy:
+        src: ./server-files/restart.sh
+        dest: /home/{{ username }}/apps/restart.sh
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0744'
+
     - name: Add NodeSource repository
       shell: curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       args:
