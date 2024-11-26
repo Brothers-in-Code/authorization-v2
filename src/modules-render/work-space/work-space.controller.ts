@@ -114,9 +114,7 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
-  //   NOTE продумать как получать из getGroupList все записи
-  //   FIX likesMin, viewsMin - сделать по умолчанию 0 или null  (ошибка: The specified value "NaN" cannot be parsed, or is out of range.)
-  //   NOTE проверить как сохраняются комментарии (должно быть update, если такой пост в отчет добавлен)
+  // TODO   NOTE проверить как сохраняются комментарии (должно быть update, если такой пост в отчет добавлен)
   @Get('work-space/posts')
   @Render('pages/posts')
   async renderPosts(
@@ -184,6 +182,7 @@ export class WorkSpaceController {
             body.reportName,
             body.reportDescription,
           );
+
           reportId = newReport.id;
           await this.workSpaceService.addReportToUser(
             Number(userId),

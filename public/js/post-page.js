@@ -45,10 +45,6 @@
 
     const selectReport = document.getElementById('selectReport');
 
-    const btnSubmitReportPostModal = document.getElementById(
-      'submitReportPostModal',
-    );
-
     if (checkboxNewReportPostModal) {
       isNewReportPostModal.addEventListener('click', () => {
         if (checkboxNewReportPostModal.checked) {
