@@ -38,6 +38,20 @@ export class ReportCommentService {
     return insertQuery;
   }
 
+  async getReportsCommentList(reportId: number): Promise<ReportComment[]> {
+    const report = await this.reportService.findOne(reportId);
+    if (!report) {
+      throw new Error(`Report with ID ${reportId} not found.`);
+    }
+
+    const result = await this.reportCommentRepository.find({
+      where: { report: { id: reportId } },
+      relations: ['comment', 'comment.post'],
+    });
+
+    return result;
+  }
+
   async checkCommentsOfReport(
     reportId: number,
     postIdList: number[],
@@ -51,8 +65,8 @@ export class ReportCommentService {
       .where('r.id = :reportId', { reportId })
       .andWhere('p.id IN (:...postIdList)', { postIdList })
       .getRawMany();
-
-    return result.map((row) => row.id);
+    // NOTE fix добавление существующего поста в отчет вместо обновления - ЗДЕСЬ РАБОТАЕТ ШТАТНО
+    return result.map((row) => Number(row.id));
   }
 
   async deleteComment(reportId: number, commentId: number) {

@@ -129,6 +129,7 @@ export class PostService {
     };
   }
 
+  //   TODO удалить в будущем (закомичено 14.11.2024)
   //   async createPost(postParams: {
   //     group_vkid: number;
   //     post_vkid: number;

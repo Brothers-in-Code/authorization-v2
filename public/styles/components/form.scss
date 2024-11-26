@@ -49,9 +49,16 @@
   .form-select--report {
     max-width: 50%;
   }
+
   .form-check-label {
     flex-basis: 100%;
     margin-bottom: 0.4rem;
+
+    &--inline {
+      flex-basis: none;
+      width: 100%;
+      max-width: 50%;
+    }
   }
   legend {
     margin-bottom: 0.6rem;
@@ -92,4 +99,12 @@ textarea[disabled] {
 
 .form-check-input {
   cursor: pointer;
+}
+
+.shameless-wrapper-plus {
+  align-self: flex-end;
+  padding-block: 0.75rem;
+  .form-check-label {
+    margin: 0;
+  }
 }

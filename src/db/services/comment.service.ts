@@ -11,7 +11,7 @@ export class CommentService {
   ) {}
 
   private readonly logger = new Logger(CommentService.name);
-
+  // NOTE здесь есть только insert. Надо разделить существующие комменты и новые . Обрабатывать соответственно
   async createCommentList(data: {
     userId: number;
     postList: { post_id: number; comment: string }[];
