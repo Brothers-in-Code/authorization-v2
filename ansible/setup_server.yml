@@ -54,22 +54,19 @@
         group: root
         mode: 0440
 
-    - name: Install nvm
-      become: true
-      become_user: genry_bolit
-      shell: >
-        curl https://raw.githubusercontent.com/creationix/nvm/v0.7.0/install.sh | sh
-        creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
+    - name: Add NodeSource repository
+      shell: curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+      args:
+        executable: /bin/bash
 
-    - name: Install node and set version
-      become: true
-      become_user: genry_bolit
-      shell: >
-        /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 20 && nvm alias default 20"
-        creates=/home/{{ ansible_user_id }}/.nvm/alias
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
 
-    - name: Install pm2
-      become: true
-      become_user: genry_bolit
-      shell: >
-        npm i -g pm2
+    - name: "Install NPM-distributed command-line tools"
+      npm:
+        global: yes
+        name: "{{ item }}"
+      with_items:
+        - pm2

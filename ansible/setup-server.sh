@@ -5,4 +5,4 @@
 PASSWORD=$1
 
 echo "pass $PASSWORD"
-#ansible-playbook setup_server.yml -i inventory.ini --extra-vars "user_password=$PASSWORD" --ask-pass
+ansible-playbook setup_server.yml -i inventory.ini --extra-vars "user_password=$PASSWORD" --ask-pass
