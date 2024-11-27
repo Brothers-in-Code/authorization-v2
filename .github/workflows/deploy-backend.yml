@@ -41,7 +41,7 @@ jobs:
           username: ${{ vars.CRON_SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ vars.CRON_SSH_PORT }}
-          script: "rm -rf /home/genry_bolit/nest/old"
+          script: "rm -rf /home/${{ vars.CRON_SSH_USER }}/apps/old"
 
       - name: Copy files to serve
         uses: appleboy/scp-action@v0.1.7
