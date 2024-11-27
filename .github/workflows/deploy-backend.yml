@@ -51,13 +51,13 @@ jobs:
       - name: Copy files to cron
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ env.CRON_SSH_HOST }}
-          username: ${{ env.CRON_SSH_USER }}
+          host: ${{ vars.CRON_SSH_HOST }}
+          username: ${{ vars.CRON_SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ env.CRON_SSH_PORT }}
+          port: ${{ vars.CRON_SSH_PORT }}
           rm: true
           source: "ecosystem.config.js,package.json,srt/*,src/db/migrations/*,public/*,dist/*,views/*,node_modules/*"
-          target: "/home/${{ env.CRON_SSH_USER }}/apps/next"
+          target: "/home/${{ vars.CRON_SSH_USER }}/apps/next"
 
       - name: Copy .env
         uses: appleboy/ssh-action@v1.0.3
@@ -71,11 +71,11 @@ jobs:
       - name: Copy .env on cron
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.CRON_SSH_HOST }}
-          username: ${{ env.CRON_SSH_USER }}
+          host: ${{ vars.CRON_SSH_HOST }}
+          username: ${{ vars.CRON_SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ env.CRON_SSH_PORT }}
-          script: "cp /home/${{ env.CRON_SSH_USER }}/apps/.env /home/${{ env.CRON_SSH_USER }}/apps/next/.env"
+          port: ${{ vars.CRON_SSH_PORT }}
+          script: "cp /home/${{ vars.CRON_SSH_USER }}/apps/.env /home/${{ vars.CRON_SSH_USER }}/apps/next/.env"
 
       - name: Move folders
         uses: appleboy/ssh-action@v1.0.3
@@ -89,11 +89,11 @@ jobs:
       - name: Move folders on cron
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.CRON_SSH_HOST }}
-          username: ${{ env.CRON_SSH_USER }}
+          host: ${{ vars.CRON_SSH_HOST }}
+          username: ${{ vars.CRON_SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ env.CRON_SSH_PORT }}
-          script: "mv /home/${{ env.CRON_SSH_USER }}/apps/current /home/${{ env.CRON_SSH_USER }}/apps/old && mv /home/${{ env.CRON_SSH_USER }}/apps/next /home/${{ env.CRON_SSH_USER }}/apps/current"
+          port: ${{ vars.CRON_SSH_PORT }}
+          script: "mv /home/${{ vars.CRON_SSH_USER }}/apps/current /home/${{ vars.CRON_SSH_USER }}/apps/old && mv /home/${{ vars.CRON_SSH_USER }}/apps/next /home/${{ vars.CRON_SSH_USER }}/apps/current"
 
       - name: Restart server
         uses: appleboy/ssh-action@v1.0.3
@@ -107,8 +107,8 @@ jobs:
       - name: Restart cron server
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.CRON_SSH_HOST }}
-          username: ${{ env.CRON_SSH_USER }}
+          host: ${{ vars.CRON_SSH_HOST }}
+          username: ${{ vars.CRON_SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ env.CRON_SSH_PORT }}
-          script: "/home/${{ env.CRON_SSH_USER }}/apps/restart.sh"
+          port: ${{ vars.CRON_SSH_PORT }}
+          script: "/home/${{ vars.CRON_SSH_USER }}/apps/restart.sh"
