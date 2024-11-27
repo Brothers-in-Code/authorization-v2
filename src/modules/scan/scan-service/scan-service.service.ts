@@ -46,7 +46,7 @@ export class ScanService implements OnModuleInit {
       this.logger.log('Scan was not enabled');
       return;
     }
-    this.logger.log('Scan was enabled at ${config.schedule}`)');
+    this.logger.log(`Scan was enabled at ${config.schedule})`);
 
     const job = new CronJob(config.schedule, async () => {
       this.logger.log('Scan was run');
