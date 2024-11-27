@@ -6,7 +6,9 @@ import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['error', 'log', 'warn'],
+  });
 
   app.enableCors({
     // origin: true,
