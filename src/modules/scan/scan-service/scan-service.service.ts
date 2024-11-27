@@ -54,6 +54,7 @@ export class ScanService implements OnModuleInit {
     });
 
     this.schedulerRegistry.addCronJob('scan-groups', job);
+    job.start();
   }
 
   async run() {
