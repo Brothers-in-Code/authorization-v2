@@ -46,6 +46,9 @@ jobs:
           source: "ecosystem.config.js,package.json,srt/*,src/db/migrations/*,public/*,dist/*,views/*,node_modules/*"
           target: "/home/${{ secrets.SSH_USERNAME }}/nest/next"
 
+      - name: Debug
+        run: echo "${{ secrets.CRON_SSH_USER }}@${{ secrets.CRON_SSH_HOST }}:${{ secrets.CRON_SSH_PORT }}"
+
       - name: Copy files to cron
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -84,7 +87,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: "mv /home/genry_bolit/nest/current /home/genry_bolit/nest/old && mv /home/genry_bolit/nest/next /home/genry_bolit/nest/current"
 
-      - name: Move folders
+      - name: Move folders on cron
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.CRON_SSH_HOST }}
@@ -102,7 +105,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: "/home/genry_bolit/nest/restart.sh"
 
-      - name: Restart server
+      - name: Restart cron server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.CRON_SSH_HOST }}
