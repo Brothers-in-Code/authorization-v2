@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4  # Updated to v3
 
-      - name: Debug
-        run: echo "${{ vars.CRON_SSH_USER }} -> ${{ vars.CRON_SSH_HOST }} -> ${{ vars.CRON_SSH_PORT }}"
-
       - name: Use Node.js 22
         uses: actions/setup-node@v4  # Updated to v3
         with:
