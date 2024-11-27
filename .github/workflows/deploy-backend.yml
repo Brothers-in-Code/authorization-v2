@@ -13,12 +13,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4  # Updated to v3
 
+      - name: Debug
+        run: echo "$CRON_SSH_USER -> $CRON_SSH_HOST -> $env.CRON_SSH_PORT"
+
       - name: Use Node.js 22
         uses: actions/setup-node@v4  # Updated to v3
         with:
           node-version: 22
           #registry-url: https://npm.pkg.github.com/
-
 
       - name: Install packages
         run: npm ci
@@ -45,9 +47,6 @@ jobs:
           rm: true
           source: "ecosystem.config.js,package.json,srt/*,src/db/migrations/*,public/*,dist/*,views/*,node_modules/*"
           target: "/home/${{ secrets.SSH_USERNAME }}/nest/next"
-
-      - name: Debug
-        run: echo "${{ env.CRON_SSH_USER }}@${{ env.CRON_SSH_HOST }}:${{ env.CRON_SSH_PORT }}"
 
       - name: Copy files to cron
         uses: appleboy/scp-action@v0.1.7
