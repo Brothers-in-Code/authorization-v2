@@ -329,7 +329,9 @@ export class ScanService implements OnModuleInit {
 
     if (!result[0]['result']) {
       this.logger.error(
-        `func: executeQuery. Ошибка выполнения запроса к БД: ${result[0]['message']}`,
+        `func: executeQuery. Ошибка выполнения запроса к БД: ${JSON.stringify({
+          result,
+        })}`,
       );
       throw new Error('func: executeQuery. Ошибка выполнения запроса к БД');
     }
