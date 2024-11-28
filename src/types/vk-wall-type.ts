@@ -1,4 +1,3 @@
-// TODO доделать все типы
 type VKWallType = {
   response: {
     count: number;

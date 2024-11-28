@@ -1,14 +1,21 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as cookieParser from 'cookie-parser';
+import * as bodyParser from 'body-parser';
+
+import { join } from 'path';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'log', 'warn'],
   });
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
     // origin: true,
@@ -17,6 +24,9 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+  // Увеличиваем лимит размера тела запроса
+  app.use(bodyParser.json({ limit: '200mb' }));
+  app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }));
 
   app.setViewEngine('ejs');
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
