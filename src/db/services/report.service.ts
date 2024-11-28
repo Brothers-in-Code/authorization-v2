@@ -82,6 +82,7 @@ export class ReportService {
   }
 
   async getReportData(reportId: number): Promise<GetReportDataOutputType> {
+    this.logger.debug('reportId', reportId);
     const queryBuilder = this.reportRepository.createQueryBuilder('r');
     const resultReport = await queryBuilder
       .select([
@@ -99,7 +100,7 @@ export class ReportService {
       .innerJoin('report_comment', 'rc', 'rc.report_id = r.id')
       .innerJoin('rc.comment', 'c', 'rc.comment_id= c.id')
       .innerJoin('c.post', 'p')
-      .innerJoin('group', 'g', 'p.group_id = g.id')
+      .innerJoin('vk_group', 'g', 'p.group_id = g.id')
       .where('r.id = :reportId', { reportId })
       .getRawMany();
 
@@ -110,10 +111,13 @@ export class ReportService {
     }
 
     if (resultReport.length === 0) {
-      this.logger.log(
+      this.logger.warn(
         `func: getReportData; Данные для отчета номер ${reportId} не найдены`,
       );
-      //   TODO вернуть report и commentList с пустыми данными
+      return {
+        report: null,
+        commentList: [],
+      };
     }
 
     const report = {

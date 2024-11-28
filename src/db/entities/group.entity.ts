@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../entities/abstract.entity';
 
-@Entity()
+@Entity('vk_group')
 export class Group extends AbstractEntity {
   @Column()
   vkid: number;
