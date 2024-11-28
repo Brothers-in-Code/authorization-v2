@@ -100,7 +100,7 @@ export class ScanApiService {
                 user_group ug
             JOIN user u ON
                 ug.user_id = u.id
-            JOIN \`group\` g ON
+            JOIN vk_group g ON
                 ug.group_id = g.id
               WHERE u.deleted_at is NULL AND g.deleted_at is NULL and ug.is_scan = 1
             )

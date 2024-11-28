@@ -197,7 +197,7 @@ export class ScanService implements OnModuleInit {
   private readonly VK_API = 'https://api.vk.com/method';
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
-  private readonly SCAN_API = `https://${this.HOST}/api/scan/`;
+  private readonly SCAN_API = `http://${this.HOST}/api/scan/`;
   private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
