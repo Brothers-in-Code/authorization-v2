@@ -17,6 +17,7 @@ import { GetAccessTokenDto } from './dto/get-access-token.dto';
 
 import { VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
+import { PostParamsListDto } from './dto/post-params-list.dto';
 
 @Controller('api/scan')
 export class ScanApiController {
@@ -55,7 +56,7 @@ export class ScanApiController {
       );
 
       await this.scanApiService.saveUser(
-        body.user_id,
+        body.user_vkid,
         response.access_token,
         response.refresh_token,
         body.device_id,
@@ -71,6 +72,7 @@ export class ScanApiController {
         },
       };
     } catch (error) {
+      this.logger.debug(error);
       if (error instanceof VK_AUTH_Error) {
         throw new HttpException(
           {
@@ -97,8 +99,61 @@ export class ScanApiController {
         throw new HttpException(
           {
             error: {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              status: HttpStatus.BAD_REQUEST,
               message: `ошибка сохранения user ${error.message}`,
+              code: 'internal_error',
+            },
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        throw new HttpException(
+          {
+            error: {
+              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              message: `неизвестная ошибка получения access_token! ${error.message}`,
+              code: 'internal_error',
+            },
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+  }
+
+  /**
+   * @description Сохранение постов
+   * @function savePostList
+   * @param body
+   * @property post_vkid: number
+   * @property likes:  number
+   * @property views:  number
+   * @property comments:  number
+   * @property timestamp_post:  number
+   * @property json:  string
+   */
+  @Post('posts')
+  async savePostList(
+    @Body()
+    body: PostParamsListDto,
+  ): Promise<{ success: ResponseInfoType }> {
+    const { groupVKId, postParamsList } = body;
+    try {
+      await this.scanApiService.savePostList(groupVKId, postParamsList);
+      return {
+        success: {
+          status: HttpStatus.OK,
+          message: 'посты сохранены',
+          code: 'success',
+        },
+      };
+    } catch (error) {
+      if (error instanceof DatabaseServiceError) {
+        throw new HttpException(
+          {
+            error: {
+              status: HttpStatus.INTERNAL_SERVER_ERROR,
+              message: error.message,
               code: 'internal_error',
             },
           },
@@ -109,7 +164,7 @@ export class ScanApiController {
           {
             error: {
               status: HttpStatus.INTERNAL_SERVER_ERROR,
-              message: `неизвестная ошибка получения access_token! ${error.message}`,
+              message: `неизвестная ошибка сохранения постов! ${error.message}`,
               code: 'internal_error',
             },
           },

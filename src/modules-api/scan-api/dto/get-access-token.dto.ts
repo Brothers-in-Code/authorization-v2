@@ -4,7 +4,7 @@ import { IsNumber, IsString } from 'class-validator';
 export class GetAccessTokenDto {
   @Type(() => Number)
   @IsNumber()
-  user_id: number;
+  user_vkid: number;
   @IsString()
   refresh_token: string;
   @IsString()

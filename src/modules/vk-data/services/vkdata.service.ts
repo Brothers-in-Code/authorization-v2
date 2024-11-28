@@ -115,6 +115,7 @@ export class VkDataService {
     return response.data;
   }
 
+  //   NOTE перенес в scan
   async getWallPrivetGroup({
     access_token,
     owner_id,
@@ -190,6 +191,8 @@ export class VkDataService {
     return response.data;
   }
 
+  //   NOTE перенес в scan
+  // TODO удалить
   async savePostList(
     group: Group,
     postParamsList: {

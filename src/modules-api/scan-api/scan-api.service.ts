@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+
+import { GroupService } from 'src/db/services/group.service';
+import { PostService } from 'src/db/services/post.service';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { DataSource } from 'typeorm';
@@ -18,6 +21,8 @@ export class ScanApiService {
     @InjectDataSource()
     private readonly dataSource: DataSource,
     private readonly authService: AuthService,
+    private postService: PostService,
+    private groupService: GroupService,
   ) {}
 
   private readonly logger = new Logger(ScanApiService.name);
@@ -53,6 +58,30 @@ export class ScanApiService {
         );
       }
     }
+  }
+
+  async savePostList(
+    groupVKId: number,
+    postParamsList: {
+      post_vkid: number;
+      likes: number;
+      views: number;
+      comments: number;
+      timestamp_post: number;
+      json: string;
+    }[],
+  ) {
+    const group = await this.groupService.findOne(groupVKId);
+    const postList = await this.postService.createOrUpdatePostList(
+      group,
+      postParamsList,
+    );
+    if (!postList) {
+      throw new DatabaseServiceError(
+        'func: savePostList. Ошибка сохранения постов',
+      );
+    }
+    return postList;
   }
 
   async dataScanQuery(): Promise<ExecuteQueryOutputType[]> {
