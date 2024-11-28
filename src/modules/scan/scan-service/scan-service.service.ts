@@ -61,8 +61,10 @@ export class ScanService implements OnModuleInit {
   onModuleInit(): void {
     const config = this.configService.getOrThrow('cron');
     if (!config.enabled) {
+      this.logger.log('Scan was not enabled');
       return;
     }
+    this.logger.log(`Scan was enabled at ${config.schedule})`);
 
     const job = new CronJob(config.schedule, async () => {
       this.logger.log('Scan was run');
@@ -70,6 +72,7 @@ export class ScanService implements OnModuleInit {
     });
 
     this.schedulerRegistry.addCronJob('scan-groups', job);
+    job.start();
   }
 
   async run() {

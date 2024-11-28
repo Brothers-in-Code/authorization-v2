@@ -1,0 +1,93 @@
+- name: Setup new user on server
+  hosts: api
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Fail if username is not defined
+      ansible.builtin.fail:
+        msg: "The variable 'username' must be defined."
+      when: username is not defined
+
+    - name: Fail if user_password is not defined
+      ansible.builtin.fail:
+        msg: "The variable 'user_password' must be defined."
+      when: user_password is not defined
+
+    - name: Fail if ssh_keys is not defined
+      ansible.builtin.fail:
+        msg: "The variable 'ssh_keys' must be defined and contain at least one key."
+      when: ssh_keys is not defined or ssh_keys | length == 0
+
+  tasks:
+    - name: Ensure the new user exists with a password
+      ansible.builtin.user:
+        name: "{{ username }}"
+        comment: "New user for administration"
+        create_home: yes
+        shell: /bin/bash
+        password: "{{ user_password | password_hash('sha512') }}"
+
+    - name: Add the user to sudo group
+      ansible.builtin.user:
+        name: "{{ username }}"
+        groups: sudo
+        append: yes
+
+    - name: Authorize SSH key for the new user
+      ansible.builtin.file:
+        path: /home/{{ username }}/.ssh
+        state: directory
+        mode: 0700
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+    - name: Add multiple public keys to authorized_keys
+      ansible.builtin.copy:
+        dest: /home/{{ username }}/.ssh/authorized_keys
+        content: "{{ ssh_keys | join('\n') }}"
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: 0600
+
+    - name: Configure passwordless sudo
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/{{ username }}
+        content: "{{ username }} ALL=(ALL) NOPASSWD:ALL"
+        owner: root
+        group: root
+        mode: 0440
+
+    - name: Create folders structure
+      ansible.builtin.file:
+        path: /home/{{ username }}/{{ item }}
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+      with_items:
+        - "apps"
+        - "apps/old"
+        - "apps/current"
+
+    - name: Copy necessary files
+      ansible.builtin.copy:
+        src: ./server-files/restart.sh
+        dest: /home/{{ username }}/apps/restart.sh
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0744'
+
+    - name: Add NodeSource repository
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+        apt install nodejs -y
+      args:
+        executable: /bin/bash
+
+    - name: "Install NPM-distributed command-line tools"
+      npm:
+        global: yes
+        name: "{{ item }}"
+      with_items:
+        - pm2
