@@ -55,6 +55,7 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
           migrationsRun: true,
           autoLoadEntities: true,
           migrationsTransactionMode: 'all',
+          multipleStatements: true,
           logging: false,
         };
       },
