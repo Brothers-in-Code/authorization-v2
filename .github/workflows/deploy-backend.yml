@@ -101,20 +101,20 @@ jobs:
           port: ${{ vars.CRON_SSH_PORT }}
           script: "mv /home/${{ vars.CRON_SSH_USER }}/apps/current /home/${{ vars.CRON_SSH_USER }}/apps/old && mv /home/${{ vars.CRON_SSH_USER }}/apps/next /home/${{ vars.CRON_SSH_USER }}/apps/current"
 
-      - name: Restart server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DESTINATION_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: "/home/genry_bolit/nest/restart.sh"
-
-      - name: Restart cron server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ vars.CRON_SSH_HOST }}
-          username: ${{ vars.CRON_SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ vars.CRON_SSH_PORT }}
-          script: "/home/${{ vars.CRON_SSH_USER }}/apps/restart.sh"
+#      - name: Restart server
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ secrets.DESTINATION_HOST }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          port: ${{ secrets.SSH_PORT }}
+#          script: "/home/genry_bolit/nest/restart.sh"
+#
+#      - name: Restart cron server
+#        uses: appleboy/ssh-action@v1.0.3
+#        with:
+#          host: ${{ vars.CRON_SSH_HOST }}
+#          username: ${{ vars.CRON_SSH_USER }}
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          port: ${{ vars.CRON_SSH_PORT }}
+#          script: "/home/${{ vars.CRON_SSH_USER }}/apps/restart.sh"

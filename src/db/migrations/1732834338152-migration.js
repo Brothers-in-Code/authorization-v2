@@ -2,7 +2,6 @@ const { MigrationInterface, QueryRunner } = require('typeorm');
 
 module.exports = class Migration1732834338152 {
   name = 'Migration1732834338152';
-  transaction = true;
 
   async up(queryRunner) {
     await queryRunner.query(`ALTER TABLE \`user_group\` DROP FOREIGN KEY \`FK_bb9982562cca83afb76c0ddc0d6\``);
