@@ -25,7 +25,6 @@ import {
   ResponseInfoType,
   SuccessResponseType,
 } from 'src/types/api-response-type';
-import e from 'express';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
@@ -200,8 +199,8 @@ export class ScanService implements OnModuleInit {
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
   private readonly PROTOCOL = this.configService.get('app.protocol');
-  //   private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
-  private readonly SCAN_API = `${this.PROTOCOL}://localhost/api/scan/`;
+  private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
+  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost/api/scan/`;
   private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
