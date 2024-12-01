@@ -82,7 +82,6 @@ export class ReportService {
   }
 
   async getReportData(reportId: number): Promise<GetReportDataOutputType> {
-    this.logger.debug('reportId', reportId);
     const queryBuilder = this.reportRepository.createQueryBuilder('r');
     const resultReport = await queryBuilder
       .select([

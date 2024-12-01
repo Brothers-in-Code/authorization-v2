@@ -49,7 +49,6 @@ export class ScanApiController {
     data: { access_token: string };
     success: ResponseInfoType;
   }> {
-    this.logger.debug('getAccessToken');
     try {
       const response = await this.authService.refreshAccessToken(
         body.refresh_token,
@@ -73,7 +72,6 @@ export class ScanApiController {
         },
       };
     } catch (error) {
-      this.logger.debug(error);
       if (error instanceof VK_AUTH_Error) {
         throw new HttpException(
           {

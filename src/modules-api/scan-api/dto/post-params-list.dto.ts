@@ -6,6 +6,7 @@ import {
   ValidateNested,
   IsArray,
   IsNotEmpty,
+  IsObject,
 } from 'class-validator';
 
 export class PostParamsListDto {
@@ -46,9 +47,9 @@ class PostParamsDto {
   @IsNotEmpty()
   timestamp_post: number;
 
-  @IsString()
+  @IsObject()
   @IsNotEmpty()
-  json: string;
+  json: object;
 
   //   NOTE пока не валидирую - сомневаюсь, что будет правильно работать
   //   @Type(() => PostType)

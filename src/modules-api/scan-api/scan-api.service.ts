@@ -68,7 +68,7 @@ export class ScanApiService {
       views: number;
       comments: number;
       timestamp_post: number;
-      json: string;
+      json: object;
     }[],
   ) {
     const group = await this.groupService.findOne(groupVKId);
