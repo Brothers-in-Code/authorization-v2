@@ -349,7 +349,7 @@
                       <% let imgPath %>
                       <!-- prettier-ignore -->
                       <% if (item?.post.attachments?.length > 0) {%>
-                      <% imgPath = item.post.attachments[0]?.photo?.orig_photo?.url || '' %>
+                      <% imgPath = item?.post.attachments[0]?.photo?.orig_photo?.url || '' %>
                       <% } else { %>
                       <% imgPath = '' %>
                       <% } %>
@@ -359,7 +359,7 @@
                         data-bs-title="Посмотреть пост"
                         data-ws-img-path="<%= imgPath %>"
                         data-ws-group-name="<%= item.group.name %>"
-                        data-ws-text="<%= item.post.text %>"
+                        data-ws-text="<%= item?.post.text %>"
                       >
                         <svg class="sprite-icon">
                           <use xlink:href="#zoom-in"></use>
@@ -371,12 +371,12 @@
                             <svg class="sprite-icon">
                               <use xlink:href="#calendar2-date"></use>
                             </svg>
-                            <%= new Date(item.post.date * 1000).toLocaleDateString() %>
+                            <%= new Date(item?.post.date * 1000).toLocaleDateString() %>
                           </div>
                         </div>
                       </div>
                       <strong><%= item.group.name %></strong>
-                      <div><%= item.post.text.slice(0, 200) %>...</div>
+                      <div><%= item?.post?.text?.slice(0, 200) %>...</div>
                     </div>
                   </td>
 
@@ -386,7 +386,7 @@
                         <svg class="sprite-icon">
                           <use xlink:href="#heart-fill"></use>
                         </svg>
-                        <%= item.post.likes?.count.toLocaleString() || 0 %>
+                        <%= item?.post.likes?.count.toLocaleString() || 0 %>
                       </div>
                     </div>
                   </td>
@@ -396,7 +396,7 @@
                         <svg class="sprite-icon">
                           <use xlink:href="#eye-fill"></use>
                         </svg>
-                        <%= item.post.views?.count.toLocaleString() || 0 %>
+                        <%= item?.post.views?.count.toLocaleString() || 0 %>
                       </div>
                     </div>
                   </td>
@@ -406,7 +406,7 @@
                         <svg class="sprite-icon">
                           <use xlink:href="#chat-right-text-fill"></use>
                         </svg>
-                        <%= item.post.comments?.count.toLocaleString() || 0 %>
+                        <%= item?.post.comments?.count.toLocaleString() || 0 %>
                       </div>
                     </div>
                   </td>

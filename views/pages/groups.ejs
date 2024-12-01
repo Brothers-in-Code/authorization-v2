@@ -3,6 +3,11 @@
   <%- include('../components/head.ejs', {title: data.pageTitle}) %>
   <body>
     <div id="root">
+        <% if (data?.currentEnv === 'dev') {%>
+            <div class="dev-mode">
+                <div>Режим разработки</div>
+            </div>
+        <% } %>
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>

@@ -83,6 +83,8 @@ export class ScanService implements OnModuleInit {
     const limitTimestamp = this.calcLimitTimestamp();
 
     const queryResultList = await this.getDataForScanning();
+    this.logger.debug(typeof queryResultList);
+
     if (queryResultList) {
       for (const queryResult of queryResultList) {
         const tokenResult = await this.getNewAccessToken(
@@ -197,7 +199,8 @@ export class ScanService implements OnModuleInit {
   private readonly VK_API = 'https://api.vk.com/method';
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
-  private readonly SCAN_API = `https://${this.HOST}/api/scan/`;
+  private readonly PROTOCOL = this.configService.get('app.protocol');
+  private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
   private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
@@ -215,10 +218,16 @@ export class ScanService implements OnModuleInit {
             refresh_token,
             device_id,
           },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
         );
 
       return response.data;
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof BadRequestException) {
         this.logger.error(`ошибка получения access_token! ${error.message}`);
         return null;
@@ -229,19 +238,26 @@ export class ScanService implements OnModuleInit {
         this.logger.error(
           `неизвестная ошибка получения access_token! ${error.message}`,
         );
-        throw new Error(`неизвестная ошибка получения access_token! ${error}`);
+        throw new Error(
+          `неизвестная ошибка получения access_token! ${error.message} ${error}`,
+        );
       }
     }
   }
 
   async getDataForScanning() {
     try {
-      const response = await this.httpService.axiosRef.get<{
-        data: ExecuteQueryOutputType[];
-      }>(`${this.SCAN_API}data`);
-      return response.data.data;
+      const response = await this.httpService.axiosRef.get<{ data: string }>(
+        `${this.SCAN_API}data`,
+      );
+      // TODO сделать валидацию полученных данных
+      const parsedData = (await JSON.parse(
+        response.data.data,
+      )) as ExecuteQueryOutputType[];
+      return parsedData;
     } catch (error) {
       this.logger.error(error);
+      throw new Error(`ошибка получения данных для сканирования! ${error}`);
     }
   }
 

@@ -16,6 +16,7 @@
 @import './mixins/components-mixins';
 @import './base';
 // components
+@import './components/dev-mode.scss';
 @import './components/nav.scss';
 @import './components/table.scss';
 @import './components/pagination.scss';
