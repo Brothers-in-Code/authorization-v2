@@ -201,7 +201,7 @@ export class VkDataService {
       views: number;
       comments: number;
       timestamp_post: number;
-      json: string;
+      json: object;
     }[],
   ) {
     const postList = await this.postService.createOrUpdatePostList(

@@ -263,7 +263,6 @@ export class WorkSpaceController {
   @Get('work-space/reports/:reportId')
   @Render('pages/one-report.ejs')
   async renderReport(@Request() req, @Param('reportId') reportId: string) {
-    this.logger.debug(reportId);
     const userId = req.user.id;
     const userAvatar = req.user.avatar;
 

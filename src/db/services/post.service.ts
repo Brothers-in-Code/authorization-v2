@@ -24,7 +24,7 @@ type PostParamsType = {
   views: number;
   comments: number;
   timestamp_post: number;
-  json: string;
+  json: object;
 };
 
 @Injectable()
