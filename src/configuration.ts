@@ -1,6 +1,7 @@
 export function configuration() {
   return {
     app: {
+      currentEnv: process.env.CURRENT_ENV,
       frontend: process.env.FRONT_REDIRECT_PATH,
       encryptKey: process.env.APP_ENCRYPT_KEY,
       jwtSecret: process.env.APP_JWT_SECRET,

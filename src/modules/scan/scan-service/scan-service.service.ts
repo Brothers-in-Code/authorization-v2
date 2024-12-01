@@ -229,7 +229,9 @@ export class ScanService implements OnModuleInit {
         this.logger.error(
           `неизвестная ошибка получения access_token! ${error.message}`,
         );
-        throw new Error(`неизвестная ошибка получения access_token! ${error}`);
+        throw new Error(
+          `неизвестная ошибка получения access_token! ${error.message} ${error}`,
+        );
       }
     }
   }

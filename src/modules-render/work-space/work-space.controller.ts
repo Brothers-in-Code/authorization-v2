@@ -20,12 +20,14 @@ import { UserGroupService } from 'src/db/services/user-group.service';
 import { UserGuard } from 'src/modules/user-guard/user.guard';
 import { Response } from 'express';
 import { UnauthorizedExceptionFilter } from 'src/shared/filter/unauthorized-exception/unauthorized-exception.filter';
+import { ConfigService } from '@nestjs/config';
 
 @UseGuards(UserGuard)
 @UseFilters(UnauthorizedExceptionFilter)
 @Controller()
 export class WorkSpaceController {
   constructor(
+    private configService: ConfigService,
     private readonly workSpaceService: WorkSpaceService,
     private readonly userGroupService: UserGroupService,
   ) {}
@@ -63,6 +65,7 @@ export class WorkSpaceController {
       },
     );
     dataToRender['userAvatar'] = userAvatar;
+    dataToRender['userAvatar'] = this.configService.get('app.currentEnv');
 
     return { data: dataToRender };
   }
