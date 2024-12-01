@@ -44,11 +44,12 @@ export class ScanApiController {
   @Post('access-token')
   async getAccessToken(
     @Body()
-    body: GetAccessTokenDto,
+    body: GetAccessTokenDto, //
   ): Promise<{
     data: { access_token: string };
     success: ResponseInfoType;
   }> {
+    this.logger.debug('getAccessToken');
     try {
       const response = await this.authService.refreshAccessToken(
         body.refresh_token,
