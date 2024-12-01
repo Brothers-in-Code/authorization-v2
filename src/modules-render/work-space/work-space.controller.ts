@@ -87,6 +87,7 @@ export class WorkSpaceController {
     },
   ) {
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
     if (body.scanGroupStatus !== undefined) {
       await this.userGroupService.updateIsScanStatus(
         Number(userId),
@@ -113,7 +114,7 @@ export class WorkSpaceController {
         filterGroupByIdOrName: body.filterGroupByIdOrName,
       },
     );
-
+    dataToRender['userAvatar'] = userAvatar;
     return { data: dataToRender };
   }
 
@@ -133,6 +134,7 @@ export class WorkSpaceController {
     @Query('sortByComments') sortByComments: '0' | '1' | '2' | undefined,
   ) {
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
     const dataToRender = await this.workSpaceService.collectPostDataToRender(
       userId,
       {
@@ -147,6 +149,8 @@ export class WorkSpaceController {
         sortByComments,
       },
     );
+    dataToRender['userAvatar'] = userAvatar;
+
     return { data: dataToRender };
   }
 
@@ -175,7 +179,9 @@ export class WorkSpaceController {
     },
   ) {
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
     let message = '';
+
     try {
       if (body.reportId !== undefined || body.isNewReport) {
         let reportId: number;
@@ -229,6 +235,7 @@ export class WorkSpaceController {
     );
 
     dataToRender['message'] = message;
+    dataToRender['userAvatar'] = userAvatar;
 
     return { data: dataToRender };
   }
@@ -241,11 +248,14 @@ export class WorkSpaceController {
     @Query('limit') limit = 20,
   ) {
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
+
     const dataToRender =
       await this.workSpaceService.collectReportListDataToRender(userId, {
         offset,
         limit,
       });
+    dataToRender['userAvatar'] = userAvatar;
 
     return { data: dataToRender };
   }
@@ -255,6 +265,8 @@ export class WorkSpaceController {
   async renderReport(@Request() req, @Param('reportId') reportId: string) {
     this.logger.debug(reportId);
     const userId = req.user.id;
+    const userAvatar = req.user.avatar;
+
     const report = await this.workSpaceService.collectReportDataToRender(
       Number(reportId),
     );
@@ -262,6 +274,8 @@ export class WorkSpaceController {
       pageTitle: 'Отчет',
       report,
     };
+    dataToRender['userAvatar'] = userAvatar;
+
     return {
       data: dataToRender,
     };
@@ -270,6 +284,7 @@ export class WorkSpaceController {
   @Post('work-space/reports/:reportId')
   @Render('pages/one-report.ejs')
   async receiveReport(
+    @Request() req,
     @Param('reportId') reportId: string,
     @Body()
     body: {
@@ -277,9 +292,12 @@ export class WorkSpaceController {
       reportDescription: string;
     },
   ) {
+    const userAvatar = req.user.avatar;
+
     if (body) {
       await this.workSpaceService.updateReport(Number(reportId), body);
     }
+
     const report = await this.workSpaceService.collectReportDataToRender(
       Number(reportId),
     );
@@ -288,6 +306,8 @@ export class WorkSpaceController {
       report,
       message: 'Название и описание отчета обновлены',
     };
+    dataToRender['userAvatar'] = userAvatar;
+
     return {
       data: dataToRender,
     };
@@ -295,9 +315,11 @@ export class WorkSpaceController {
 
   @Patch('work-space/reports/:reportId')
   async updateComment(
+    @Request() req,
     @Param('reportId') reportId: string,
     @Body() body: { commentId: string; comment: string },
   ) {
+    const userAvatar = req.user.avatar;
     let message = '';
 
     const result = await this.workSpaceService.patchCommentText(
@@ -321,6 +343,7 @@ export class WorkSpaceController {
       pageTitle: 'Отчет',
       report,
     };
+    dataToRender['userAvatar'] = userAvatar;
 
     const htmlMainSection = await this.workSpaceService.renderMainOneReport({
       data: dataToRender,

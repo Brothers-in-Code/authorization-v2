@@ -42,7 +42,7 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          type: 'mysql',
+          type: 'mariadb',
           host: configService.get('db.host'),
           port: Number(configService.get('db.port')),
           username: configService.get('db.username'),
