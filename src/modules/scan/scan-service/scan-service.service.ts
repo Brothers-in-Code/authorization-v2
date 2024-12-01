@@ -358,7 +358,7 @@ export class ScanService implements OnModuleInit {
         views: item.views?.count || 0,
         comments: item.comments.count || 0,
         timestamp_post: item.date,
-        json: JSON.stringify(item),
+        json: item,
       };
     });
 
