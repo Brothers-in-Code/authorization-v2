@@ -1,5 +1,3 @@
-@import './libs/bootstrap/bootstrap.min.css';
-@import './libs/tabulator/tabulator.min.css';
 .page-layout {
   display: grid;
   grid-template-columns: auto 1fr;
