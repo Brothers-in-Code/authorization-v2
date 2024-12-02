@@ -162,6 +162,9 @@ export class ScanService implements OnModuleInit {
             break;
           }
         } catch (error) {
+          if (error.response && error.response.data) {
+            this.logger.error(error.response.data);
+          }
           if (error.response && error.response.status === 413) {
             errorsCounter++;
             this.logger.error(error);
@@ -228,6 +231,7 @@ export class ScanService implements OnModuleInit {
 
       return response.data;
     } catch (error) {
+      this.logger.warn(`api: ${this.SCAN_API}`);
       if (error.response && error.response.data) {
         this.logger.error(error.response.data);
       }
