@@ -1,5 +1,5 @@
 {
-  "proxy": "https://smm-toolkit.ru/",
+  "proxy": "http//:localhost:3000",
   "port": 3010,
 
   "files": ["public/styles/*.css", "views/**/*.ejs"],
