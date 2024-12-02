@@ -25,6 +25,7 @@ import {
   ResponseInfoType,
   SuccessResponseType,
 } from 'src/types/api-response-type';
+import { AxiosError } from 'axios';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
@@ -200,7 +201,7 @@ export class ScanService implements OnModuleInit {
   private readonly HOST = this.configService.get('app.host');
   private readonly PROTOCOL = this.configService.get('app.protocol');
   private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
-  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost/api/scan/`;
+  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
   private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
@@ -227,7 +228,9 @@ export class ScanService implements OnModuleInit {
 
       return response.data;
     } catch (error) {
-      this.logger.error(error);
+      if (error.response && error.response.data) {
+        this.logger.error(error.response.data);
+      }
       if (error instanceof BadRequestException) {
         this.logger.error(`ошибка получения access_token! ${error.message}`);
         return null;
