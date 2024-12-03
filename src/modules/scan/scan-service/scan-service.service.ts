@@ -25,7 +25,6 @@ import {
   ResponseInfoType,
   SuccessResponseType,
 } from 'src/types/api-response-type';
-import { AxiosError } from 'axios';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
