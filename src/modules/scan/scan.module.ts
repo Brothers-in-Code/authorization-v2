@@ -7,6 +7,7 @@ import { VkDataModule } from 'src/modules/vk-data/vkdata.module';
 import { DBModule } from 'src/db/db.module';
 
 import { ScanService } from 'src/modules/scan/scan-service/scan-service.service';
+import { ScanController } from 'src/modules/scan/scan.controller';
 
 @Module({
   imports: [
@@ -17,5 +18,6 @@ import { ScanService } from 'src/modules/scan/scan-service/scan-service.service'
     HttpModule,
   ],
   providers: [ScanService],
+  controllers: [ScanController],
 })
 export class ScanModule {}
