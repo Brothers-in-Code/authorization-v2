@@ -7,6 +7,7 @@ import {
   Logger,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 
 import { ScanApiService } from './scan-api.service';
@@ -18,7 +19,9 @@ import { GetAccessTokenDto } from './dto/get-access-token.dto';
 import { VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { PostParamsListDto } from './dto/post-params-list.dto';
+import { ApiInternalGuard } from 'src/shared/guards/api-internal/api-internal.guard';
 
+@UseGuards(ApiInternalGuard)
 @Controller('api/scan')
 export class ScanApiController {
   constructor(

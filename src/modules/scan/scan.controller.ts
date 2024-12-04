@@ -1,5 +1,5 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { ScanService } from './scan-service/scan-service.service';
+import { ScanService } from './scan-service.service';
 
 // TODO добавить guard
 @Controller()

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ScanController } from './scan.controller';
+import { ScanController } from '../scan.controller';
 
 describe('ScanController', () => {
   let controller: ScanController;

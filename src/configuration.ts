@@ -5,6 +5,7 @@ export function configuration() {
       frontend: process.env.FRONT_REDIRECT_PATH,
       encryptKey: process.env.APP_ENCRYPT_KEY,
       jwtSecret: process.env.APP_JWT_SECRET,
+      apiInternalSecret: process.env.API_INTERNAL_SECRET,
       host: process.env.APP_HOST,
       scanDaysDepth: process.env.SCAN_DAYS_DEPTH,
 
