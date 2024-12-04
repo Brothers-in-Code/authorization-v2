@@ -9,6 +9,8 @@ import {
   Logger,
   Req,
   Query,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -18,6 +20,8 @@ import { UserSubscriptionService } from 'src/db/services/user-subscription.servi
 import { AuthService } from './services/auth.service';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
+import { SuccessResponseType } from 'src/types/api-response-type';
+import { Exception } from 'sass';
 
 type VerificationOutputType = {
   client_id: number;
@@ -171,28 +175,28 @@ export class AuthController {
   @Post('refresh-token')
   async handleRefreshToken(
     @Body() { user_vkid }: { user_vkid: number },
-  ): Promise<AuthBaseOutputType> {
+  ): Promise<SuccessResponseType<any>> {
     const user = await this.userService.findOne(user_vkid);
     if (!user) {
       this.logger.error(`User with id = ${user_vkid} not found`);
-      return {
-        message: `User with id = ${user_vkid} not found`,
-        status: 'error',
-      };
+      throw new HttpException(
+        {
+          error: {
+            status: HttpStatus.NOT_FOUND,
+            message: 'Пользователь не найден',
+            code: 'not found',
+          },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
+
     try {
       const response = await this.authService.refreshAccessToken(
         user.refresh_token,
         user.device_id,
       );
 
-      if (!response.hasOwnProperty('access_token')) {
-        return {
-          message: 'Token not received',
-          status: 'error',
-          error: response,
-        };
-      }
       const expires_date = this.authService.calcExpiresDate(
         response.expires_in,
       );
@@ -205,7 +209,14 @@ export class AuthController {
         expires_date,
       );
 
-      return { message: 'Token successfully received', status: 'ok' };
+      return {
+        data: { access_token: response.access_token },
+        success: {
+          status: HttpStatus.OK,
+          message: 'Token successfully received',
+          code: 'success',
+        },
+      };
     } catch (e) {
       this.logger.error(
         `func:handleRefreshToken,Failed to get access token. ${e.message}`,

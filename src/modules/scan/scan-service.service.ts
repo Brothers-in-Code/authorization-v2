@@ -216,22 +216,23 @@ export class ScanService implements OnModuleInit {
     userVkId: number,
     refresh_token: string,
     device_id: string,
-  ): Promise<null | SuccessResponseType> {
+  ): Promise<null | SuccessResponseType<any>> {
     try {
-      const response =
-        await this.httpService.axiosRef.post<SuccessResponseType>(
-          `${this.SCAN_API}access-token`,
-          {
-            user_vkid: userVkId,
-            refresh_token,
-            device_id,
+      const response = await this.httpService.axiosRef.post<
+        SuccessResponseType<any>
+      >(
+        `${this.SCAN_API}access-token`,
+        {
+          user_vkid: userVkId,
+          refresh_token,
+          device_id,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
+        },
+      );
 
       return response.data;
     } catch (error) {

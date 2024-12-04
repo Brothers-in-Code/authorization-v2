@@ -1,8 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
 
-export type SuccessResponseType = {
+export type SuccessResponseType<T> = {
   success: ResponseInfoType;
-  data: any;
+  data: T;
 };
 
 export type ErrorResponseType = {
