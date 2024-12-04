@@ -18,7 +18,9 @@ export class ApiInternalGuard implements CanActivate {
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
-      this.logger.warn('API_INTERNAL_GUARD: There is no Authorization header');
+      this.logger.warn(
+        `API_INTERNAL_GUARD: There is no Authorization header for ${request.method} : ${request.url}`,
+      );
       throw new UnauthorizedException(
         'API_INTERNAL_GUARD: There is no Authorization header',
       );
