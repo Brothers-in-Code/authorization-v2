@@ -91,11 +91,7 @@ export class ScanService implements OnModuleInit {
 
     if (queryResultList) {
       for (const queryResult of queryResultList) {
-        const tokenResult = await this.getNewAccessToken(
-          queryResult.userVkId,
-          queryResult.refresh_token,
-          queryResult.device_id,
-        );
+        const tokenResult = await this.getNewAccessToken(queryResult.userVkId);
         this.logger.log('получен новый access_token');
 
         const scanGroupListResult = await this.scanGroupList(
@@ -207,31 +203,28 @@ export class ScanService implements OnModuleInit {
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
   private readonly PROTOCOL = this.configService.get('app.protocol');
-  //   private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
-  private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
-  private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
+  private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
+  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
+  private readonly AUTH_API = `${this.PROTOCOL}://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
   async getNewAccessToken(
     userVkId: number,
-    refresh_token: string,
-    device_id: string,
-  ): Promise<null | SuccessResponseType> {
+  ): Promise<null | SuccessResponseType<any>> {
     try {
-      const response =
-        await this.httpService.axiosRef.post<SuccessResponseType>(
-          `${this.SCAN_API}access-token`,
-          {
-            user_vkid: userVkId,
-            refresh_token,
-            device_id,
+      const response = await this.httpService.axiosRef.post<
+        SuccessResponseType<any>
+      >(
+        `${this.AUTH_API}refresh-token`,
+        {
+          user_vkid: userVkId,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
+        },
+      );
 
       return response.data;
     } catch (error) {
