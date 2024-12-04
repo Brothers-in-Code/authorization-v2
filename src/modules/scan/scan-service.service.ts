@@ -55,7 +55,12 @@ export class ScanService implements OnModuleInit {
     private schedulerRegistry: SchedulerRegistry,
 
     private httpService: HttpService, // NOTE для будущего нового vkDataService
-  ) {}
+  ) {
+    // prettier-ignore
+    const apiInternalSecret = this.configService.get<string>('app.apiInternalSecret',);
+    // prettier-ignore
+    this.httpService.axiosRef.defaults.headers.common['Authorization'] = `Bearer ${apiInternalSecret}`;
+  }
   private readonly logger = new Logger(ScanService.name);
 
   onModuleInit(): void {
@@ -202,8 +207,8 @@ export class ScanService implements OnModuleInit {
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
   private readonly PROTOCOL = this.configService.get('app.protocol');
-  private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
-  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
+  //   private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
+  private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
   private readonly AUTH_API = `https://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService
@@ -255,6 +260,11 @@ export class ScanService implements OnModuleInit {
     try {
       const response = await this.httpService.axiosRef.get<{ data: string }>(
         `${this.SCAN_API}data`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
       );
       // TODO сделать валидацию полученных данных
       const parsedData = (await JSON.parse(
@@ -369,10 +379,18 @@ export class ScanService implements OnModuleInit {
     });
 
     const response = await this.httpService.axiosRef
-      .post<ResponseInfoType>(`${this.SCAN_API}posts`, {
-        groupVKId,
-        postParamsList,
-      })
+      .post<ResponseInfoType>(
+        `${this.SCAN_API}posts`,
+        {
+          groupVKId,
+          postParamsList,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
       .then((response) => {
         return response;
       })

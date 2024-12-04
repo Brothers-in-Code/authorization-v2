@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ScanService } from '../scan-service/scan-service.service';
+import { ScanService } from '../scan-service.service';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from 'src/modules/auth/services/auth.service';
