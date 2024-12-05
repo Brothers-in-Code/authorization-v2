@@ -11,6 +11,7 @@ import {
   Query,
   HttpStatus,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -21,6 +22,7 @@ import { AuthService } from './services/auth.service';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
 import { SuccessResponseType } from 'src/types/api-response-type';
+import { ApiInternalGuard } from 'src/shared/guards/api-internal/api-internal.guard';
 
 type VerificationOutputType = {
   client_id: number;
@@ -172,6 +174,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(ApiInternalGuard)
   @Post('refresh-token')
   async handleRefreshToken(
     @Body() { user_vkid }: { user_vkid: number },
