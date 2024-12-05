@@ -21,7 +21,6 @@ import { AuthService } from './services/auth.service';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
 import { SuccessResponseType } from 'src/types/api-response-type';
-import { Exception } from 'sass';
 
 type VerificationOutputType = {
   client_id: number;
@@ -128,6 +127,7 @@ export class AuthController {
       const userInfo = await this.authService.getUserInfo(
         response.access_token,
       );
+
       const expires_date = this.authService.calcExpiresDate(
         response.expires_in,
       );
@@ -175,7 +175,7 @@ export class AuthController {
   @Post('refresh-token')
   async handleRefreshToken(
     @Body() { user_vkid }: { user_vkid: number },
-  ): Promise<SuccessResponseType<any>> {
+  ): Promise<SuccessResponseType<{ access_token: string }>> {
     const user = await this.userService.findOne(user_vkid);
     if (!user) {
       this.logger.error(`User with id = ${user_vkid} not found`);
