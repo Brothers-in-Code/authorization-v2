@@ -50,7 +50,6 @@ export class ScanService implements OnModuleInit {
     @InjectDataSource()
     private readonly dataSource: DataSource,
     private configService: ConfigService,
-    private authService: AuthService,
     private groupService: GroupService,
     private schedulerRegistry: SchedulerRegistry,
 
@@ -89,11 +88,7 @@ export class ScanService implements OnModuleInit {
 
     if (queryResultList) {
       for (const queryResult of queryResultList) {
-        const tokenResult = await this.getNewAccessToken(
-          queryResult.userVkId,
-          queryResult.refresh_token,
-          queryResult.device_id,
-        );
+        const tokenResult = await this.getNewAccessToken(queryResult.userVkId);
         this.logger.log('получен новый access_token');
 
         const scanGroupListResult = await this.scanGroupList(
@@ -215,8 +210,6 @@ export class ScanService implements OnModuleInit {
   //   TODO получать access_token через authService
   async getNewAccessToken(
     userVkId: number,
-    refresh_token: string,
-    device_id: string,
   ): Promise<null | SuccessResponseType<any>> {
     try {
       const response = await this.httpService.axiosRef.post<
@@ -225,8 +218,6 @@ export class ScanService implements OnModuleInit {
         `${this.AUTH_API}refresh-token`,
         {
           user_vkid: userVkId,
-          refresh_token,
-          device_id,
         },
         {
           headers: {
