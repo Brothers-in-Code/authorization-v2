@@ -14,12 +14,14 @@ export class ApiInternalGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const secret = this.configService.get('app.apiInternalSecret');
-    const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
+    const request = context.switchToHttp().getRequest<Request>();
+    const authHeader = request.headers['authorization'];
 
     if (!authHeader) {
       this.logger.warn(
-        `API_INTERNAL_GUARD: There is no Authorization header for ${request.method} : ${request.url}`,
+        `API_INTERNAL_GUARD: There is no Authorization header for ${
+          request.method
+        } : ${request.url} : ${JSON.stringify({ h: request.headers })}`,
       );
       throw new UnauthorizedException(
         'API_INTERNAL_GUARD: There is no Authorization header',
