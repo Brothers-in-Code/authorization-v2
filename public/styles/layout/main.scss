@@ -19,3 +19,25 @@
   justify-content: flex-start;
   align-items: stretch;
 }
+
+.main--exception {
+  display: flex;
+  flex-direction: column;
+  .img {
+    width: auto;
+    max-height: 100%;
+  }
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #cfd0f2;
+    * {
+      text-align: center;
+    }
+  }
+
+}

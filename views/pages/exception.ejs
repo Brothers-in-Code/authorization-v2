@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<%- include('../components/head.ejs', {title: data.pageTitle}) %>
+<body>
+<div id="root">
+    <div class="page-layout">
+        <main class="page-layout__section page-layout__exception main--exception">
+            <picture>
+                <source srcset="/img/500/robot-2000.webp" media="(min-width: 1500px)" />
+                <source srcset="/img/500/robot-1500.webp" media="(min-width: 1000px)" />
+                <source srcset="/img/500/robot-1000.webp" media="(max-width: 999px)" />
+                <img class="img" src="/img/500/robot.webp" alt="Произошел сбой в работе приложения">
+            </picture>
+            <div class="message">
+                <h1>Произошел сбой в работе приложения</h1>
+                <p>Мы уже работаем на исправлением. Перезагрузите страницу или зайдите позже</p>
+                <div>
+                    <% linkText = data?.regirectTo !== 'work-space/groups' ? 'Перезагрузить целевую страницу' : 'Вернуться на главную' %>
+                    <a class="btn btn-outline-blue" href="<%= data?.regirectTo%>">
+                        <%= linkText %>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

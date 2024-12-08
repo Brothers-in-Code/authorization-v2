@@ -15,6 +15,7 @@ import { HomeModule } from './modules-render/home/home.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './modules/login/login.module';
 import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
+import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageModule';
 
 @Module({
   imports: [
@@ -25,6 +26,9 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
     ScanModule,
     WorkSpaceModule,
     HomeModule,
+    LoginModule,
+    ScanApiModule,
+    ExceptionPageModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -60,8 +64,6 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
         };
       },
     }),
-    LoginModule,
-    ScanApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
