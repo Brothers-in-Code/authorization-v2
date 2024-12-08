@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository,  } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import {
   Between,
   FindOptionsOrder,
-  In,
+  In, IsNull,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Repository,
+  Repository
 } from 'typeorm';
 import { Group } from '../entities/group.entity';
 
@@ -40,8 +40,31 @@ export class PostService {
     return this.postRepository.find();
   }
 
-  findFreshPostWithoutKeywords(take = 10) {
-    return this.postRepository.find({ where: { keywords: null }, take });
+  findFreshPostWithoutKeywords(take: number, skip: number) {
+    return this.postRepository.find({
+      order: {
+        timestamp_post: 'DESC',
+      },
+      where: { keywords: IsNull() },
+      take,
+      skip,
+    });
+  }
+
+  async saveKeywords(list: { id: number; keywords: string }[]) {
+    const queryBuilder = this.postRepository.createQueryBuilder();
+
+    const updatePromises = list.map(({ id, keywords }) =>
+      queryBuilder
+        .update()
+        .set({ keywords })
+        .where('id = :id', { id })
+        .execute()
+        .then(() => ({ id: true }))
+        .catch(() => ({ id: false })),
+    );
+
+    return await Promise.all(updatePromises);
   }
 
   findOne(id: number): Promise<Post> {
