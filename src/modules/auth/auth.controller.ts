@@ -134,7 +134,6 @@ export class AuthController {
         response.expires_in,
       );
 
-      // TODO сохранить имя и ссылку на фото пользователя
       const user = await this.authService.saveUser(
         response.user_id,
         response.access_token,
