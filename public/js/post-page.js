@@ -26,7 +26,6 @@
     function setParamsToReportModalForm(params) {
       const form = document.getElementById('reportFormModal');
       for (let [key, value] of Object.entries(params)) {
-        console.log(key, value);
         const input = document.createElement('input');
         input.classList.add('hide');
         input.setAttribute('type', 'text');
