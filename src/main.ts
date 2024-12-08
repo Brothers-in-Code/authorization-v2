@@ -9,6 +9,7 @@ import * as bodyParser from 'body-parser';
 import { join } from 'path';
 
 import { AppModule } from './app.module';
+import { InternalServeExceptionFilter } from 'src/shared/filter/internal-serve-exception/internal-serve-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -16,6 +17,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new InternalServeExceptionFilter());
 
   app.enableCors({
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
