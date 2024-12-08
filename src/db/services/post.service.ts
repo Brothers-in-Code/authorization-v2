@@ -40,6 +40,10 @@ export class PostService {
     return this.postRepository.find();
   }
 
+  findFreshPostWithoutKeywords(take = 10) {
+    return this.postRepository.find({ where: { keywords: null }, take });
+  }
+
   findOne(id: number): Promise<Post> {
     return this.postRepository.findOneBy({ id });
   }

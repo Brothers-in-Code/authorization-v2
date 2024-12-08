@@ -15,6 +15,7 @@ import { HomeModule } from './modules-render/home/home.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './modules/login/login.module';
 import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
+import { InternalApiModule } from 'src/modules-api/internal-api/internal-api.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
     ScanModule,
     WorkSpaceModule,
     HomeModule,
+    InternalApiModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -56,7 +58,7 @@ import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
           autoLoadEntities: true,
           migrationsTransactionMode: 'all',
           multipleStatements: true,
-          logging: false,
+          logging: configService.get('app.currentEnv') === 'local',
         };
       },
     }),
