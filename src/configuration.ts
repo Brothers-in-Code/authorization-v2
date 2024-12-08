@@ -1,5 +1,11 @@
+import * as os from 'os';
+
 export function configuration() {
   return {
+    server: {
+      name: process.env.SERVER_NAME,
+      hostname: os.hostname(),
+    },
     app: {
       currentEnv: process.env.CURRENT_ENV,
       frontend: process.env.FRONT_REDIRECT_PATH,

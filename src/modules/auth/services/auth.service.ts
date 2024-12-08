@@ -171,6 +171,7 @@ export class AuthService {
       client_id: this.configService.get('vk.appId'),
       scope: 'email',
     };
+
     const response = await this.httpService.axiosRef.post<VKUserInfoType>(
       `${AUTH_API}/user_info`,
       qs.stringify(info_params),

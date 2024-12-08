@@ -50,16 +50,13 @@ export class ScanService implements OnModuleInit {
     @InjectDataSource()
     private readonly dataSource: DataSource,
     private configService: ConfigService,
-    private authService: AuthService,
     private groupService: GroupService,
     private schedulerRegistry: SchedulerRegistry,
 
     private httpService: HttpService, // NOTE для будущего нового vkDataService
   ) {
     // prettier-ignore
-    const apiInternalSecret = this.configService.get<string>('app.apiInternalSecret',);
-    // prettier-ignore
-    this.httpService.axiosRef.defaults.headers.common['Authorization'] = `Bearer ${apiInternalSecret}`;
+
   }
   private readonly logger = new Logger(ScanService.name);
 
@@ -199,6 +196,9 @@ export class ScanService implements OnModuleInit {
   }
 
   //    NOTE будущий независимый vkDataService
+  private readonly apiInternalSecret = this.configService.get<string>(
+    'app.apiInternalSecret',
+  );
   private readonly VK_API = 'https://api.vk.com/method';
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
@@ -222,6 +222,7 @@ export class ScanService implements OnModuleInit {
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiInternalSecret}`,
           },
         },
       );
@@ -256,6 +257,7 @@ export class ScanService implements OnModuleInit {
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiInternalSecret}`,
           },
         },
       );
@@ -381,6 +383,7 @@ export class ScanService implements OnModuleInit {
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.apiInternalSecret}`,
           },
         },
       )

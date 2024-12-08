@@ -10,4 +10,12 @@ export class AppController {
   redirectHome() {
     return {};
   }
+
+  @Get('/info')
+  getInfo() {
+    return {
+      status: 'OK',
+      info: this.appService.getInfo(),
+    };
+  }
 }

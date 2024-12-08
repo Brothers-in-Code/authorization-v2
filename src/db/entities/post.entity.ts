@@ -25,4 +25,7 @@ export class Post extends AbstractEntity {
 
   @Column('json')
   json: any;
+
+  @Column()
+  keywords?: string;
 }

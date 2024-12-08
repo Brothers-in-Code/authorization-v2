@@ -15,6 +15,7 @@ import { HomeModule } from './modules-render/home/home.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './modules/login/login.module';
 import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
+import { InternalApiModule } from 'src/modules-api/internal-api/internal-api.module';
 import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageModule';
 
 @Module({
@@ -26,6 +27,7 @@ import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageM
     ScanModule,
     WorkSpaceModule,
     HomeModule,
+    InternalApiModule,
     LoginModule,
     ScanApiModule,
     ExceptionPageModule,
