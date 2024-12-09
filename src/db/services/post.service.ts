@@ -145,6 +145,7 @@ export class PostService {
               name: post.group.name,
             },
             post: post.json,
+            keywords: post.keywords,
           };
         }),
       );
