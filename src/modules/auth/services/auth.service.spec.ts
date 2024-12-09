@@ -1,73 +1,74 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { UserService } from 'src/db/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { DataSource } from 'typeorm';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/db/entities/user.entity';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { configuration } from 'src/configuration';
 
-describe('AuthService Intergration Test', () => {
-  let service: AuthService;
+describe('saveUser', () => {
+  let authService: AuthService;
   let userService: UserService;
-  let dataSource: DataSource;
 
-  beforeAll(async () => {
-    const module = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          load: [
-            () => ({
-              integrationDb: {
-                host: 'localhost',
-                port: 3306,
-                username: 'admin',
-                password: 'dbpassword',
-                database: 'smm_test',
-              },
-            }),
-          ],
-        }),
-        TypeOrmModule.forRootAsync({
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => {
-            return {
-              type: 'mariadb',
-              host: configService.get('integrationDb.host'),
-              port: Number(configService.get('integrationDb.port')),
-              username: configService.get('integrationDb.username'),
-              password: configService.get('integrationDb.password'),
-              database: configService.get('integrationDb.database'),
-              entities: [User],
-            };
-          },
-        }),
-        TypeOrmModule.forFeature([User]),
-      ],
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        UserService,
         {
           provide: ConfigService,
           useValue: {},
         },
+        {
+          provide: HttpService,
+          useValue: {},
+        },
+        {
+          provide: JwtService,
+          useValue: {},
+        },
+        {
+          provide: UserService,
+          useValue: {
+            findOne: jest.fn(),
+            updateToken: jest.fn(),
+            createUser: jest.fn(),
+            save: jest.fn(),
+          },
+        },
       ],
     }).compile();
-    service = module.get<AuthService>(AuthService);
+
+    authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    dataSource = module.get<DataSource>(DataSource);
   });
 
-  afterAll(async () => {
-    await dataSource.destroy();
-  });
+  it('should update user', async () => {
+    const mockParams = {
+      user_vkid: 100,
+      access_token: 'test_access_token',
+      refresh_token: 'test_refresh_token',
+      device_id: 'test_device_id',
+      expires_date: new Date(),
+    };
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    jest
+      .spyOn(userService, 'findOne')
+      .mockResolvedValueOnce(mockParams as User);
+
+    const spyUpdateToken = jest
+      .spyOn(userService, 'updateToken')
+      .mockResolvedValue(mockParams as User);
+
+    const response = await authService.saveUser(
+      mockParams.user_vkid,
+      mockParams.access_token,
+      mockParams.refresh_token,
+      mockParams.device_id,
+      mockParams.expires_date,
+    );
+    expect(userService.findOne).toHaveBeenCalledWith(mockParams.user_vkid);
+    expect(spyUpdateToken).toHaveBeenCalledWith(mockParams);
+    expect(response).toEqual(mockParams);
   });
 });
 
@@ -80,7 +81,9 @@ describe('AuthService Unit Test', () => {
         AuthService,
         {
           provide: UserService,
-          useValue: {},
+          useValue: {
+            user_vkid: 123,
+          },
         },
         {
           provide: ConfigService,
@@ -106,17 +109,10 @@ describe('AuthService Unit Test', () => {
 
   it('should return expires date', async () => {
     const expire_in = 3600;
-    const RESPONSE_DELAY = 200;
     const date = new Date();
-    date.setSeconds(date.getSeconds() + expire_in - RESPONSE_DELAY);
+    date.setSeconds(date.getSeconds() + expire_in);
     const result = service.calcExpiresDate(expire_in);
     const dateResult = new Date(result).getTime();
     expect(dateResult).toBeLessThanOrEqual(date.getTime());
   });
 });
-
-// "paths": {
-//   "./src/*": [
-//     "./src/*"
-//   ]
-// },
