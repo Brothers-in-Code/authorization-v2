@@ -210,15 +210,15 @@ export class AuthService {
       const updatedUser = await this.userService.updateToken(params);
       if (!updatedUser) {
         throw new DatabaseServiceError(
-          `func: saveUser.Не удалось обновить токен пользователя ${user_vkid}`,
+          `func: saveUser. Не удалось обновить токен пользователя ${user_vkid}`,
         );
       }
       return updatedUser;
     } else {
-      const newUser = this.userService.createUser(params);
+      const newUser = await this.userService.createUser(params);
       if (!newUser) {
         throw new DatabaseServiceError(
-          `func: saveUser.Не удалось создать пользователя ${user_vkid}`,
+          `func: saveUser. Не удалось создать пользователя ${user_vkid}`,
         );
       }
       return newUser;
