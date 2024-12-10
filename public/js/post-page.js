@@ -10,12 +10,13 @@
     if (btnAddPostToReportList) {
       const main = document.querySelector('#main');
       btnAddPostToReportList.forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (event) => {
           const params = getDataset();
 
           params.postId = btn.dataset.wsPostId;
           params.offset = main.dataset.wsOffset;
           params.limit = main.dataset.wsLimit;
+          params.keywords = event.target.dataset.keywords;
           setParamsToReportModalForm(params);
           addPostToReportModal.show();
         });

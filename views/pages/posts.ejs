@@ -269,6 +269,7 @@
                 </tr>
                 <tr>
                   <th>Пост</th>
+
                   <th>
                     <div
                       class="table__flex"
@@ -376,7 +377,12 @@
                         </div>
                       </div>
                       <strong><%= item.group.name %></strong>
-                      <div><%= item?.post?.text?.slice(0, 200) %>...</div>
+                      <p><%= item?.post?.text?.slice(0, 200) %>...</p>
+
+                      <p>
+                        <strong>Ключевые слова: </strong>
+                        <%- item?.keywords?.split('|').map(it => `<span class="small">${it}</span>`).join(', ') %>
+                      </p>
                     </div>
                   </td>
 
@@ -415,6 +421,7 @@
                       class="btn btn-outline-success js-btn-add-to-report"
                       name="addToReport"
                       data-ws-post-id="<%= item.id %>"
+                      data-keywords="<%= item?.keywords?.split('|').map(it => `${it}`).join(', ') %>"
                     >
                       Добавить в отчет
                     </button>
