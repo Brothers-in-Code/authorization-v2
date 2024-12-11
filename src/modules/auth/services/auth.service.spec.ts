@@ -4,25 +4,42 @@ import { HttpService } from '@nestjs/axios';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { UserService } from 'src/db/services/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/db/entities/user.entity';
-import { DatabaseServiceError } from 'src/errors/service-errors';
-import { errors } from 'browser-sync/dist/config';
 
-describe('AuthService Unit Tests', () => {
+import { User } from 'src/db/entities/user.entity';
+
+import { VKUserInfoType } from 'src/types/vk-user-info-type';
+import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
+import { DatabaseServiceError } from 'src/errors/service-errors';
+import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
+
+import { getAppState } from 'src/utils/verifiers';
+import { UnauthorizedException } from '@nestjs/common';
+import SpyInstance = jest.SpyInstance;
+jest.mock('src/utils/verifiers');
+
+const mockState = describe('AuthService Unit Tests', () => {
   let authService: AuthService;
   let userService: UserService;
+  let httpService: HttpService;
+  let axiosRefPost: SpyInstance;
+
+  const mockErrorResponse = {
+    error: 'mock error',
+    error_description: 'mock error description',
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        {
-          provide: ConfigService,
-          useValue: {},
-        },
+        ConfigService,
         {
           provide: HttpService,
-          useValue: {},
+          useValue: {
+            axiosRef: {
+              post: jest.fn(),
+            },
+          },
         },
         {
           provide: JwtService,
@@ -41,6 +58,8 @@ describe('AuthService Unit Tests', () => {
 
     authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
+    httpService = module.get<HttpService>(HttpService);
+    axiosRefPost = jest.spyOn(httpService.axiosRef, 'post');
   });
 
   it('should be defined', () => {
@@ -172,6 +191,114 @@ describe('AuthService Unit Tests', () => {
         expect(response).rejects.toThrow(
           new DatabaseServiceError(
             `func: saveUser. Не удалось создать пользователя ${mockParams.user_vkid}`,
+          ),
+        );
+      });
+    });
+  });
+
+  describe('getUserInfo', () => {
+    const mockInfoParams = {
+      access_token: 'test_access_token',
+      client_id: 101,
+      scope: 'email',
+    };
+
+    it('should get user info', async () => {
+      const mockUserInfoResponse: VKUserInfoType = {
+        user: {
+          user_id: 'test_user_id',
+          first_name: 'test_first_name',
+          last_name: 'test_last_name',
+          avatar: 'test_avatar',
+          sex: 1,
+          is_verified: false,
+          birthday: 'test_birthday',
+        },
+      };
+      axiosRefPost.mockResolvedValue({ data: mockUserInfoResponse });
+      const response = await authService.getUserInfo(
+        mockInfoParams.access_token,
+      );
+      expect(response).toEqual(mockUserInfoResponse);
+    });
+
+    it('should throw exception can`t get user info', async () => {
+      axiosRefPost.mockResolvedValue({ data: mockErrorResponse });
+
+      const response = authService.getUserInfo(mockInfoParams.access_token);
+      await expect(response).rejects.toThrow(
+        new VK_API_Error(
+          `user_info не получен. ${mockErrorResponse.error_description}`,
+        ),
+      );
+    });
+  });
+
+  describe('refreshAccessToken', () => {
+    const mockState = 'mockState';
+    const mockParams = {
+      refresh_token: 'mock refresh_token',
+      device_id: 'mock device_id',
+    };
+    const mockTokenResponse: VKResponseTokenType = {
+      refresh_token: 'refresh_token',
+      access_token: 'access_token',
+      token_type: 'token_type',
+      expires_in: 3600,
+      user_id: 101,
+      scope: 'scope',
+      state: 'mockState',
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (getAppState as jest.Mock).mockReturnValue(mockState);
+    });
+
+    describe('successfully', () => {
+      it('should get refresh token', async () => {
+        axiosRefPost.mockResolvedValue({ data: mockTokenResponse });
+
+        const response = await authService.refreshAccessToken(
+          mockParams.refresh_token,
+          mockParams.device_id,
+        );
+
+        expect(response).toEqual({
+          access_token: mockTokenResponse.access_token,
+          refresh_token: mockTokenResponse.refresh_token,
+          expires_in: mockTokenResponse.expires_in,
+        });
+      });
+    });
+
+    describe('failure fully', () => {
+      it('should throw exception state не совпадает', async () => {
+        mockTokenResponse.state = 'wrongState';
+        axiosRefPost.mockResolvedValue({ data: mockTokenResponse });
+        const response = authService.refreshAccessToken(
+          mockParams.refresh_token,
+          mockParams.device_id,
+        );
+        await expect(response).rejects.toThrow(
+          new UnauthorizedException(
+            `state не совпадает. local_state: ${mockState}, vk_state: ${mockTokenResponse.state}`,
+          ),
+        );
+      });
+
+      it('should throw exception access_token не получен', async () => {
+        axiosRefPost.mockResolvedValue({ data: mockErrorResponse });
+
+        const response = authService.refreshAccessToken(
+          mockParams.refresh_token,
+          mockParams.device_id,
+        );
+
+        await expect(response).rejects.toThrow(
+          new VK_AUTH_Error(
+            `access_token не получен. ${mockErrorResponse.error_description}`,
           ),
         );
       });
