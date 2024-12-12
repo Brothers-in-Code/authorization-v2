@@ -9,18 +9,22 @@ import { User } from 'src/db/entities/user.entity';
 
 import { VKUserInfoType } from 'src/types/vk-user-info-type';
 import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
+import { UnauthorizedException } from '@nestjs/common';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 
-import { getAppState } from 'src/utils/verifiers';
-import { UnauthorizedException } from '@nestjs/common';
+import { getAppState, getVerifier } from 'src/utils/verifiers';
 import SpyInstance = jest.SpyInstance;
+import clearAllMocks = jest.clearAllMocks;
 jest.mock('src/utils/verifiers');
 
 const mockState = describe('AuthService Unit Tests', () => {
   let authService: AuthService;
   let userService: UserService;
   let httpService: HttpService;
+  let jwtService: JwtService;
+  let configService: ConfigService;
+
   let axiosRefPost: SpyInstance;
 
   const mockErrorResponse = {
@@ -32,7 +36,15 @@ const mockState = describe('AuthService Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        ConfigService,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key) => {
+              if (key === 'vk') return { appId: 111111 };
+              if (key === 'app') return { frontend: 'some url' };
+            }),
+          },
+        },
         {
           provide: HttpService,
           useValue: {
@@ -43,7 +55,9 @@ const mockState = describe('AuthService Unit Tests', () => {
         },
         {
           provide: JwtService,
-          useValue: {},
+          useValue: {
+            signAsync: jest.fn(),
+          },
         },
         {
           provide: UserService,
@@ -59,6 +73,7 @@ const mockState = describe('AuthService Unit Tests', () => {
     authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
     httpService = module.get<HttpService>(HttpService);
+    jwtService = module.get<JwtService>(JwtService);
     axiosRefPost = jest.spyOn(httpService.axiosRef, 'post');
   });
 
@@ -241,6 +256,7 @@ const mockState = describe('AuthService Unit Tests', () => {
       refresh_token: 'mock refresh_token',
       device_id: 'mock device_id',
     };
+
     const mockTokenResponse: VKResponseTokenType = {
       refresh_token: 'refresh_token',
       access_token: 'access_token',
@@ -302,6 +318,119 @@ const mockState = describe('AuthService Unit Tests', () => {
           ),
         );
       });
+    });
+  });
+
+  describe('getAccessToken', () => {
+    const mockParams = {
+      code: 'mockCode',
+      device_id: 'mockShouldGetExactlyThisString',
+      code_verifier: 'mockCode_verifier',
+    };
+
+    const mockTokenResponse = {
+      access_token: 'mockAccess_token',
+      refresh_token: 'mockRefresh_token',
+      expires_in: 'mockExpires_in',
+      id_token: 'mockId_token',
+      user_id: 'mockUser_id',
+      device_id: 'mockShouldGetExactlyThisString',
+    };
+
+    describe('successfully', () => {
+      it('should get access token', async () => {
+        axiosRefPost.mockResolvedValue({ data: mockTokenResponse });
+        const response = await authService.getAccessToken(
+          mockParams.code,
+          mockParams.device_id,
+          mockParams.code_verifier,
+        );
+
+        expect(response).toEqual(mockTokenResponse);
+      });
+    });
+
+    describe('failure fully', () => {
+      it('should throw exception access_token не получен', async () => {
+        axiosRefPost.mockResolvedValue({ data: mockErrorResponse });
+
+        const response = authService.getAccessToken(
+          mockParams.code,
+          mockParams.device_id,
+          mockParams.code_verifier,
+        );
+
+        await expect(response).rejects.toThrow(
+          new UnauthorizedException(
+            `access_token не получен. ${mockErrorResponse.error_description}`,
+          ),
+        );
+      });
+    });
+  });
+
+  describe('verifyState', () => {
+    const mockState = 'mockRightState';
+    it('should return true', () => {
+      const mockCookieState = 'mockRightState';
+      const response = authService.verifyState(mockState, mockCookieState);
+      expect(response).toBeTruthy();
+    });
+    it('should return false', () => {
+      const mockCookieState = 'mockWrongState';
+      const response = authService.verifyState(mockState, mockCookieState);
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('createVerificationState', () => {
+    const mockVerifierReturnValue = {
+      code_verifier: 'mock_code_verifier',
+      code_challenge: 'mock_code_challenge',
+    };
+
+    it('should match object', () => {
+      jest.clearAllMocks();
+      (getVerifier as jest.Mock).mockReturnValue(mockVerifierReturnValue);
+      (getAppState as jest.Mock).mockReturnValue('mockAppState');
+      const frontendParams = authService.createVerificationState();
+
+      expect(frontendParams).toHaveProperty('client_id');
+      expect(frontendParams).toHaveProperty('redirect_uri');
+      expect(frontendParams).toHaveProperty('response_type');
+      expect(frontendParams).toHaveProperty('code_verifier');
+      expect(frontendParams).toHaveProperty('code_challenge');
+      expect(frontendParams).toHaveProperty('code_challenge_method');
+      expect(frontendParams).toHaveProperty('state');
+      expect(frontendParams).toHaveProperty('scope');
+      expect(frontendParams).toHaveProperty('display');
+    });
+  });
+
+  describe('createJWTToken', () => {
+    const mockUserId = 11111;
+    const mockAdditionalParams = {
+      first: 'first',
+      second: 'second',
+    };
+    const expectedPayload = {
+      sub: mockUserId,
+      0: mockAdditionalParams.first,
+      1: mockAdditionalParams.second,
+    };
+    beforeEach(() => {
+      jest.clearAllMocks();
+      jest.spyOn(jwtService, 'signAsync').mockResolvedValue('mockToken');
+    });
+
+    it('should create a JWT token', async () => {
+      const response = await authService.createJWTToken(
+        mockUserId,
+        mockAdditionalParams.first,
+        mockAdditionalParams.second,
+      );
+      expect(jwtService.signAsync).toHaveBeenCalledWith(expectedPayload);
+      expect(response).toEqual('mockToken');
     });
   });
 });
