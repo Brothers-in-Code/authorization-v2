@@ -36,5 +36,12 @@ export function configuration() {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
     },
+    integrationDb: {
+      host: process.env.INTEGRATION_DB_HOST,
+      port: process.env.INTEGRATION_DB_PORT,
+      username: process.env.INTEGRATION_DB_USER,
+      password: process.env.INTEGRATION_DB_PASSWORD,
+      database: process.env.INTEGRATION_DB_NAME,
+    },
   };
 }
