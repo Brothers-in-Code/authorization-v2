@@ -5,16 +5,16 @@ import {
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { SchedulerRegistry } from '@nestjs/schedule';
+
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 import { CronJob } from 'cron';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
-import { HttpService } from '@nestjs/axios'; // NOTE для будущего нового vkDataService
 import * as qs from 'qs'; // NOTE для будущего нового vkDataService
 
-import { AuthService } from 'src/modules/auth/services/auth.service';
+import { HttpService } from '@nestjs/axios'; // NOTE для будущего нового vkDataService
 import { GroupService } from 'src/db/services/group.service';
 
 import { VK_API_Error } from 'src/errors/vk-errors';
@@ -52,12 +52,8 @@ export class ScanService implements OnModuleInit {
     private configService: ConfigService,
     private groupService: GroupService,
     private schedulerRegistry: SchedulerRegistry,
-
     private httpService: HttpService, // NOTE для будущего нового vkDataService
-  ) {
-    // prettier-ignore
-
-  }
+  ) {}
   private readonly logger = new Logger(ScanService.name);
 
   onModuleInit(): void {
