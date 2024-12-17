@@ -151,7 +151,7 @@ const mockState = describe('AuthService Unit Tests', () => {
       });
     });
 
-    describe('failurefully', () => {
+    describe('failure fully', () => {
       it('should throw exception can`t refresh token', () => {
         const mockParams = {
           user_vkid: 100,
