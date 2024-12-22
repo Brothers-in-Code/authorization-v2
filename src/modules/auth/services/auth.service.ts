@@ -66,10 +66,10 @@ export class AuthService {
     return cookieState === state;
   }
 
-  async createJWTToken(userId: number, ...rest: any): Promise<string> {
+  async createJWTToken(userId: number, tokenData: object): Promise<string> {
     const payload = {
       sub: userId,
-      ...rest,
+      ...tokenData,
     };
     return await this.jwtService.signAsync(payload);
   }

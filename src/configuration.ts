@@ -14,6 +14,7 @@ export function configuration() {
       apiInternalSecret: process.env.API_INTERNAL_SECRET,
       host: process.env.APP_HOST,
       scanDaysDepth: process.env.SCAN_DAYS_DEPTH,
+      userTokenLifetime: process.env.USER_TOKEN_LIFETIME,
 
       protocol: process.env.APP_PROTOCOL,
       port: parseInt(process.env.PORT, 10) || 3000,

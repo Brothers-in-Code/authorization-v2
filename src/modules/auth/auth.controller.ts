@@ -142,11 +142,10 @@ export class AuthController {
         expires_date,
       );
 
-      const userToken = await this.authService.createJWTToken(
-        user.id,
-        userInfo.user.first_name,
-        userInfo.user.avatar,
-      );
+      const userToken = await this.authService.createJWTToken(user.id, {
+        name: userInfo.user.first_name,
+        avatar: userInfo.user.avatar,
+      });
       res.cookie('user_token', userToken, cookieOptions);
 
       const userSubscription =
@@ -155,7 +154,7 @@ export class AuthController {
       if (userSubscription) {
         const subscriptionToken = await this.authService.createJWTToken(
           user.id,
-          userSubscription,
+          { userSubscription },
         );
         res.cookie('user_subscription', subscriptionToken, cookieOptions);
       }

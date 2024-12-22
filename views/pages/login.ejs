@@ -6,6 +6,9 @@
       <div class="page-layout">
         <main class="page-layout__section page-layout__login main main--login">
           <h1>SSM Менеджер</h1>
+          <% if (data.message) {%>
+            <p><%= data.message%></p>
+          <% }%>
           <p>Пожалуйста, авторизуйтесь</p>
           <div class="wrapper">
             <button
