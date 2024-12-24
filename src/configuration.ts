@@ -7,7 +7,7 @@ export function configuration() {
       hostname: os.hostname(),
     },
     app: {
-      currentEnv: process.env.CURRENT_ENV,
+      currentEnv: process.env.NODE_ENV || 'production',
       frontend: process.env.FRONT_REDIRECT_PATH,
       encryptKey: process.env.APP_ENCRYPT_KEY,
       jwtSecret: process.env.APP_JWT_SECRET,
@@ -40,9 +40,18 @@ export function configuration() {
     integrationDb: {
       host: process.env.INTEGRATION_DB_HOST,
       port: process.env.INTEGRATION_DB_PORT,
-      username: process.env.INTEGRATION_DB_USER,
-      password: process.env.INTEGRATION_DB_PASSWORD,
-      database: process.env.INTEGRATION_DB_NAME,
+      username:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_USER
+          : process.env.INTEGRATION_DB_USER,
+      password:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_PASSWORD
+          : process.env.INTEGRATION_DB_PASSWORD,
+      database:
+        process.env.NODE_ENV === 'production'
+          ? process.env.DB_NAME
+          : process.env.INTEGRATION_DB_NAME,
     },
   };
 }
