@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedStatus } from 'src/shared/enum/unauthorized-enum';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -23,15 +24,25 @@ export class UserGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token); // теперь использует конфигурированный секретный ключ
+      const payload = await this.jwtService.verifyAsync(token);
       request['user'] = {
         id: payload.sub,
-        name: payload.user_name,
+        name: payload.name,
         email: payload.email,
-        avatar: payload['1'],
+        avatar: payload.avatar,
       };
+      const nowTimestamp = Date.now();
+      const tokenExpiresTimestamp = Number(payload.exp) * 1000;
+
+      if (tokenExpiresTimestamp < nowTimestamp) {
+        throw new UnauthorizedException(
+          `USER_GUARD: ${UnauthorizedStatus.EXPIRED_TOKEN}`,
+        );
+      }
     } catch (error) {
-      throw new UnauthorizedException(`USER_GUARD: Wrong user_token: ${error}`);
+      throw new UnauthorizedException(
+        `USER_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
+      );
     }
 
     return true;

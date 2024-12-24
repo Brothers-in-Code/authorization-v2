@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { UnauthorizedStatus } from 'src/shared/enum/unauthorized-enum';
 
 @Catch(UnauthorizedException)
 export class UnauthorizedExceptionFilter implements ExceptionFilter {
@@ -20,12 +21,17 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
       exception instanceof UnauthorizedException &&
       exception.message.includes('USER_GUARD')
     ) {
-      this.logger.warn(
-        `UserGuard Exception caught: ${exception.message}`,
-        exception.stack,
-      );
+      this.logger.warn(`UserGuard Exception caught: ${exception.message}`);
       const redirectTo = request.originalUrl;
-      response.redirect(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+      let message: string;
+      if (exception.message.includes(UnauthorizedStatus.EXPIRED_TOKEN)) {
+        message = 'Время сеанса закончилось';
+      }
+      response.redirect(
+        `/login?redirectTo=${encodeURIComponent(
+          redirectTo,
+        )}&message=${message}`,
+      );
     } else {
       throw exception;
     }
