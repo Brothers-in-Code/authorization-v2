@@ -104,7 +104,6 @@ export class WorkSpaceController {
     if (body.importUserGroups) {
       await this.workSpaceService.importUserGroups(Number(userId));
     }
-
     const dataToRender = await this.workSpaceService.collectGroupDataToRender(
       userId,
       {

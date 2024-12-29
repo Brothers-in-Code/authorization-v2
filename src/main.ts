@@ -13,7 +13,7 @@ import { InternalServeExceptionFilter } from 'src/shared/filter/internal-serve-e
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'log', 'warn'],
+    logger: ['error', 'log', 'warn', 'debug'],
   });
 
   app.useGlobalPipes(new ValidationPipe());
