@@ -8,6 +8,9 @@ export class UserSubscription extends AbstractEntity {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column()
+  @Column({ default: 0 })
   subscription: boolean;
+
+  @Column('timestamp')
+  endDate: Date;
 }

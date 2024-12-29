@@ -158,7 +158,7 @@ export class AuthController {
         );
         res.cookie('user_subscription', subscriptionToken, cookieOptions);
       }
-
+      // todo удалить cookies, которые добавил в процессе авторизации
       return {
         message: 'Token successfully received',
         status: 'ok',
