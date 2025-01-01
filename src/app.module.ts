@@ -17,6 +17,7 @@ import { LoginModule } from './modules/login/login.module';
 import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
 import { InternalApiModule } from 'src/modules-api/internal-api/internal-api.module';
 import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageModule';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageM
     HomeModule,
     InternalApiModule,
     LoginModule,
+    SubscriptionModule,
     ScanApiModule,
     ExceptionPageModule,
     ConfigModule.forRoot({

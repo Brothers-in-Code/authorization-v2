@@ -154,8 +154,12 @@ export class AuthController {
       if (userSubscription) {
         const subscriptionToken = await this.authService.createJWTToken(
           user.id,
-          { userSubscription },
+          {
+            subscription: userSubscription.subscription,
+            endDate: userSubscription.endDate.getTime(),
+          },
         );
+        // todo увеличить продолжительность жизни токена СПРОСИТЬ ПАВЛА
         res.cookie('user_subscription', subscriptionToken, cookieOptions);
       }
       // todo удалить cookies, которые добавил в процессе авторизации

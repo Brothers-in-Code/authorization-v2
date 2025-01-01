@@ -32,6 +32,28 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
           redirectTo,
         )}&message=${message}`,
       );
+    } else if (
+      exception instanceof UnauthorizedException &&
+      exception.message.includes('SUBSCRIPTION_GUARD')
+    ) {
+      this.logger.warn(`UserGuard Exception caught: ${exception.message}`);
+      const redirectTo = request.originalUrl;
+      let message: string;
+
+      if (exception.message.includes(UnauthorizedStatus.NO_TOKEN)) {
+        message = 'Для доступа в этой раздел, пожалуйста, оформите подписку';
+      } else if (exception.message.includes(UnauthorizedStatus.EXPIRED_TOKEN)) {
+        message = 'К сожалению, ваша подписка закончилась';
+      } else {
+        message =
+          'Токен подписки недействителен. Перезагрузите страницу или обратитесь в поддержу';
+      }
+
+      response.redirect(
+        `/subscription?redirectTo=${encodeURIComponent(
+          redirectTo,
+        )}&message=${message}`,
+      );
     } else {
       throw exception;
     }

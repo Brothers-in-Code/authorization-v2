@@ -18,7 +18,9 @@ export class UserSubscriptionService {
     return this.userSubscriptionRepository.save(userSubscription);
   }
 
-  async findPermission(user_id: number): Promise<boolean> {
+  async findPermission(
+    user_id: number,
+  ): Promise<{ subscription: boolean; endDate: Date }> {
     const userSubscription = await this.userSubscriptionRepository.findOne({
       where: {
         user: {
@@ -27,8 +29,14 @@ export class UserSubscriptionService {
       },
     });
     if (!userSubscription) {
-      return false;
+      return {
+        subscription: false,
+        endDate: null,
+      };
     }
-    return userSubscription.subscription;
+    return {
+      subscription: userSubscription.subscription,
+      endDate: userSubscription.endDate,
+    };
   }
 }
