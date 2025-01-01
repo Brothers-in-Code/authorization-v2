@@ -424,11 +424,10 @@ const mockState = describe('AuthService Unit Tests', () => {
     });
 
     it('should create a JWT token', async () => {
-      const response = await authService.createJWTToken(
-        mockUserId,
-        mockAdditionalParams.first,
-        mockAdditionalParams.second,
-      );
+      const response = await authService.createJWTToken(mockUserId, {
+        first: mockAdditionalParams.first,
+        second: mockAdditionalParams.second,
+      });
       expect(jwtService.signAsync).toHaveBeenCalledWith(expectedPayload);
       expect(response).toEqual('mockToken');
     });

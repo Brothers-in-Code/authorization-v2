@@ -40,7 +40,7 @@ describe('InternalGuard', () => {
       }),
     };
     const result = guard.canActivate(context as unknown as ExecutionContext);
-    expect(result).rejects.toThrow(
+    await expect(result).rejects.toThrow(
       new UnauthorizedException(
         'API_INTERNAL_GUARD: Wrong Authorization header',
       ),
@@ -57,7 +57,7 @@ describe('InternalGuard', () => {
       }),
     };
     const result = guard.canActivate(context as unknown as ExecutionContext);
-    expect(result).rejects.toThrow(
+    await expect(result).rejects.toThrow(
       new UnauthorizedException(
         'API_INTERNAL_GUARD: Wrong Authorization header',
       ),
