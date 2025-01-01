@@ -36,7 +36,7 @@ export class UserGuard implements CanActivate {
 
       if (tokenExpiresTimestamp < nowTimestamp) {
         throw new UnauthorizedException(
-          `USER_GUARD: ${UnauthorizedStatus.EXPIRED_TOKEN}`,
+          `USER_GUARD: userId: ${payload.sub} ${UnauthorizedStatus.EXPIRED_TOKEN}`,
         );
       }
     } catch (error) {

@@ -14,10 +14,19 @@ export class SubscriptionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const subscriptionToken = request.cookies?.user_subscription;
+    const userToken = request.cookies?.user_token;
+    let userId: number | null;
+
+    if (userToken) {
+      const payload = await this.jwtService.verifyAsync(userToken);
+      userId = payload.sub;
+    } else {
+      userId = null;
+    }
 
     if (!subscriptionToken) {
       throw new UnauthorizedException(
-        `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.NO_TOKEN}`,
+        `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.NO_TOKEN}`,
       );
     }
     try {
@@ -31,13 +40,11 @@ export class SubscriptionGuard implements CanActivate {
       const nowTimestamp = Date.now();
       if (payload.endDate < nowTimestamp) {
         throw new UnauthorizedException(
-          `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.EXPIRED_TOKEN}`,
+          `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.EXPIRED_TOKEN}`,
         );
       }
     } catch (error) {
-      throw new UnauthorizedException(
-        `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
-      );
+      throw new UnauthorizedException(`SUBSCRIPTION_GUARD:  ${error}`);
     }
     return true;
   }

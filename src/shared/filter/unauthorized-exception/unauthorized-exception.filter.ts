@@ -40,13 +40,17 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
       const redirectTo = request.originalUrl;
       let message: string;
 
-      if (exception.message.includes(UnauthorizedStatus.EXPIRED_TOKEN)) {
-        message = 'К сожалению подписка закончилась';
+      if (exception.message.includes(UnauthorizedStatus.NO_TOKEN)) {
+        message = 'Для доступа в этой раздел, пожалуйста, оформите подписку';
+      } else if (exception.message.includes(UnauthorizedStatus.EXPIRED_TOKEN)) {
+        message = 'К сожалению, ваша подписка закончилась';
+      } else {
+        message =
+          'Токен подписки недействителен. Перезагрузите страницу или обратитесь в поддержу';
       }
-      if (exception.message.includes(UnauthorizedStatus.EXPIRED_TOKEN)) {
-      }
+
       response.redirect(
-        `subscription?redirectTo=${encodeURIComponent(
+        `/subscription?redirectTo=${encodeURIComponent(
           redirectTo,
         )}&message=${message}`,
       );

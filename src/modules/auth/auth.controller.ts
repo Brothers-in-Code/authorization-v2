@@ -159,7 +159,6 @@ export class AuthController {
             endDate: userSubscription.endDate.getTime(),
           },
         );
-        this.logger.debug(`endDate: ${userSubscription.endDate.getTime()}`);
         // todo увеличить продолжительность жизни токена СПРОСИТЬ ПАВЛА
         res.cookie('user_subscription', subscriptionToken, cookieOptions);
       }
