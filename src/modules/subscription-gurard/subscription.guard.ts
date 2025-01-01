@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedStatus } from 'src/shared/enum/unauthorized-enum';
 
 @Injectable()
 export class SubscriptionGuard implements CanActivate {
@@ -12,21 +13,31 @@ export class SubscriptionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const subscriptionToken = request.cookies?.subscription_token;
+    const subscriptionToken = request.cookies?.user_subscription;
 
     if (!subscriptionToken) {
       throw new UnauthorizedException(
-        'There is no subscription_token in cookies',
+        `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.NO_TOKEN}`,
       );
     }
     try {
-      await this.jwtService.verifyAsync(subscriptionToken);
+      const payload = await this.jwtService.verifyAsync(subscriptionToken);
 
       request['subscription'] = {
-        subscription: true,
+        subscription: payload.subscription,
+        endDate: payload.endDate,
       };
+
+      const nowTimestamp = Date.now();
+      if (payload.endDate < nowTimestamp) {
+        throw new UnauthorizedException(
+          `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.EXPIRED_TOKEN}`,
+        );
+      }
     } catch (error) {
-      throw new UnauthorizedException('Wrong subscription_token');
+      throw new UnauthorizedException(
+        `SUBSCRIPTION_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
+      );
     }
     return true;
   }

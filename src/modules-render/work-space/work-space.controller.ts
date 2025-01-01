@@ -21,6 +21,7 @@ import { UserGuard } from 'src/modules/user-guard/user.guard';
 import { Response } from 'express';
 import { UnauthorizedExceptionFilter } from 'src/shared/filter/unauthorized-exception/unauthorized-exception.filter';
 import { ConfigService } from '@nestjs/config';
+import { SubscriptionGuard } from 'src/modules/subscription-gurard/subscription.guard';
 
 @UseGuards(UserGuard)
 @UseFilters(UnauthorizedExceptionFilter)
@@ -118,6 +119,7 @@ export class WorkSpaceController {
   }
 
   // TODO   NOTE проверить как сохраняются комментарии (должно быть update, если такой пост в отчет добавлен)
+  @UseGuards(SubscriptionGuard)
   @Get('work-space/posts')
   @Render('pages/posts')
   async renderPosts(
@@ -153,6 +155,7 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
+  @UseGuards(SubscriptionGuard)
   @Post('work-space/posts')
   @Render('pages/posts')
   async receivePosts(
@@ -239,6 +242,7 @@ export class WorkSpaceController {
     return { data: dataToRender };
   }
 
+  @UseGuards(SubscriptionGuard)
   @Get('work-space/reports')
   @Render('pages/reports')
   async renderReports(
@@ -279,6 +283,7 @@ export class WorkSpaceController {
     };
   }
 
+  @UseGuards(SubscriptionGuard)
   @Post('work-space/reports/:reportId')
   @Render('pages/one-report.ejs')
   async receiveReport(
