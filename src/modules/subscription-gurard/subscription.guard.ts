@@ -29,23 +29,30 @@ export class SubscriptionGuard implements CanActivate {
         `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.NO_TOKEN}`,
       );
     }
+
+    let subscriptionPayload: any = null;
     try {
-      const payload = await this.jwtService.verifyAsync(subscriptionToken);
-
-      request['subscription'] = {
-        subscription: payload.subscription,
-        endDate: payload.endDate,
-      };
-
-      const nowTimestamp = Date.now();
-      if (payload.endDate < nowTimestamp) {
-        throw new UnauthorizedException(
-          `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.EXPIRED_TOKEN}`,
-        );
-      }
+      subscriptionPayload = await this.jwtService.verifyAsync(
+        subscriptionToken,
+      );
     } catch (error) {
-      throw new UnauthorizedException(`SUBSCRIPTION_GUARD:  ${error}`);
+      throw new UnauthorizedException(
+        `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.WRONG_TOKEN}  ${error}`,
+      );
     }
+
+    request['subscription'] = {
+      subscription: subscriptionPayload.subscription,
+      endDate: subscriptionPayload.endDate,
+    };
+
+    const nowTimestamp = Date.now();
+    if (subscriptionPayload.endDate < nowTimestamp) {
+      throw new UnauthorizedException(
+        `SUBSCRIPTION_GUARD: userId ${userId}, ${UnauthorizedStatus.EXPIRED_TOKEN}`,
+      );
+    }
+
     return true;
   }
 }
