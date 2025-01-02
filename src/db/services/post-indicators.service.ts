@@ -40,6 +40,7 @@ export class PostIndicatorsService {
       );
       if (!postIndicator) {
         postIndicator = this.implementPostIndicator();
+        postIndicator.indicatorsList = [];
       }
       return this.updatePostIndicatorProperty(postIndicator, item);
     });
