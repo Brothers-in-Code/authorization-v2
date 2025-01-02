@@ -1,6 +1,14 @@
-import { AbstractEntity } from '../entities/abstract.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { AbstractEntity } from '../entities/abstract.entity';
 import { Post } from './post.entity';
+
+type IndicatorsType = {
+  datetime: number;
+  views: number;
+  likes: number;
+  repost: number;
+  comment: number;
+};
 
 @Entity('postIndicators')
 export class PostIndicators extends AbstractEntity {
@@ -8,6 +16,6 @@ export class PostIndicators extends AbstractEntity {
   @JoinColumn({ name: 'post_id' })
   post: Post;
 
-  @Column({ type: 'json', name: 'indicatorsList' })
-  indicatorsList: any;
+  @Column({ type: 'json', name: 'indicatorsList', default: [] })
+  indicatorsList: IndicatorsType[];
 }
