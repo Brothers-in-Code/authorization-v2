@@ -27,6 +27,7 @@ export class ScanApiService {
 
   private readonly logger = new Logger(ScanApiService.name);
 
+  // todo скорее всего можно удалить - проверить использование в scan-api.controller.getAccessToken
   async saveUser(
     user_id: number,
     access_token: string,

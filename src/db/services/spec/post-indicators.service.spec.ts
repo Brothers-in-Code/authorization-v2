@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostIndicatorsService } from 'src/db/services/post-indicators.service';
+import {
+  PostIndicatorParamsType,
+  PostIndicatorsService,
+} from 'src/db/services/post-indicators.service';
 import { DataSource, Repository } from 'typeorm';
 import { PostIndicators } from 'src/db/entities/postIndicators.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -7,6 +10,7 @@ import { configuration } from 'src/configuration';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DBModule } from 'src/db/db.module';
+import { Post } from 'src/db/entities/post.entity';
 
 describe('PostIndicatorsService', () => {
   let service: PostIndicatorsService;
@@ -59,7 +63,7 @@ describe('PostIndicatorsService', () => {
     queryRunner = dataSource.createQueryRunner();
 
     await queryRunner.startTransaction();
-  }, 30000);
+  });
 
   afterAll(async () => {
     await queryRunner.rollbackTransaction();
@@ -69,5 +73,25 @@ describe('PostIndicatorsService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  }, 30000);
+  });
+
+  it('create new record postIndicator to DB', async () => {
+    const datetime = Date.now();
+    const mockPostIndicatorsProp: PostIndicatorParamsType = {
+      post: { id: 1 } as Post,
+      indicators: {
+        datetime: datetime,
+        views: 1,
+        likes: 1,
+        repost: 1,
+        comment: 1,
+      },
+    };
+
+    const newPostIndicatorList = await service.createOrUpdatePostIndicatorList([
+      mockPostIndicatorsProp,
+    ]);
+
+    expect(newPostIndicatorList).toBeDefined();
+  });
 });

@@ -2,6 +2,7 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { PostIndicators } from 'src/db/entities/postIndicators.entity';
+import { Post } from 'src/db/entities/post.entity';
 
 type IndicatorsType = {
   datetime: number;
@@ -11,8 +12,8 @@ type IndicatorsType = {
   comment: number;
 };
 
-type PostIndicatorPropType = {
-  postId: number;
+export type PostIndicatorParamsType = {
+  post: Post;
   indicators: IndicatorsType;
 };
 
@@ -28,15 +29,18 @@ export class PostIndicatorsService {
   }
 
   async createOrUpdatePostIndicatorList(
-    postIndicatorList: PostIndicatorPropType[],
+    postIndicatorList: PostIndicatorParamsType[],
   ) {
     const existingPostIndicatorList = await this.postIndicatorsRepository.find({
-      where: { post: { id: In(postIndicatorList.map((item) => item.postId)) } },
+      where: {
+        post: { id: In(postIndicatorList.map((item) => item.post.id)) },
+      },
+      relations: ['post'],
     });
 
     const newPostIndicatorList = postIndicatorList.map((item) => {
       let postIndicator = existingPostIndicatorList.find(
-        (existingItem) => existingItem.post.id === item.postId,
+        (existingItem) => existingItem.post.id === item.post.id,
       );
       if (!postIndicator) {
         postIndicator = this.implementPostIndicator();
@@ -50,10 +54,10 @@ export class PostIndicatorsService {
 
   private updatePostIndicatorProperty(
     postIndicator: PostIndicators,
-    props: PostIndicatorPropType,
+    params: PostIndicatorParamsType,
   ) {
-    postIndicator.post.id = postIndicator.id;
-    postIndicator.indicatorsList.push(props.indicators);
+    postIndicator.post = params.post;
+    postIndicator.indicatorsList.push(params.indicators);
 
     return postIndicator;
   }
