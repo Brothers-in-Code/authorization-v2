@@ -67,7 +67,6 @@ export class WorkSpaceController {
     );
     dataToRender['userAvatar'] = userAvatar;
     dataToRender['currentEnv'] = this.configService.get('app.currentEnv');
-
     return { data: dataToRender };
   }
 
