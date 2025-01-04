@@ -121,6 +121,7 @@ export class AuthService {
     };
   }
 
+  // todo в случае ошибки должен возвращать ошибку
   async refreshAccessToken(
     refresh_token: string,
     device_id: string,
@@ -134,6 +135,20 @@ export class AuthService {
       scope: ['groups, email'],
       device_id,
     };
+
+    this.httpService.axiosRef.interceptors.request.use(
+      (config) => {
+        this.logger.debug('INTERCEPTOR');
+        this.logger.debug(`url: ${config.url}`);
+        this.logger.debug(`data: ${config.data}`);
+        this.logger.debug(`headers: ${config.headers}`);
+        return config;
+      },
+      (error) => {
+        this.logger.debug(error);
+        return Promise.reject(error);
+      },
+    );
 
     const response = await this.httpService.axiosRef.post<VKResponseTokenType>(
       `${AUTH_API}/auth`,

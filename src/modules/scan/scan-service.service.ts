@@ -85,6 +85,7 @@ export class ScanService implements OnModuleInit {
     if (queryResultList) {
       for (const queryResult of queryResultList) {
         const tokenResult = await this.getNewAccessToken(queryResult.userVkId);
+
         this.logger.log('получен новый access_token');
 
         const scanGroupListResult = await this.scanGroupList(
@@ -195,12 +196,13 @@ export class ScanService implements OnModuleInit {
   private readonly apiInternalSecret = this.configService.get<string>(
     'app.apiInternalSecret',
   );
+
   private readonly VK_API = 'https://api.vk.com/method';
   private readonly VK_API_VERSION = 5.199;
   private readonly HOST = this.configService.get('app.host');
   private readonly PROTOCOL = this.configService.get('app.protocol');
   private readonly SCAN_API = `${this.PROTOCOL}://${this.HOST}/api/scan/`;
-  //   private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
+  // private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
   private readonly AUTH_API = `${this.PROTOCOL}://${this.HOST}/api/auth/`;
 
   //   TODO получать access_token через authService

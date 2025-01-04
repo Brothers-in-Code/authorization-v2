@@ -182,6 +182,7 @@ export class AuthController {
     @Body() { user_vkid }: { user_vkid: number },
   ): Promise<SuccessResponseType<{ access_token: string }>> {
     const user = await this.userService.findOne(user_vkid);
+
     if (!user) {
       this.logger.error(`User with id = ${user_vkid} not found`);
       throw new HttpException(

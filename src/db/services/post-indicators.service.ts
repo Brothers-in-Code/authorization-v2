@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { PostIndicators } from 'src/db/entities/postIndicators.entity';
 import { Post } from 'src/db/entities/post.entity';
 
-type IndicatorsType = {
+export type IndicatorsType = {
   datetime: number;
   views: number;
   likes: number;
@@ -44,21 +44,13 @@ export class PostIndicatorsService {
       );
       if (!postIndicator) {
         postIndicator = this.implementPostIndicator();
+        postIndicator.post = item.post;
         postIndicator.indicatorsList = [];
       }
-      return this.updatePostIndicatorProperty(postIndicator, item);
+      postIndicator.indicatorsList.push(item.indicators);
+      return postIndicator;
     });
 
     return this.postIndicatorsRepository.save(newPostIndicatorList);
-  }
-
-  private updatePostIndicatorProperty(
-    postIndicator: PostIndicators,
-    params: PostIndicatorParamsType,
-  ) {
-    postIndicator.post = params.post;
-    postIndicator.indicatorsList.push(params.indicators);
-
-    return postIndicator;
   }
 }
