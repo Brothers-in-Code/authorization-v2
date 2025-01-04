@@ -1,21 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository,  } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import {
   Between,
   FindOptionsOrder,
-  In, IsNull,
+  In,
+  IsNull,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Repository
+  Repository,
 } from 'typeorm';
 import { Group } from '../entities/group.entity';
+import { IndicatorsType } from 'src/db/services/post-indicators.service';
 
 type PostListOutputType = {
   total: number;
   offset: number;
   limit: number;
   posts: { group: { id: number; name: string }; post: string }[];
+  // indicatorsList: IndicatorsType[];
 };
 
 type PostParamsType = {

@@ -42,7 +42,7 @@
       fill: var(--bs-green);
     }
 
-    &:hover {
+      &:hover {
       .sprite-icon {
         fill: var(--green-light);
       }
@@ -87,19 +87,21 @@
 
   .ceil-body {
     position: relative;
-
-    &__btn {
+    &__control {
       position: absolute;
-      top: 0px;
-      right: 0;
-
-      .sprite-icon {
-        width: 16px;
-        height: 16px;
-      }
-    }
-    &__btn--up {
       top: -5px;
+      right: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .table__btn-icon {
+        padding-block: 0;
+        .sprite-icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
     }
   }
 }

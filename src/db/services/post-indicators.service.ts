@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { PostIndicators } from 'src/db/entities/postIndicators.entity';
 import { Post } from 'src/db/entities/post.entity';
 
-type IndicatorsType = {
+export type IndicatorsType = {
   datetime: number;
   views: number;
   likes: number;
