@@ -37,6 +37,7 @@ export class ScanApiController {
     return { data: queryResultList };
   }
 
+  // TODO удалить метод getAccessToken - в scan-service используется auth-api
   /**
    * @description Получение нового access_token
    * @function getAccessToken

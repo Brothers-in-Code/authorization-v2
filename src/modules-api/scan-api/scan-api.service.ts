@@ -1,11 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { GroupService } from 'src/db/services/group.service';
 import { PostService } from 'src/db/services/post.service';
-import { DatabaseServiceError } from 'src/errors/service-errors';
 import { AuthService } from 'src/modules/auth/services/auth.service';
-import { DataSource } from 'typeorm';
+import {
+  PostIndicatorParamsType,
+  PostIndicatorsService,
+} from 'src/db/services/post-indicators.service';
+
+import { DatabaseServiceError } from 'src/errors/service-errors';
+import { Post } from 'src/db/entities/post.entity';
 
 type ExecuteQueryOutputType = {
   userVkId: number;
@@ -23,10 +29,12 @@ export class ScanApiService {
     private readonly authService: AuthService,
     private postService: PostService,
     private groupService: GroupService,
+    private readonly postIndicatorService: PostIndicatorsService,
   ) {}
 
   private readonly logger = new Logger(ScanApiService.name);
 
+  // todo скорее всего можно удалить - проверить использование в scan-api.controller.getAccessToken
   async saveUser(
     user_id: number,
     access_token: string,
@@ -81,7 +89,37 @@ export class ScanApiService {
         'func: savePostList. Ошибка сохранения постов',
       );
     }
+
+    const postIndicatorParamsList: PostIndicatorParamsType[] =
+      this.formatPostIndicatorsParamsList(postList);
+
+    const savedPostIndicators =
+      await this.postIndicatorService.createOrUpdatePostIndicatorList(
+        postIndicatorParamsList,
+      );
+
+    if (!savedPostIndicators) {
+      throw new DatabaseServiceError(
+        'func: savePostList. Ошибка сохранения PostIndicators',
+      );
+    }
+
     return postList;
+  }
+
+  private formatPostIndicatorsParamsList(
+    postList: Post[],
+  ): PostIndicatorParamsType[] {
+    return postList.map((post) => ({
+      post: post,
+      indicators: {
+        datetime: Date.now(),
+        views: post.json.views.count,
+        likes: post.json.likes.count,
+        repost: post.json.reposts.count,
+        comment: post.json.comments.count,
+      },
+    }));
   }
 
   async dataScanQuery(): Promise<ExecuteQueryOutputType[]> {

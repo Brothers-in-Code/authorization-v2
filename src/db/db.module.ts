@@ -21,6 +21,8 @@ import { Report } from './entities/report.entity';
 import { ReportService } from './services/report.service';
 import { ReportCommentService } from './services/report-comment.service';
 import { UserReportService } from './services/user-report.service';
+import { PostIndicators } from 'src/db/entities/postIndicators.entity';
+import { PostIndicatorsService } from 'src/db/services/post-indicators.service';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { UserReportService } from './services/user-report.service';
       Report,
       ReportComment,
       UserReport,
+      PostIndicators,
     ]),
   ],
 
@@ -47,6 +50,7 @@ import { UserReportService } from './services/user-report.service';
     ReportService,
     ReportCommentService,
     UserReportService,
+    PostIndicatorsService,
   ],
   exports: [
     PostService,
@@ -58,6 +62,7 @@ import { UserReportService } from './services/user-report.service';
     ReportService,
     ReportCommentService,
     UserReportService,
+    PostIndicatorsService,
   ],
 })
 export class DBModule {}
