@@ -331,17 +331,20 @@
 .table .ceil-body {
   position: relative;
 }
-.table .ceil-body__btn {
+.table .ceil-body__control {
   position: absolute;
-  top: 0px;
+  top: -5px;
   right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
-.table .ceil-body__btn .sprite-icon {
+.table .ceil-body__control .table__btn-icon {
+  padding-block: 0;
+}
+.table .ceil-body__control .table__btn-icon .sprite-icon {
   width: 16px;
   height: 16px;
-}
-.table .ceil-body__btn--up {
-  top: -5px;
 }
 
 .table--groups th {
@@ -654,6 +657,10 @@ textarea[disabled] {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+.view-modal--vertical {
+  max-width: 700px;
 }
 
 .view-modal--hide {

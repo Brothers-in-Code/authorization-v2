@@ -137,10 +137,10 @@
 
       <!-- icon666.com - MILLIONS vector ICONS FREE -->
       <symbol
-        id="reset-filter"
-        enable-background="new 0 0 512 512"
-        viewBox="0 0 512 512"
         xmlns="http://www.w3.org/2000/svg"
+        id="reset-filter"
+        viewBox="0 0 512 512"
+        enable-background="new 0 0 512 512"
       >
         <g>
           <path
@@ -150,6 +150,14 @@
             d="m281.951 30.166c-75.076 67.31-38.685 187.35 55.962 206.05 75.479 15.948 143.193-43.867 143.193-116.945 0-102.594-122.364-157.159-199.155-89.105zm118.529 106.804c9.515 9.466 2.715 25.676-10.603 25.676-8.014 0-10.022-3.79-28.462-22.158-18.064 17.984-20.27 22.158-28.472 22.158-13.349 0-20.063-16.264-10.603-25.676l17.769-17.699-17.769-17.699c-14.107-14.035 7.142-35.322 21.216-21.297l17.859 17.779 17.849-17.779c14.074-14.025 35.331 7.254 21.216 21.297l-17.769 17.699z"
           />
         </g>
+      </symbol>
+      <symbol
+        xmlns="http://www.w3.org/2000/svg"
+        id="file-bar-graph"
+        viewBox="0 0 16 16"
+      >
+        <path d="M4.5 12a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5zm3 0a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5zm3 0a.5.5 0 0 1-.5-.5v-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5z"/>
+        <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
       </symbol>
     </svg>
 
@@ -167,6 +175,7 @@
 
       <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
       <%- include('../components/post-view-modal.ejs') %>
+      <%- include('../components/indicators-view-modal.ejs') %>
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>
@@ -186,6 +195,7 @@
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
+
             <table class="table">
               <thead>
                 <tr>
@@ -354,19 +364,29 @@
                       <% } else { %>
                       <% imgPath = '' %>
                       <% } %>
-                      <% console.log(JSON.stringify(item?.indicatorsList)) %>
-                      <button
-                        class="btn-reset table__btn-icon table__btn-icon--local ceil-body__btn ceil-body__btn--up btn-post-view"
-                        data-bs-toggle="tooltip"
-                        data-bs-title="Посмотреть пост"
-                        data-ws-img-path="<%= imgPath %>"
-                        data-ws-group-name="<%= item.group.name %>"
-                        data-ws-text="<%= item?.post.text %>"
-                      >
-                        <svg class="sprite-icon">
-                          <use xlink:href="#zoom-in"></use>
-                        </svg>
-                      </button>
+                      <div class="ceil-body__control">
+                        <button
+                                class="btn-reset table__btn-icon table__btn-icon--local btn-post-view"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="Посмотреть пост"
+                                data-ws-img-path="<%= imgPath %>"
+                                data-ws-group-name="<%= item.group.name %>"
+                                data-ws-text="<%= item?.post.text %>"
+                        >
+                          <svg class="sprite-icon">
+                            <use xlink:href="#zoom-in"></use>
+                          </svg>
+                        </button>
+                        <button
+                                class="btn-reset table__btn-icon table__btn-icon--local js-btn-indicators-view"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="График индикаторов"
+                        >
+                          <svg class="sprite-icon">
+                            <use xlink:href="#file-bar-graph"></use>
+                          </svg>
+                        </button>
+                      </div>
                       <div>
                         <div class="tech-info">
                           <div class="tech-info__item">
@@ -446,6 +466,7 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/utils/pop-up.js"></script>
 
     <script src="/js/utils/call-popup.js"></script>
@@ -453,7 +474,9 @@
 
     <script src="/js/fetch-data.js"></script>
     <script src="/js/post-view.js"></script>
+    <script src="/js/indicators-view.js"></script>
     <script defer src="/js/utils/tooltip-init.js"></script>
+
 
     <% if ( data.message) { %>
     <script>
