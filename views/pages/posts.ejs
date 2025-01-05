@@ -175,6 +175,7 @@
 
       <%- include('../components/report-post-modal.ejs', {reportList: data.reportList}) %>
       <%- include('../components/post-view-modal.ejs') %>
+      <%- include('../components/indicators-view-modal.ejs') %>
       <div class="page-layout">
         <!-- prettier-ignore -->
         <%- include('../components/nav-section.ejs') %>
@@ -194,6 +195,7 @@
         >
           <h2><%= data.pageTitle %></h2>
           <div class="page-layout__wrapper">
+
             <table class="table">
               <thead>
                 <tr>
@@ -376,7 +378,7 @@
                           </svg>
                         </button>
                         <button
-                                class="btn-reset table__btn-icon table__btn-icon--local btn-indicators-view"
+                                class="btn-reset table__btn-icon table__btn-icon--local js-btn-indicators-view"
                                 data-bs-toggle="tooltip"
                                 data-bs-title="График индикаторов"
                         >
@@ -464,6 +466,7 @@
       integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/utils/pop-up.js"></script>
 
     <script src="/js/utils/call-popup.js"></script>
@@ -471,7 +474,9 @@
 
     <script src="/js/fetch-data.js"></script>
     <script src="/js/post-view.js"></script>
+    <script src="/js/indicators-view.js"></script>
     <script defer src="/js/utils/tooltip-init.js"></script>
+
 
     <% if ( data.message) { %>
     <script>
