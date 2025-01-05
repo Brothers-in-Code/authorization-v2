@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { AbstractEntity } from '../entities/abstract.entity';
 import { Post } from './post.entity';
 
-type IndicatorsType = {
+export type IndicatorsType = {
   datetime: number;
   views: number;
   likes: number;
