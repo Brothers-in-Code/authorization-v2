@@ -366,21 +366,24 @@
                       <% } %>
                       <div class="ceil-body__control">
                         <button
-                                class="btn-reset table__btn-icon table__btn-icon--local btn-post-view"
-                                data-bs-toggle="tooltip"
-                                data-bs-title="Посмотреть пост"
-                                data-ws-img-path="<%= imgPath %>"
-                                data-ws-group-name="<%= item.group.name %>"
-                                data-ws-text="<%= item?.post.text %>"
+                          class="btn-reset table__btn-icon table__btn-icon--local btn-post-view"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Посмотреть пост"
+                          data-ws-img-path="<%= imgPath %>"
+                          data-ws-group-name="<%= item.group.name %>"
+                          data-ws-text="<%= item?.post.text %>"
                         >
                           <svg class="sprite-icon">
                             <use xlink:href="#zoom-in"></use>
                           </svg>
                         </button>
+
                         <button
-                                class="btn-reset table__btn-icon table__btn-icon--local js-btn-indicators-view"
-                                data-bs-toggle="tooltip"
-                                data-bs-title="График индикаторов"
+                          class="btn-reset table__btn-icon table__btn-icon--local js-btn-indicators-view"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="График индикаторов"
+                          data-ws-indicators-list="<%= item?  JSON.stringify(item.indicatorsList) : JSON.stringify([]) %>"
+                          data-ws-indicators-title="<%= item?.post?.text?.slice(0, 30) %>"
                         >
                           <svg class="sprite-icon">
                             <use xlink:href="#file-bar-graph"></use>

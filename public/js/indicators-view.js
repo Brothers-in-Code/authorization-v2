@@ -1,68 +1,87 @@
 (() => {
-  const indicatorsViewModal = document.getElementById('indicators-view');
-  const content = indicatorsViewModal.querySelector('.view-modal__content');
-  const btnClose = indicatorsViewModal.querySelector('.js-btn-close');
-  const btnOpenList = document.querySelectorAll('.js-btn-indicators-view');
-  const chartCanvas = document.getElementById('js-indicators-chart');
+  const INDICATORS_VIEW_MODAL = document.getElementById('indicators-view');
+  const CONTENT = INDICATORS_VIEW_MODAL.querySelector('.view-modal__content');
+  const BTN_CLOSE = INDICATORS_VIEW_MODAL.querySelector('.js-btn-close');
+  const BTN_OPEN_LIST = document.querySelectorAll('.js-btn-indicators-view');
+  const CHART_CANVAS = document.getElementById('js-indicators-chart');
 
-  if (btnClose) {
-    btnClose.addEventListener('click', () => {
-      indicatorsViewModal.classList.add('view-modal--hide');
+  const dateFormater = Intl.DateTimeFormat('ru-Ru', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+
+  if (BTN_CLOSE) {
+    BTN_CLOSE.addEventListener('click', () => {
+      INDICATORS_VIEW_MODAL.classList.add('view-modal--hide');
     });
   }
 
-  if (btnOpenList.length > 0) {
-    btnOpenList.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        openChart('test title');
-      });
+  if (BTN_OPEN_LIST.length > 0) {
+    BTN_OPEN_LIST.forEach((btn) => {
+      btn.addEventListener('click', handleBtnOpenClick);
     });
   }
 
-  // note для тестов
-  const labels = [
-    '01.01.2024 12:00',
-    '01.01.2024 13:00',
-    '01.01.2024 14:00',
-    '01.01.2024 15:00',
-    '02.01.2024',
-    '03.01.2024',
-    '04.01.2024',
-    '05.01.2024',
-    '06.01.2024',
-    '07.01.2024',
-  ];
+  function handleBtnOpenClick(event) {
+    const btn = event.currentTarget;
 
-  const data = [
-    {
-      label: 'likes',
-      data: [1, 3, 4, 5, 6, 7, 8, 9, 10],
-    },
-    {
-      label: 'views',
-      data: [10, 30, 40, 50, 60, 70, 80, 90, 100],
-    },
-    {
-      label: 'comments',
-      data: [2, 3, 7, 9, 9, 9, 9, 9, 15],
-    },
-    {
-      label: 'reposts',
-      data: [2, 5, 6, 9, 9, 9, 9, 9, 12],
-    },
-  ];
+    const indicatorsTitle = btn.dataset.wsIndicatorsTitle;
+    const { labels, datasets } = formatData(
+      JSON.parse(btn.dataset.wsIndicatorsList),
+    );
 
-  function openChart(title) {
-    indicatorsViewModal.classList.remove('view-modal--hide');
-    const header = createHeader(title);
-    content.replaceChildren(header);
-    const chart = createChart(chartCanvas, labels, data);
+    openChart(indicatorsTitle);
 
-    if (btnClose) {
-      btnClose.addEventListener('click', () => {
+    const chart = createChart(CHART_CANVAS, labels, datasets);
+
+    if (BTN_CLOSE) {
+      BTN_CLOSE.addEventListener('click', () => {
         chart.destroy();
       });
     }
+  }
+
+  function formatData(dataList) {
+    const labels = [];
+    const dataMap = new Map();
+    if (dataList.length > 0) {
+      dataList.forEach((item) => {
+        for (let [key, value] of Object.entries(item)) {
+          if (key === 'datetime') {
+            const date = new Date(Number(value));
+            labels.push(dateFormater.format(date));
+          } else {
+            if (!dataMap.has(key)) {
+              dataMap.set(key, []);
+            }
+            dataMap.get(key).push(value);
+          }
+        }
+      });
+    }
+
+    const datasets = Array.from(dataMap.entries()).reduce((acc, item) => {
+      const obj = {
+        label: item[0],
+        data: item[1],
+      };
+      acc.push(obj);
+      return acc;
+    }, []);
+
+    return {
+      labels,
+      datasets,
+    };
+  }
+
+  function openChart(title) {
+    INDICATORS_VIEW_MODAL.classList.remove('view-modal--hide');
+    const header = createHeader(title);
+    CONTENT.replaceChildren(header);
   }
 
   function createChart(ctx, labels, datasets) {
@@ -94,6 +113,7 @@
     header.append(title);
     return header;
   }
+
   function createEl(el) {
     return document.createElement(el);
   }
