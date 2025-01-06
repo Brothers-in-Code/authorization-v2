@@ -1,15 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository,  } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entities/post.entity';
 import {
   Between,
   FindOptionsOrder,
-  In, IsNull,
+  In,
+  IsNull,
   LessThanOrEqual,
   MoreThanOrEqual,
-  Repository
+  Repository,
 } from 'typeorm';
 import { Group } from '../entities/group.entity';
+import {
+  IndicatorsType,
+  PostIndicators,
+} from 'src/db/entities/postIndicators.entity';
 
 type PostListOutputType = {
   total: number;
@@ -130,7 +135,7 @@ export class PostService {
     const posts = await this.postRepository
       .find({
         where: whereConditions,
-        relations: { group: true },
+        relations: { group: true, postIndicators: true },
         skip: data.offset,
         take: data.limit,
         order: order,
@@ -146,6 +151,9 @@ export class PostService {
             },
             post: post.json,
             keywords: post.keywords,
+            indicatorsList: post.postIndicators
+              ? post.postIndicators.indicatorsList
+              : [],
           };
         }),
       );

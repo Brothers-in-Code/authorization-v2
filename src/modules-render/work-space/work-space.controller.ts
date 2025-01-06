@@ -150,6 +150,36 @@ export class WorkSpaceController {
       },
     );
     dataToRender['userAvatar'] = userAvatar;
+    dataToRender['indicatorsList'] = [
+      {
+        datetime: 1735754379000,
+        views: 1,
+        likes: 1,
+        repost: 1,
+        comment: 1,
+      },
+      {
+        datetime: 1735840779000,
+        views: 2,
+        likes: 2,
+        repost: 2,
+        comment: 2,
+      },
+      {
+        datetime: 17359271790000,
+        views: 3,
+        likes: 3,
+        repost: 3,
+        comment: 3,
+      },
+      {
+        datetime: 17360271790000,
+        views: 5,
+        likes: 5,
+        repost: 5,
+        comment: 5,
+      },
+    ];
 
     return { data: dataToRender };
   }

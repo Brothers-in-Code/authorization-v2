@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { AbstractEntity } from '../entities/abstract.entity';
 import { Group } from './group.entity';
+import { PostIndicators } from 'src/db/entities/postIndicators.entity';
 
 @Entity()
 export class Post extends AbstractEntity {
@@ -28,4 +29,7 @@ export class Post extends AbstractEntity {
 
   @Column()
   keywords?: string;
+
+  @OneToOne(() => PostIndicators, (postIndicators) => postIndicators.post)
+  postIndicators: PostIndicators;
 }
