@@ -659,10 +659,6 @@ textarea[disabled] {
   right: 10px;
 }
 
-.view-modal--vertical {
-  max-width: 700px;
-}
-
 .view-modal--hide {
   transform: translateY(-200%);
 }

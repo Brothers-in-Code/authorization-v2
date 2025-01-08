@@ -35,7 +35,8 @@ module.exports = class Migration1732916829368 {
       `ALTER TABLE \`userSubscription\` ADD CONSTRAINT \`FK_c6be1f2cba5ee4da18e3432c5be\` FOREIGN KEY (\`user_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE \`user_report\` ADD CONSTRAINT \`FK_3d355b3cbf05ae70386830ce05a\` FOREIGN KEY (\`user_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+      `ALTER TABLE \`user_report\` ADD CONSTRAINT \`FK_3d355b3cbf05ae70386830ce05a\` 
+    FOREIGN KEY (\`user_id\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE \`user_report\` ADD CONSTRAINT \`FK_eae411a4a5c228ad64b2c7ecba4\` FOREIGN KEY (\`report_id\`) REFERENCES \`report\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`,
