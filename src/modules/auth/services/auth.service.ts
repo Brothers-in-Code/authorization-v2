@@ -2,7 +2,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import * as qs from 'qs';
-import { getVerifier, getAppState } from 'src/utils/verifiers';
+import { getAppState, getVerifier } from 'src/utils/verifiers';
 import { UserService } from 'src/db/services/user.service';
 
 import { VKResponseTokenType } from 'src/types/vk-refresh-token-type';
@@ -11,6 +11,8 @@ import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import { DatabaseServiceError } from 'src/errors/service-errors';
 import { VKUserInfoType } from 'src/types/vk-user-info-type';
 import { JwtService } from '@nestjs/jwt';
+import { UserSubscriptionService } from 'src/db/services/user-subscription.service';
+import { SubscriptionType } from 'src/shared/enum/subscription-type-enum';
 
 type getAccessTokenOutputType = {
   access_token: string;
@@ -35,6 +37,7 @@ export class AuthService {
     private configService: ConfigService,
     private httpService: HttpService,
     private userService: UserService,
+    private readonly userSubscriptionService: UserSubscriptionService,
     private jwtService: JwtService,
   ) {}
 
@@ -231,21 +234,42 @@ export class AuthService {
       return updatedUser;
     } else {
       const newUser = await this.userService.createUser(params);
+
       if (!newUser) {
         throw new DatabaseServiceError(
           `func: saveUser. Не удалось создать пользователя ${user_vkid}`,
         );
       }
+      const userSubscription = await this.userSubscriptionService.addPermission(
+        newUser,
+        true,
+        SubscriptionType.TRIAL,
+        this.calcTrialPermissionEndDate(),
+      );
+
+      if (!userSubscription) {
+        throw new DatabaseServiceError(
+          `func: saveUser. Не удалось создать userSubscription для пользователя № ${user_vkid}`,
+        );
+      }
+
       return newUser;
     }
   }
 
-  calcExpiresDate(expires_in: number) {
+  calcUserTokenExpiresDate(expires_in: number) {
     const RESPONSE_DELAY = 200;
     const expires_date = new Date();
     expires_date.setSeconds(
       expires_date.getSeconds() + expires_in - RESPONSE_DELAY,
     );
     return expires_date;
+  }
+
+  private calcTrialPermissionEndDate() {
+    const TRIAL_DURATION_DAYS = 7;
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + TRIAL_DURATION_DAYS);
+    return endDate;
   }
 }
