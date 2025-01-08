@@ -16,14 +16,17 @@ import { VK_API_Error, VK_AUTH_Error } from 'src/errors/vk-errors';
 import { getAppState, getVerifier } from 'src/utils/verifiers';
 import SpyInstance = jest.SpyInstance;
 import clearAllMocks = jest.clearAllMocks;
+import { UserSubscription } from 'src/db/entities/user_subscription.entity';
+import { UserSubscriptionService } from 'src/db/services/user-subscription.service';
 jest.mock('src/utils/verifiers');
 
-const mockState = describe('AuthService Unit Tests', () => {
+describe('AuthService Unit Tests', () => {
   let authService: AuthService;
   let userService: UserService;
   let httpService: HttpService;
   let jwtService: JwtService;
   let configService: ConfigService;
+  let userSubscriptionService: UserSubscriptionService;
 
   let axiosRefPost: SpyInstance;
 
@@ -67,6 +70,12 @@ const mockState = describe('AuthService Unit Tests', () => {
             createUser: jest.fn(),
           },
         },
+        {
+          provide: UserSubscriptionService,
+          useValue: {
+            addPermission: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -74,6 +83,9 @@ const mockState = describe('AuthService Unit Tests', () => {
     userService = module.get<UserService>(UserService);
     httpService = module.get<HttpService>(HttpService);
     jwtService = module.get<JwtService>(JwtService);
+    userSubscriptionService = module.get<UserSubscriptionService>(
+      UserSubscriptionService,
+    );
     axiosRefPost = jest.spyOn(httpService.axiosRef, 'post');
   });
 
@@ -86,7 +98,7 @@ const mockState = describe('AuthService Unit Tests', () => {
       const expire_in = 3600;
       const date = new Date();
       date.setSeconds(date.getSeconds() + expire_in);
-      const result = authService.calcExpiresDate(expire_in);
+      const result = authService.calcUserTokenExpiresDate(expire_in);
       const dateResult = new Date(result).getTime();
       expect(dateResult).toBeLessThanOrEqual(date.getTime());
     });
@@ -132,10 +144,20 @@ const mockState = describe('AuthService Unit Tests', () => {
           expires_date: new Date(),
         };
 
+        const mockUserSubscriptionResponse = {
+          subscription: true,
+          endDate: new Date('2034-12-29 22:08:21.000'),
+          subscriptionTypeId: 1,
+        } as UserSubscription;
+
         jest.spyOn(userService, 'findOne').mockResolvedValueOnce(null);
         jest
           .spyOn(userService, 'createUser')
           .mockResolvedValue(mockParams as User);
+
+        jest
+          .spyOn(userSubscriptionService, 'addPermission')
+          .mockResolvedValueOnce(mockUserSubscriptionResponse);
 
         const response = await authService.saveUser(
           mockParams.user_vkid,

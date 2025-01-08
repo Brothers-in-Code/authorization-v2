@@ -42,7 +42,7 @@ export class ScanApiService {
     device_id: string,
     expires_in: number,
   ) {
-    const expires_date = this.authService.calcExpiresDate(expires_in);
+    const expires_date = this.authService.calcUserTokenExpiresDate(expires_in);
     try {
       await this.authService.saveUser(
         user_id,

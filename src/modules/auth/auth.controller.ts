@@ -130,7 +130,7 @@ export class AuthController {
         response.access_token,
       );
 
-      const expires_date = this.authService.calcExpiresDate(
+      const expires_date = this.authService.calcUserTokenExpiresDate(
         response.expires_in,
       );
 
@@ -203,7 +203,7 @@ export class AuthController {
         user.device_id,
       );
 
-      const expires_date = this.authService.calcExpiresDate(
+      const expires_date = this.authService.calcUserTokenExpiresDate(
         response.expires_in,
       );
 

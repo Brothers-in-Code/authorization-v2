@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserSubscription } from '../entities/user_subscription.entity';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { SubscriptionType } from 'src/shared/enum/subscription-type-enum';
 
 @Injectable()
 export class UserSubscriptionService {
@@ -11,10 +12,16 @@ export class UserSubscriptionService {
     private readonly userSubscriptionRepository: Repository<UserSubscription>,
   ) {}
 
-  addPermission(user: User, subscription: boolean): Promise<UserSubscription> {
+  addPermission(
+    user: User,
+    subscription: boolean,
+    subscriptionTypeId: SubscriptionType,
+    endDate: Date,
+  ): Promise<UserSubscription> {
     const userSubscription = new UserSubscription();
     userSubscription.user = user;
     userSubscription.subscription = subscription;
+    userSubscription.subscriptionTypeId = subscriptionTypeId;
     return this.userSubscriptionRepository.save(userSubscription);
   }
 
