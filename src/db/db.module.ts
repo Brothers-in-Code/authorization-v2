@@ -23,6 +23,7 @@ import { ReportCommentService } from './services/report-comment.service';
 import { UserReportService } from './services/user-report.service';
 import { PostIndicators } from 'src/db/entities/postIndicators.entity';
 import { PostIndicatorsService } from 'src/db/services/post-indicators.service';
+import { RbSubscriptionType } from 'src/db/entities/rb-subscription-type.entity';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PostIndicatorsService } from 'src/db/services/post-indicators.service';
       ReportComment,
       UserReport,
       PostIndicators,
+      RbSubscriptionType,
     ]),
   ],
 
