@@ -205,7 +205,6 @@ export class ScanService implements OnModuleInit {
   // private readonly SCAN_API = `${this.PROTOCOL}://localhost:3000/api/scan/`;
   private readonly AUTH_API = `${this.PROTOCOL}://${this.HOST}/api/auth/`;
 
-  //   TODO получать access_token через authService
   async getNewAccessToken(
     userVkId: number,
   ): Promise<null | SuccessResponseType<any>> {
