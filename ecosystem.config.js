@@ -22,7 +22,7 @@ apps.push({
 if (server === 'scan') {
   apps.push(
     {
-      name: 'app-scan',
+      name: 'app-daily-scan',
       exec_mode: 'cluster',
       script: './dist/main.js',
       instances: 1,
