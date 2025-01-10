@@ -22,7 +22,7 @@ export class UserGuard implements CanActivate {
         'USER_GUARD: There is no user_token in cookies',
       );
     }
-
+    // todo переделать чтобы UnauthorizedStatus.EXPIRED_TOKEN проходил дальше
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request['user'] = {
