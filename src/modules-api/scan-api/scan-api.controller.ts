@@ -24,103 +24,20 @@ import { ApiInternalGuard } from 'src/shared/guards/api-internal/api-internal.gu
 @UseGuards(ApiInternalGuard)
 @Controller('api/scan')
 export class ScanApiController {
-  constructor(
-    private readonly scanApiService: ScanApiService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly scanApiService: ScanApiService) {}
 
   private readonly logger = new Logger(ScanApiController.name);
 
   @Get('data')
   async getDataScan() {
-    const queryResultList = await this.scanApiService.dataScanQuery();
-    return { data: queryResultList };
-  }
-
-  // TODO удалить метод getAccessToken - в scan-service используется auth-api
-  /**
-   * @description Получение нового access_token
-   * @function getAccessToken
-   * @param body
-   *  refresh_token: string;
-   *  device_id: string;
-   */
-  @Post('access-token')
-  async getAccessToken(
-    @Body()
-    body: GetAccessTokenDto, //
-  ): Promise<{
-    data: { access_token: string };
-    success: ResponseInfoType;
-  }> {
     try {
-      const response = await this.authService.refreshAccessToken(
-        body.refresh_token,
-        body.device_id,
-      );
-
-      await this.scanApiService.saveUser(
-        body.user_vkid,
-        response.access_token,
-        response.refresh_token,
-        body.device_id,
-        response.expires_in,
-      );
-
-      return {
-        data: { access_token: response.access_token },
-        success: {
-          status: HttpStatus.OK,
-          message: 'access_token получен',
-          code: 'success',
-        },
-      };
+      const queryResultList = await this.scanApiService.dataScanQuery();
+      return { data: queryResultList };
     } catch (error) {
-      if (error instanceof VK_AUTH_Error) {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.BAD_REQUEST,
-              message: `ошибка получения access_token! ${error.message}`,
-              code: 'vk_auth_error',
-            },
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      } else if (error instanceof UnauthorizedException) {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.UNAUTHORIZED,
-              message: `ошибка получения access_token! ${error.message}`,
-              code: 'unauthorized',
-            },
-          },
-          HttpStatus.UNAUTHORIZED,
-        );
-      } else if (error instanceof DatabaseServiceError) {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.BAD_REQUEST,
-              message: `ошибка сохранения user ${error.message}`,
-              code: 'internal_error',
-            },
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
-              message: `неизвестная ошибка получения access_token! ${error.message}`,
-              code: 'internal_error',
-            },
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+      throw new HttpException(
+        `ошибка получения данных для сканирования! ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -151,29 +68,10 @@ export class ScanApiController {
         },
       };
     } catch (error) {
-      if (error instanceof DatabaseServiceError) {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
-              message: error.message,
-              code: 'internal_error',
-            },
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      } else {
-        throw new HttpException(
-          {
-            error: {
-              status: HttpStatus.INTERNAL_SERVER_ERROR,
-              message: `неизвестная ошибка сохранения постов! ${error.message}`,
-              code: 'internal_error',
-            },
-          },
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+      throw new HttpException(
+        `ошибка сохранения постов! ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

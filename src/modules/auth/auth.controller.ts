@@ -21,7 +21,10 @@ import { UserSubscriptionService } from 'src/db/services/user-subscription.servi
 import { AuthService } from './services/auth.service';
 
 import { encrypt, decrypt } from 'src/utils/crypting';
-import { SuccessResponseType } from 'src/types/api-response-type';
+import {
+  ErrorResponseType,
+  SuccessResponseType,
+} from 'src/types/api-response-type';
 import { ApiInternalGuard } from 'src/shared/guards/api-internal/api-internal.guard';
 
 type VerificationOutputType = {
@@ -227,7 +230,13 @@ export class AuthController {
       this.logger.error(
         `func:handleRefreshToken,Failed to get access token. ${e.message}`,
       );
-      throw new InternalServerErrorException(e.message);
+      throw new HttpException(
+        `Token received failed: ${e.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+
+      // todo сделать сообщения для пользователя и в сообщении рассказать о проблеме
+      // throw new InternalServerErrorException(e.message);
     }
   }
 }
