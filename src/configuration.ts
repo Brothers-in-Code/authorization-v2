@@ -13,7 +13,7 @@ export function configuration() {
       jwtSecret: process.env.APP_JWT_SECRET,
       apiInternalSecret: process.env.API_INTERNAL_SECRET,
       host: process.env.APP_HOST,
-      scanDaysDepth: process.env.SCAN_DAYS_DEPTH,
+      scanDaysDepth: process.env.SCAN_DAYS_DEPTH || 7,
       userTokenLifetime: process.env.USER_TOKEN_LIFETIME,
 
       protocol: process.env.APP_PROTOCOL,

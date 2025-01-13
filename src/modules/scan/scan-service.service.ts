@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   Logger,
   OnModuleInit,
@@ -83,10 +84,15 @@ export class ScanService implements OnModuleInit {
     const queryResultList = await this.getDataForScanning();
 
     if (queryResultList) {
+      this.logger.debug(`queryResultList.length ${queryResultList.length}`);
       for (const queryResult of queryResultList) {
         const tokenResult = await this.getNewAccessToken(queryResult.userVkId);
 
-        this.logger.log('получен новый access_token');
+        if (tokenResult) {
+          this.logger.log('получен новый access_token');
+        } else {
+          continue;
+        }
 
         const scanGroupListResult = await this.scanGroupList(
           tokenResult.data.access_token,
@@ -226,24 +232,15 @@ export class ScanService implements OnModuleInit {
 
       return response.data;
     } catch (error) {
-      this.logger.warn(`api: ${this.SCAN_API}`);
+      this.logger.error(
+        `ошибка получения access_token! userVkId: ${userVkId}; ${error}`,
+      );
       if (error.response && error.response.data) {
-        this.logger.error(error.response.data);
+        this.logger.warn('детали ошибки:');
+        this.logger.log(error.response.data);
       }
-      if (error instanceof BadRequestException) {
-        this.logger.error(`ошибка получения access_token! ${error.message}`);
-        return null;
-      } else if (error instanceof UnauthorizedException) {
-        this.logger.error(`ошибка получения access_token! ${error.message}`);
-        return null;
-      } else {
-        this.logger.error(
-          `неизвестная ошибка получения access_token! ${error.message}`,
-        );
-        throw new Error(
-          `неизвестная ошибка получения access_token! ${error.message} ${error}`,
-        );
-      }
+
+      return null;
     }
   }
 
@@ -352,7 +349,7 @@ export class ScanService implements OnModuleInit {
         if (error.response.status === 413) {
           await this.retrySaveLargePostList(groupVKId, item, attempt + 1, 5);
         } else {
-          throw error;
+          this.logger.warn(error);
         }
       }
     }
