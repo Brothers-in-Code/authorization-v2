@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  Logger,
-  OnModuleInit,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -84,13 +77,13 @@ export class ScanService implements OnModuleInit {
     const queryResultList = await this.getDataForScanning();
 
     if (queryResultList) {
-      this.logger.debug(`queryResultList.length ${queryResultList.length}`);
       for (const queryResult of queryResultList) {
         const tokenResult = await this.getNewAccessToken(queryResult.userVkId);
 
         if (tokenResult) {
           this.logger.log('получен новый access_token');
         } else {
+          //  todo добавить группы этого пользователя в список групп следующего пользователя
           continue;
         }
 
@@ -99,7 +92,9 @@ export class ScanService implements OnModuleInit {
           queryResult.groupVkIdList,
           limitTimestamp,
         );
-        this.logger.log(`Сканирование групп завершено. ${scanGroupListResult}`);
+        this.logger.log(
+          `======== Сканирование групп завершено. ${scanGroupListResult} ========`,
+        );
       }
     }
   }
@@ -121,7 +116,7 @@ export class ScanService implements OnModuleInit {
 
     for (const groupVKId of groupVKIdList) {
       let currentOffset = 0;
-      let currentPostTimestamp = new Date().getTime();
+      let currentPostTimestamp = this.getStartTimestamp(new Date().getTime());
       let isSaveSuccess = false;
 
       while (currentPostTimestamp >= limitTimestamp) {
@@ -136,31 +131,40 @@ export class ScanService implements OnModuleInit {
             offset: currentOffset,
           });
           const { offset, data } = responsePostList;
+          const postList = data?.response?.items;
 
-          this.logger.log(`получен посты группы groupVKId = ${groupVKId}`);
+          this.logger.log(`получены посты группы groupVKId = ${groupVKId}`);
 
-          if (data.response.items && data.response.items.length > 0) {
-            const postResponse = await this.savePostList(
-              groupVKId,
-              data.response.items,
-            );
+          if (!postList || postList.length === 0) {
+            this.logger.log(`Нет постов у группы groupVKId = ${groupVKId}`);
+            break;
+          }
 
-            if (postResponse) {
-              this.logger.log(
-                `посты группы groupVKId = ${groupVKId} сохранены. offset = ${currentOffset}`,
-              );
-              isSaveSuccess = true;
-            }
+          const filteredPostList = postList.filter(
+            (item) => item.date * 1000 >= limitTimestamp,
+          );
 
-            currentOffset = offset + COUNT;
-            currentPostTimestamp =
-              data.response.items[data.response.items.length - 1].date * 1000;
-          } else {
+          if (filteredPostList.length === 0) {
             this.logger.log(
-              `Нет новых постов для группы groupVKId = ${groupVKId}`,
+              `Нет новых постов у группы groupVKId = ${groupVKId}`,
             );
             break;
           }
+
+          const postResponse = await this.savePostList(
+            groupVKId,
+            filteredPostList,
+          );
+
+          if (postResponse) {
+            this.logger.log(
+              `посты группы groupVKId = ${groupVKId} сохранены. offset = ${currentOffset}`,
+            );
+            isSaveSuccess = true;
+          }
+
+          currentOffset = offset + COUNT;
+          currentPostTimestamp = postList[postList.length - 1].date * 1000;
         } catch (error) {
           if (error.response && error.response.data) {
             this.logger.error(error.response.data);
@@ -394,10 +398,16 @@ export class ScanService implements OnModuleInit {
   private calcLimitTimestamp(): number {
     const scanDaysDepth = this.configService.get('app.scanDaysDepth');
     const limitDate = new Date();
-    limitDate.setHours(23, 59, 0, 0);
+    limitDate.setHours(0, 0, 0, 0);
     limitDate.setDate(limitDate.getDate() - scanDaysDepth);
 
     return limitDate.getTime();
+  }
+
+  private getStartTimestamp(timestamp: number): number {
+    const localDate = new Date(timestamp);
+    localDate.setHours(23, 59, 0, 0);
+    return localDate.getTime();
   }
 
   private splitPostList(itemList: PostType[]) {
