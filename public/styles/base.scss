@@ -1,6 +1,7 @@
 #root {
+  --root-padding-inline: 10px;
   position: relative;
-  padding-inline: 10px;
+  padding-inline: var(--root-padding-inline);
 }
 
 .img {

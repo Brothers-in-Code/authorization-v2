@@ -27,3 +27,13 @@
     transform: rotateY(180deg);
   }
 }
+
+.header--fixed {
+  grid-column: 1 / 3;
+  position: fixed;
+  top: 0;
+  margin-inline: calc(var(--root-padding-inline) * -1);
+  padding-inline: var(--root-padding-inline);
+  width: 100%;
+  height: var(--header-height);
+}

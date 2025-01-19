@@ -1,10 +1,10 @@
-.card {
+.card-base {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 2px 8px 5px $color-shadow-black;
-  border-radius: 4px;
+  box-shadow: 1px 1px 7px var(--bs-gray-400);
+  border-radius: 10px;
 
   &__body {
     padding-inline: 1rem;
@@ -34,12 +34,12 @@
   }
 }
 
-.card--dashboard {
+.card-base--dashboard {
   min-width: 250px;
   min-height: 300px;
   height: 100%;
 
-  .card__background {
+  .card-base__background {
     background-position: center bottom;
     margin: 10px;
   }

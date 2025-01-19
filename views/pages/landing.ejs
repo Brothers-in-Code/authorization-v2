@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<%- include('../components/head.ejs', {title: data.pageTitle}) %>
+<body>
+<div id="root">
+    <% if (data?.currentEnv === 'development') {%>
+        <div class="dev-mode">
+            <div>Режим разработки</div>
+        </div>
+    <% } %>
+        <div class="page-layout-classic">
+            <header class="header header--fixed">
+                <div>
+                    SMM Менеджер
+                </div>
+                <div>
+                    <a href="/login">Зарегистрироваться или Войти</a>
+                </div>
+            </header>
+            <main>
+                <section class="hero">
+                    <div class="hero__content">
+                        <div class="hero__card">
+                            <div class="hero__background hero__background--layout"></div>
+                            <h1 class="page-title hero__title">
+                                Прозрачная аналитика для вашего бизнеса во ВКонтакте
+                            </h1>
+                            <div class="hero__text">Изучайте статистику постов, групп и аудитории с максимальной точностью.</div>
+                            <div>
+                                <button class="btn btn-outline-primary">Попробовать</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero__background hero__background--img"></div>
+                </section>
+                <section class="features">
+                    <div class="card-base card-base--dashboard">
+                        <div class="card-base__body">Feature 1</div>
+                    </div>
+                    <div class="card-base card-base--dashboard">
+                        <div class="card-base__body">Feature 2</div>
+                    </div>
+                    <div class="card-base card-base--dashboard">
+                        <div class="card-base__body">Feature 3</div>
+                    </div>
+                    <div class="card-base card-base--dashboard">
+                        <div class="card-base__body">Feature 4</div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    <div>
+
+    </div>
+</div>
