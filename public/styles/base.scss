@@ -143,3 +143,18 @@
   text-transform: lowercase;
   color: var(--bs-gray-600);
 }
+
+.block-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.block-wrapper--center {
+  justify-content: center;
+  align-items: center;
+}
+
+.block-wrapper--features {
+  width: 50%;
+}
+

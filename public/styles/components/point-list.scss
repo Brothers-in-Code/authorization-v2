@@ -1,0 +1,106 @@
+.point-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    position: relative;
+    box-sizing: border-box;
+    padding-left: calc(var(--size-x) * 1.5);
+  }
+
+  &__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: var(--size-x);
+    height: var(--size-x);
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top left;
+  }
+
+  &__background--analytic::before {
+    background-image: url('/img/landing/analytics.svg');
+  }
+
+  &__background--flag::before {
+    background-image: url('/img/landing/cafe_flag.svg');
+  }
+
+  &__background--check::before {
+    background-image: url('/img/landing/check5.svg');
+  }
+
+  &__background--touragency_emoji::before {
+    background-image: url('/img/landing/touragency_emoji.svg');
+  }
+
+  &__background--envelope::before {
+    background-image: url('/img/landing/envelope.svg');
+  }
+
+  &__background--telegram::before {
+    background-image: url('/img/landing/telegram.svg');
+  }
+
+  &__background--telephone::before {
+    background-image: url('/img/landing/telephone.svg');
+  }
+
+  &__title {
+    margin: 0 0 0.7em;
+    font-size: 1.1rem;
+    font-weight: 900;
+  }
+
+  &__text {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.point-list--half {
+  width: 50%;
+}
+
+.point-list--features {
+  width: 60%;
+}
+
+.point-list--column-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.point-list--big {
+  --size-x: 40px;
+}
+
+.point-list--medium {
+  --size-x: 25px;
+}
+
+.point-list--contacts {
+  --size-x: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+
+  .point-list__text {
+    font-size: var(--size-x);
+  }
+
+  .point-list__item::before {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+}
+
+
+

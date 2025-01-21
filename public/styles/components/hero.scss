@@ -27,12 +27,13 @@
   }
 
   &__card {
-    position: absolute;
-    top: -50px;
+    position: relative;
+    top: -10%;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 60%;
+    height: 100%;
+    width: 120%;
     padding: 20px;
     border-radius: 20px;
     overflow: hidden;
@@ -52,7 +53,7 @@
     position: absolute;
     inset: 0;
     background-position: left top;
-    background-image: linear-gradient(to right, rgba(225, 234, 231, 1), 90%,  rgba(225, 234, 231, 0)  );
+    background-image: linear-gradient(to right bottom, rgba(225, 234, 231, 1), 75%,  rgba(225, 234, 231, 0)  );
     z-index: -90;
   }
 }

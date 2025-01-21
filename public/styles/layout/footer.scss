@@ -1,0 +1,10 @@
+.footer {
+  &__content {
+    border-top: 1px solid #000;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 2rem;
+  }
+}
