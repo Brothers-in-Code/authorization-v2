@@ -1,0 +1,9 @@
+.page-layout-classic {
+  --header-height: 64px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+
+  margin-top: calc(var(--header-height) * 2) ;
+}

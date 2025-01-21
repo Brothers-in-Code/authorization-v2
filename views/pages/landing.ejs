@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<%- include('../components/head.ejs', {title: data.pageTitle}) %>
+<body>
+<div id="root">
+    <% if (data?.currentEnv === 'development') {%>
+        <div class="dev-mode">
+            <div>Режим разработки</div>
+        </div>
+    <% } %>
+        <div class="page-layout-classic">
+            <header class="header header--fixed">
+                <div>
+                    SMM Менеджер
+                </div>
+                <div>
+                    <a href="/login">Зарегистрироваться или Войти</a>
+                </div>
+            </header>
+            <main>
+                <section class="hero">
+                    <div class="hero__content">
+                        <div class="hero__card">
+                            <div class="hero__background hero__background--layout"></div>
+                            <h1 class="page-title hero__title">
+                                Прозрачная аналитика для вашего бизнеса во ВКонтакте
+                            </h1>
+                            <div class="hero__text">Изучайте статистику постов, групп и аудитории с максимальной точностью.</div>
+                            <div>
+                                <button class="btn btn-outline-primary">Попробовать</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero__background hero__background--img"></div>
+                </section>
+                <section class="features section">
+                    <h2 class="section__title">Почему стоит выбрать наш сервис аналитики?</h2>
+                    <div class="block-wrapper block-wrapper--center">
+                        <p class="section__text">Получите подробную аналитику по постам и группам ВКонтакте, создавайте отчёты по ключевым метрикам.</p>
+                    </div>
+                    <div class="block-wrapper block-wrapper--center">
+                        <ul class="point-list point-list--features point-list--big">
+                            <li class="point-list__item point-list__background--analytic">
+                                <h3 class="point-list__title">Аналитика постов</h3>
+                                <p class="point-list__text">Узнайте количество просмотров, лайков и другую статистику по каждому посту.</p>
+                            </li>
+                            <li class="point-list__item point-list__background--flag">
+                                <h3 class="point-list__title">Аналитика групп</h3>
+                                <p class="point-list__text">Следите за динамикой роста и активности участников группы. Выявляйте тренды и оптимизируйте стратегию продвижения.</p>
+                            </li>
+                            <li class="point-list__item point-list__background--touragency_emoji">
+                                <h3 class="point-list__title">Создание отчётов</h3>
+                                <p class="point-list__text">Формируйте подробные отчёты с ключевыми показателями эффективности. Анализируйте результаты и принимайте обоснованные решения на основе данных.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section section--advantages">
+                    <h2 class="section__title">Преимущества использования нашей аналитики постов в социальной сети ВКонтакте</h2>
+                    <div class="block-wrapper block-wrapper--center">
+                        <p class="section__text">Получите полную картину эффективности ваших публикаций и вовлеченности аудитории.</p>
+                    </div>
+                    <ul class="point-list point-list--column-2 point-list--medium">
+                        <li class="point-list__item point-list__background--check">
+                            <h3 class="point-list__title">Отслеживание эффективности постов</h3>
+                            <p class="point-list__text">Узнайте, какие посты работают лучше всего, и оптимизируйте вашу контент-стратегию.</p>
+                        </li>
+                        <li class="point-list__item point-list__background--check">
+                            <h3 class="point-list__title">Понимание вовлеченности аудитории</h3>
+                            <p class="point-list__text">Анализируйте уровень взаимодействия с вашими публикациями и улучшайте взаимодействие с аудиторией.</p>
+                        </li>
+                        <li class="point-list__item point-list__background--check">
+                            <h3 class="point-list__title">Улучшение контент-стратегии</h3>
+                            <p class="point-list__text">Используйте данные для создания более качественного и актуального контента.</p>
+                        </li>
+                        <li class="point-list__item point-list__background--check">
+                            <h3 class="point-list__title">Оптимизация времени публикации</h3>
+                            <p class="point-list__text">Определите оптимальное время для публикации, чтобы максимизировать охват и вовлеченность.</p>
+                        </li>
+                    </ul>
+                </section>
+                <section class="section section--contacts">
+                    <h2 class="section__title">Мы всегда на связи</h2>
+                    <ul class="point-list point-list--contacts">
+                        <li class="point-list__item point-list__background--envelope">
+                            <div class="point-list__text"><a class="link"  href="mailto:tigeronsun@gmail.com">Почта</a></div>
+                        </li>
+                        <li class="point-list__item point-list__background--telegram">
+                            <div class="point-list__text"><a class="link" href="tg://resolve?domain=@TimurTakvarelia">Телеграмм</a></div>
+                        </li>
+                        <li class="point-list__item point-list__background--telephone">
+                            <div class="point-list__text"><a class="link" href="tel:+791119792886">Телефон</a></div>
+                        </li>
+                    </ul>
+                </section>
+            </main>
+            <footer class="footer">
+                <div class="footer__content">
+                    <div>SMM Менеджер</div>
+                    <div>&copy;FSK8-DEV, 2025</div>
+                </div>
+            </footer>
+        </div>
+    <div>
+
+    </div>
+</div>

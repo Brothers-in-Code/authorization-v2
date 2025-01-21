@@ -1,0 +1,26 @@
+.section {
+  padding-block: 6rem;
+
+  &__title {
+    text-align: center;
+  }
+
+  &__text {
+    width: 50%;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+  }
+}
+
+.section--advantages {
+  margin-inline: -20px;
+  padding-inline: 40px;
+  background-color: rgba(225, 234, 231, 1);
+}
+
+.section--contacts {
+  .section__title {
+    margin-bottom: 2rem;
+  }
+}
