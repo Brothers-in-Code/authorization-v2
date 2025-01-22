@@ -348,6 +348,11 @@
   width: 50%;
 }
 
+.block-wrapper--logo {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .dev-mode {
   position: absolute;
   top: 10px;
@@ -952,6 +957,11 @@ textarea[disabled] {
 .card-base__body {
   padding-inline: 1rem;
 }
+.card-base__title {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
 .card-base__footer {
   padding-inline: 1rem;
 }
@@ -971,6 +981,35 @@ textarea[disabled] {
 }
 .card-base .report {
   background-image: url("../../img/icons/report.png");
+}
+
+.card-base--login {
+  z-index: 100;
+  width: 30%;
+  min-width: 280px;
+  max-width: 460px;
+}
+.card-base--login .card-base__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+.card-base--login .card-base__body .h3 {
+  margin: 0;
+}
+.card-base--login .img {
+  width: 20%;
+}
+.card-base--login .message-text {
+  font-size: 1.2rem;
+  font-style: italic;
+}
+.card-base--login .btn {
+  width: 100%;
+  font-size: 1.2rem;
 }
 
 .card-base--dashboard {
