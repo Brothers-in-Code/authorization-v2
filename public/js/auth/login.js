@@ -4,10 +4,12 @@
   const stayAPIUrl = `${new URL(window.location.href).origin}/api`;
   const loginButton = document.getElementById('login');
 
-  loginButton.addEventListener('click', () => {
-    const redirectTo = loginButton.dataset.smmRedirectTo;
-    login(redirectTo);
-  });
+  if (loginButton) {
+    loginButton.addEventListener('click', () => {
+      const redirectTo = loginButton.dataset.smmRedirectTo;
+      login(redirectTo);
+    });
+  }
 
   async function login(redirectTo) {
     const verificationParams = await fetchVerificationParams(redirectTo);
