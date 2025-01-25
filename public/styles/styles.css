@@ -52,7 +52,14 @@
   column-gap: 20px;
   padding-top: 32px;
   background-color: #fff;
-  z-index: 1000;
+}
+.header__logo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.header__logo .img {
+  width: 30px;
 }
 .header__user-icon {
   width: 25px;
@@ -77,9 +84,10 @@
   position: fixed;
   top: 0;
   margin-inline: calc(var(--root-padding-inline) * -1);
-  padding-inline: var(--root-padding-inline);
+  padding: 10px var(--root-padding-inline);
   width: 100%;
   height: var(--header-height);
+  z-index: 1000;
 }
 
 .context {
@@ -154,7 +162,7 @@
 }
 
 .section--advantages {
-  margin-inline: -20px;
+  margin-inline: -10px;
   padding-inline: 40px;
   background-color: rgb(225, 234, 231);
 }

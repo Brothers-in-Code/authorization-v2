@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedStatus } from 'src/shared/enum/unauthorized-enum';
+import { CustomUnauthorizedException } from 'src/errors/http-custom-exception';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -18,11 +19,11 @@ export class UserGuard implements CanActivate {
     const token = request.cookies?.user_token;
 
     if (!token) {
-      throw new UnauthorizedException(
-        'USER_GUARD: There is no user_token in cookies',
+      throw new CustomUnauthorizedException(
+        `USER_GUARD: ${UnauthorizedStatus.NO_TOKEN}`,
       );
     }
-    // todo переделать чтобы UnauthorizedStatus.EXPIRED_TOKEN проходил дальше
+
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request['user'] = {
@@ -35,14 +36,18 @@ export class UserGuard implements CanActivate {
       const tokenExpiresTimestamp = Number(payload.exp) * 1000;
 
       if (tokenExpiresTimestamp < nowTimestamp) {
-        throw new UnauthorizedException(
+        throw new CustomUnauthorizedException(
           `USER_GUARD: userId: ${payload.sub} ${UnauthorizedStatus.EXPIRED_TOKEN}`,
         );
       }
     } catch (error) {
-      throw new UnauthorizedException(
-        `USER_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
-      );
+      if (error instanceof CustomUnauthorizedException) {
+        throw error;
+      } else {
+        throw new UnauthorizedException(
+          `USER_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
+        );
+      }
     }
 
     return true;
