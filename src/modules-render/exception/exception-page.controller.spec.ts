@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { 500Controller } from './exception.controller';
+import { ExceptionPageController } from './exception-page.controller';
 
 describe('500Controller', () => {
-  let controller: 500Controller;
+  let controller: ExceptionPageController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [500Controller],
+      controllers: [ExceptionPageController],
     }).compile();
 
-    controller = module.get<500Controller>(500Controller);
+    controller = module.get<ExceptionPageController>(ExceptionPageController);
   });
 
   it('should be defined', () => {
