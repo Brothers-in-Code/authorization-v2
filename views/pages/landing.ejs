@@ -10,11 +10,21 @@
     <% } %>
     <div class="page-layout-classic">
         <header class="header header--fixed">
-            <div>
-                SMM Менеджер
+            <div class="header__logo">
+                <img src="/img/smm-toolkit-logo.png" alt="логотип smm toolkit" class="img">
+                <strong>SMM Менеджер</strong>
+            </div>
+            <div class="header__menu">
+                <nav>
+                    <a class="link" href="/work-space/groups">Рабочее пространство</a>
+                </nav>
             </div>
             <div>
-                <a href="/login" class="btn btn-outline-primary">Авторизация</a>
+                <% if (data?.user?.userAvatar === null) {%>
+                    <a href="/login" class="btn btn-outline-primary">Авторизация</a>
+                <%} else {%>
+                    <img class="header__user-icon header__user-icon--medium" src="<%= data.user.userAvatar %>" alt="Аватар пользователя">
+                <% }%>
             </div>
         </header>
         <main>

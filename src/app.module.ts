@@ -16,7 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './modules/login/login.module';
 import { ScanApiModule } from './modules-api/scan-api/scan-api.module';
 import { InternalApiModule } from 'src/modules-api/internal-api/internal-api.module';
-import { ExceptionPageModule } from 'src/modules-render/exception/exceptionPageModule';
+import { ExceptionPageModule } from 'src/modules-render/exception/exception-page.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { InfoModule } from './modules-render/info/info.module';
 

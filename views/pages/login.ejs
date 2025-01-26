@@ -8,12 +8,12 @@
           <div class="wrapper">
             <div class="card-base card-base--login">
               <div class="card-base__body">
-                  <div class="block-wrapper block-wrapper--logo block-wrapper--center">
-                  <img src="/img/smm-toolkit-logo.png" alt="логотип smm toolkit" class="img">
+                <div class="block-wrapper block-wrapper--logo block-wrapper--center">
+                  <img src="/img/smm-toolkit-logo.png" alt="логотип smm toolkit" class="img img--logo">
                   <span class="h3">SMM Toolkit</span>
                 </div>
 
-                <% if (data?.message !== undefined) {%>
+                <% if (data?.message !== undefined && data?.message !== 'undefined') {%>
                   <div class="message-text"><%= data.message%></div>
                 <% }%>
                 <button

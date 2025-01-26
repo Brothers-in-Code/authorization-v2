@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/')
-  @Redirect('/work-space/groups', 302)
+  @Redirect('/landing', 302)
   redirectHome() {
     return {};
   }

@@ -65,6 +65,9 @@
   width: 25px;
   border-radius: 50%;
 }
+.header__user-icon--medium {
+  width: 35px;
+}
 .header__btn-toggle {
   top: 0;
   right: 0;
@@ -218,10 +221,12 @@
 }
 
 .img {
+  width: auto;
   max-width: 100%;
+  height: auto;
 }
 
-.logo {
+.vk-group-icon {
   width: 40px;
   height: auto;
   border-radius: 50%;

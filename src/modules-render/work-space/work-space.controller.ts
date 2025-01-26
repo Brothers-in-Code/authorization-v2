@@ -17,13 +17,14 @@ import {
 } from '@nestjs/common';
 import { WorkSpaceService } from './work-space.service';
 import { UserGroupService } from 'src/db/services/user-group.service';
-import { UserGuard } from 'src/modules/user-guard/user.guard';
 import { Response } from 'express';
 import { UnauthorizedExceptionFilter } from 'src/shared/filter/unauthorized-exception/unauthorized-exception.filter';
 import { ConfigService } from '@nestjs/config';
-import { SubscriptionGuard } from 'src/modules/subscription-gurard/subscription.guard';
 
-@UseGuards(UserGuard)
+import { SubscriptionGuard } from 'src/modules/subscription-gurard/subscription.guard';
+import { UnauthorizedGuard } from 'src/guards/unauthorized-guard/unauthorized-guard';
+
+@UseGuards(UnauthorizedGuard)
 @UseFilters(UnauthorizedExceptionFilter)
 @Controller()
 export class WorkSpaceController {

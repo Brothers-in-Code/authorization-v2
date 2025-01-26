@@ -18,12 +18,6 @@ export class UserGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.user_token;
 
-    if (!token) {
-      throw new CustomUnauthorizedException(
-        `USER_GUARD: ${UnauthorizedStatus.NO_TOKEN}`,
-      );
-    }
-
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request['user'] = {
@@ -32,24 +26,7 @@ export class UserGuard implements CanActivate {
         email: payload.email,
         avatar: payload.avatar,
       };
-      const nowTimestamp = Date.now();
-      const tokenExpiresTimestamp = Number(payload.exp) * 1000;
-
-      if (tokenExpiresTimestamp < nowTimestamp) {
-        throw new CustomUnauthorizedException(
-          `USER_GUARD: userId: ${payload.sub} ${UnauthorizedStatus.EXPIRED_TOKEN}`,
-        );
-      }
-    } catch (error) {
-      if (error instanceof CustomUnauthorizedException) {
-        throw error;
-      } else {
-        throw new UnauthorizedException(
-          `USER_GUARD: ${UnauthorizedStatus.WRONG_TOKEN}: ${error}`,
-        );
-      }
-    }
-
+    } catch (error) {}
     return true;
   }
 }

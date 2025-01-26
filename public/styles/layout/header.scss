@@ -10,9 +10,23 @@
 
   background-color: #fff;
 
+  &__logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+
+    .img {
+      width: 30px;
+    }
+  }
+
   &__user-icon {
     width: 25px;
     border-radius: 50%;
+  }
+
+  &__user-icon--medium {
+    width: 35px;
   }
 
   &__btn-toggle {
@@ -35,8 +49,10 @@
   position: fixed;
   top: 0;
   margin-inline: calc(var(--root-padding-inline) * -1);
-  padding-inline: var(--root-padding-inline);
+  padding: 10px var(--root-padding-inline);
   width: 100%;
   height: var(--header-height);
   z-index: 1000;
+
+
 }
