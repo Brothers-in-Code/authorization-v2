@@ -20,7 +20,11 @@
                 </nav>
             </div>
             <div>
-                <a href="/login" class="btn btn-outline-primary">Авторизация</a>
+                <% if (data?.user?.userAvatar === null) {%>
+                    <a href="/login" class="btn btn-outline-primary">Авторизация</a>
+                <%} else {%>
+                    <img class="header__user-icon header__user-icon--medium" src="<%= data.user.userAvatar %>" alt="Аватар пользователя">
+                <% }%>
             </div>
         </header>
         <main>

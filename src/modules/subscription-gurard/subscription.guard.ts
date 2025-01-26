@@ -16,6 +16,7 @@ export class SubscriptionGuard implements CanActivate {
     const subscriptionToken = request.cookies?.user_subscription;
     const userToken = request.cookies?.user_token;
     let userId: number | null;
+    let subscriptionPayload: any = null;
 
     if (userToken) {
       const payload = await this.jwtService.verifyAsync(userToken);
@@ -30,7 +31,6 @@ export class SubscriptionGuard implements CanActivate {
       );
     }
 
-    let subscriptionPayload: any = null;
     try {
       subscriptionPayload = await this.jwtService.verifyAsync(
         subscriptionToken,

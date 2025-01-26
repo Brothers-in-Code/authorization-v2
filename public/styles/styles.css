@@ -65,6 +65,9 @@
   width: 25px;
   border-radius: 50%;
 }
+.header__user-icon--medium {
+  width: 35px;
+}
 .header__btn-toggle {
   top: 0;
   right: 0;
