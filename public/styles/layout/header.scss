@@ -10,6 +10,13 @@
 
   background-color: #fff;
 
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
   &__logo {
     display: flex;
     align-items: baseline;
@@ -20,28 +27,12 @@
     }
   }
 
-  &__user-icon {
-    width: 25px;
-    border-radius: 50%;
-  }
-
-  &__user-icon--medium {
-    width: 35px;
-  }
-
   &__btn-toggle {
     top: 0;
     right: 0;
   }
   &__bottom {
     width: 100%;
-  }
-
-  .btn-logout {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: rotateY(180deg);
   }
 }
 

@@ -1,3 +1,19 @@
+<header class="page-layout__header page-layout__section header">
+  <button class="btn btn--toggle header__btn-toggle" id="header-btn-toggle">
+    <img
+            class="slide-section__btn-img"
+            src="/img/bootstrap-icons/chevron-double-left.svg"
+            alt="кнопка открытия и закрытия навигации"
+    />
+  </button>
+  <% userAvatar = data.userAvatar ? `${data.userAvatar}` : '/img/bootstrap-icons/person.svg' %>
+  <div class="header__top">
+    <div><a href="/" class="link">SSM Менеджер</a></div>
+    <%- include('../components/user-section.ejs', {userAvatar: userAvatar, dropdownOffset: 'left', iconSize: 'small'})  %>
+  </div>
+</header>
+
+<!-- TODO добавить всплывающее окно с подтверждением -->
 <svg width="0" height="0" class="hide">
   <symbol
     xmlns="http://www.w3.org/2000/svg"
@@ -13,29 +29,3 @@
   </symbol>
 </svg>
 
-<!-- TODO добавить всплывающее окно с подтверждением -->
-<header class="page-layout__header page-layout__section header">
-  <button class="btn btn--toggle header__btn-toggle" id="header-btn-toggle">
-    <img
-      class="slide-section__btn-img"
-      src="/img/bootstrap-icons/chevron-double-left.svg"
-      alt="кнопка открытия и закрытия навигации"
-    />
-  </button>
-  <div><a href="/" class="link">SSM Менеджер</a></div>
-  <% src = data.userAvatar ? `${data.userAvatar}` : '/img/bootstrap-icons/person.svg' %>
-  <img class="header__user-icon" src="<%= src %>" alt="user icon" />
-  <div class="header__bottom">
-    <button
-      data-bs-toggle="tooltip"
-      data-bs-title="Выйти из аккаунта"
-      class="btn btn-logout"
-      id="btn-logout"
-    >
-      <svg class="sprite-icon">
-        <use xlink:href="#person-walking"></use>
-      </svg>
-    </button>
-  </div>
-</header>
-<script defer src="/js/logout.js"></script>

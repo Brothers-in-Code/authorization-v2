@@ -3,6 +3,7 @@
   position: absolute;
   top: 100%;
   padding-top: .5rem;
+  z-index: 1000;
 
   &__body {
     border-radius: 10px;
@@ -13,4 +14,8 @@
 
 .dropdown--right {
   right: 0%;
+}
+
+.dropdown--left {
+  left: 0%;
 }

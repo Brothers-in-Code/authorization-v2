@@ -16,15 +16,13 @@
 
 <div class="user-section">
     <div class="user-section__avatar">
-        <img class="header__user-icon header__user-icon--medium" src="<%= userAvatar %>" alt="Аватар пользователя">
+        <img class="user-section__user-icon user-section__user-icon--<%= iconSize %>" src="<%= userAvatar %>" alt="Аватар пользователя">
     </div>
     <div class="user-section__dropdown dropdown  dropdown--<%= dropdownOffset %>">
         <div class="dropdown__body">
             <ul class="user-section__list">
                 <li>
                     <button
-                            data-bs-toggle="tooltip"
-                            data-bs-title="Выйти из аккаунта"
                             class="btn btn--flex"
                             id="btn-logout"
                     >
@@ -37,3 +35,4 @@
         </div>
     </div>
 </div>
+<script defer src="/js/logout.js"></script>
