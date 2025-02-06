@@ -1,0 +1,14 @@
+.user-section {
+  position: relative;
+
+  &__list {
+    @include list-reset;
+  }
+
+  &:hover {
+    .user-section__dropdown {
+      display: block;
+    }
+  }
+}
+

@@ -18,6 +18,7 @@
 @import './mixins/components-mixins';
 @import './base';
 // components
+@import './components/dropdown';
 @import './components/dev-mode.scss';
 @import './components/nav.scss';
 @import './components/table.scss';
@@ -29,6 +30,7 @@
 @import './components/pop-up.scss';
 @import './components/hero.scss';
 @import './components/point-list';
+@import './components/user-section';
 
 
 

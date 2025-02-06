@@ -23,7 +23,7 @@
                 <% if (data?.user?.userAvatar === null) {%>
                     <a href="/login" class="btn btn-outline-primary">Авторизация</a>
                 <%} else {%>
-                    <img class="header__user-icon header__user-icon--medium" src="<%= data.user.userAvatar %>" alt="Аватар пользователя">
+                    <%- include('../components/user-section.ejs', {userAvatar: data.user.userAvatar, dropdownOffset: 'right'})  %>
                 <% }%>
             </div>
         </header>

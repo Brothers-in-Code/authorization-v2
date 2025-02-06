@@ -1,0 +1,16 @@
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  padding-top: .5rem;
+
+  &__body {
+    border-radius: 10px;
+    box-shadow: 1px 1px 7px var(--bs-gray-400);
+    background-color: var(--bs-white);
+  }
+}
+
+.dropdown--right {
+  right: 0%;
+}
