@@ -53,6 +53,12 @@
   padding-top: 32px;
   background-color: #fff;
 }
+.header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
 .header__logo {
   display: flex;
   align-items: baseline;
@@ -61,25 +67,12 @@
 .header__logo .img {
   width: 30px;
 }
-.header__user-icon {
-  width: 25px;
-  border-radius: 50%;
-}
-.header__user-icon--medium {
-  width: 35px;
-}
 .header__btn-toggle {
   top: 0;
   right: 0;
 }
 .header__bottom {
   width: 100%;
-}
-.header .btn-logout {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: rotateY(180deg);
 }
 
 .header--fixed {
@@ -298,6 +291,12 @@
   transition: fill 0.2s ease-out;
 }
 
+.btn--flex {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn--vk {
   background-color: #0077ff;
   color: #fff;
@@ -364,6 +363,27 @@
 .block-wrapper--logo {
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  padding-top: 0.5rem;
+  z-index: 1000;
+}
+.dropdown__body {
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px var(--bs-gray-400);
+  background-color: var(--bs-white);
+}
+
+.dropdown--right {
+  right: 0%;
+}
+
+.dropdown--left {
+  left: 0%;
 }
 
 .dev-mode {
@@ -957,6 +977,27 @@ textarea[disabled] {
 .point-list--contacts .point-list__item::before {
   top: 50%;
   transform: translateY(-50%);
+}
+
+.user-section {
+  position: relative;
+}
+.user-section__user-icon {
+  border-radius: 50%;
+}
+.user-section__user-icon--small {
+  width: 25px;
+}
+.user-section__user-icon--medium {
+  width: 35px;
+}
+.user-section__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.user-section:hover .user-section__dropdown {
+  display: block;
 }
 
 .card-base {

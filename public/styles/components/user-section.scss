@@ -1,0 +1,26 @@
+.user-section {
+  position: relative;
+
+  &__user-icon {
+    border-radius: 50%;
+  }
+
+  &__user-icon--small {
+    width: 25px;
+  }
+
+  &__user-icon--medium {
+    width: 35px;
+  }
+
+  &__list {
+    @include list-reset;
+  }
+
+  &:hover {
+    .user-section__dropdown {
+      display: block;
+    }
+  }
+}
+

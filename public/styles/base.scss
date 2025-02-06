@@ -93,6 +93,12 @@
   transition: fill 0.2s ease-out;
 }
 
+.btn--flex {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn--vk {
   background-color: #0077ff;
   color: #fff;
@@ -165,3 +171,4 @@
   flex-direction: column;
   gap: .5rem;
 }
+
